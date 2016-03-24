@@ -1,0 +1,25 @@
+﻿
+ENGLISH
+ESPAÑOL
+CATALÀ
+PLAY
+OPTIONS
+MORE
+EXIT
+SOUND ON
+SOUND OFF
+VIBRATION ON
+VIBRATION OFF
+DO YOU WANT TO QUIT GAME?
+NO
+YES
+HELP
+ABOUT
+DESTROY ALL BLOCKS WITH THE BALL FOR GET POINTS. SLIDES FINGER AROUND THE SCREEN FOR MOVE THE BAR.
+DESING AND PROGRAMMING: LUIS VALDES FRANCES. xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx MUSIC AND FX: FRANCISCO HOYOS. xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx ALL RIGHTS RESERVED.
+POINTS:
+RECORD:
+RETRY
+LEAVE
+NEW RECORD:
+DO YOU WANT TO RETURN TU MENU?

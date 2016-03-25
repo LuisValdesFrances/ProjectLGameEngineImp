@@ -1,8 +1,7 @@
 package com.luis.projectlgameengineimp.objects;
 
-import com.luis.lgameengine.gameutils.GfxEffects;
-import com.luis.lgameengine.gameutils.Math2D;
-import com.luis.lgameengine.gameutils.WorldConver;
+import com.luis.lgameengine.gameutils.gameworld.RigidBody;
+import com.luis.lgameengine.gameutils.gameworld.WorldConver;
 import com.luis.lgameengine.implementation.graphics.Graphics;
 import com.luis.lgameengine.implementation.graphics.Image;
 import com.luis.projectlgameengineimp.Define;
@@ -41,7 +40,7 @@ public abstract class GameObject extends RigidBody{
     }
 
     public void update(float _fDeltaTime, int[][] _iTilesMatrixID, float _fTileW, float _fTileH) {
-    	super.runPhysics (_fDeltaTime, _iTilesMatrixID, _fTileW, _fTileH, Define.SIZEX, Define.SIZEY);
+    	super.runPhysics (_fDeltaTime, _iTilesMatrixID, _fTileW, _fTileH, Define.SIZEX, Define.SIZEY, ModeGame.isBoundColToScreen);
     }
     
     public void draw(

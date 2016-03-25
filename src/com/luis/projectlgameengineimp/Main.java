@@ -72,8 +72,8 @@ public class Main extends MyCanvas implements Runnable {
 	public static final int COLOR_GREEN_BG = 0xff8bfc88;
 	public static final int COLOR_YELOW_BG = 0xfffcf659;
 
-	public static final boolean IS_DEBUG = false;
-	public static final boolean IS_INPUT_DEBUG = true;
+	public static final boolean IS_DEBUG = true;
+	public static final boolean IS_INPUT_DEBUG = false;
 	public static final boolean IS_GAME_DEBUG = false;
 
 	// Nombre del fichero donde se guardaran y cargaran los datos:
@@ -213,15 +213,16 @@ public class Main extends MyCanvas implements Runnable {
 				_g.setClip(0, 0, Define.SIZEX, Define.SIZEY);
 				_g.setTextSize((int) (24 * Settings.getInstance().getScale()));
 				_g.setAlpha(160);
-				_g.setColor(COLOR_BLACK);
+				_g.setColor(0x88000000);
 				_g.fillRect(0, 0, Define.SIZEX, _g.getTextHeight() * 6);
 				_g.setAlpha(255);
-				_g.drawText("FramesXSecond: " + Define.MAX_FPS + "/" + iFramesXSecond, 0, _g.getTextHeight(), COLOR_RED);
-				_g.drawText("DeltaTime: " + lDeltaTime, Define.SIZEX2, _g.getTextHeight(), COLOR_RED);
-				_g.drawText("SizeX: " + Define.SIZEX, 0, _g.getTextHeight() * 2,COLOR_RED);
-				_g.drawText("SizeY: " + Define.SIZEY, Define.SIZEX2, _g.getTextHeight() * 2, COLOR_RED);
-				_g.drawText("RealW: " + Settings.getInstance().getRealWidth(), 0, _g.getTextHeight() * 3, COLOR_RED);
-				_g.drawText("RealH: " + Settings.getInstance().getRealHeight(), Define.SIZEX2, _g.getTextHeight() * 3, COLOR_RED);
+				_g.drawText("LGameEngine version: : " + Settings.LGAME_ENGINE_VERSION, 0, _g.getTextHeight(), COLOR_WHITE);
+				_g.drawText("FramesXSecond: " + Define.MAX_FPS + "/" + iFramesXSecond, 0, _g.getTextHeight() * 2, COLOR_WHITE);
+				_g.drawText("DeltaTime: " + lDeltaTime, Define.SIZEX2, _g.getTextHeight() * 2, COLOR_WHITE);
+				_g.drawText("SizeX: " + Define.SIZEX, 0, _g.getTextHeight() * 3,COLOR_WHITE);
+				_g.drawText("SizeY: " + Define.SIZEY, Define.SIZEX2, _g.getTextHeight() * 3, COLOR_WHITE);
+				_g.drawText("RealW: " + Settings.getInstance().getRealWidth(), 0, _g.getTextHeight() * 4, COLOR_WHITE);
+				_g.drawText("RealH: " + Settings.getInstance().getRealHeight(), Define.SIZEX2, _g.getTextHeight() * 4, COLOR_WHITE);
 				
 				_g.setColor(Main.COLOR_GREEN);
 				_g.fillRect(0, 0, Define.SCR_MIDLE/64, Define.SCR_MIDLE/64);
@@ -233,23 +234,24 @@ public class Main extends MyCanvas implements Runnable {
 				_g.setClip(0, 0, Define.SIZEX, Define.SIZEY);
 				_g.setTextSize((int) (24 * Settings.getInstance().getScale()));
 				_g.setAlpha(160);
-				_g.setColor(COLOR_BLACK);
+				_g.setColor(0x88000000);
 				_g.fillRect(0, 0, Define.SIZEX, _g.getTextHeight() * 10);
 				_g.setAlpha(255);
-				_g.drawText("TouchAction: " + MultiTouchHandler2.touchAction[0], 0, _g.getTextHeight(),COLOR_RED);
-				_g.drawText("Orin_X: " + MultiTouchHandler2.touchOriginX[0], 0, _g.getTextHeight()*2,COLOR_RED);
-				_g.drawText("Orin_Y: " + MultiTouchHandler2.touchOriginY[0], Define.SIZEX2,_g.getTextHeight()*2, COLOR_RED);
-				_g.drawText("Current_X: " + MultiTouchHandler2.touchX[0], 0, _g.getTextHeight() * 3, COLOR_RED);
-				_g.drawText("Current_Y: " + MultiTouchHandler2.touchY[0], Define.SIZEX2,_g.getTextHeight() * 3, COLOR_RED);
-				_g.drawText("Dist_X: " + MultiTouchHandler2.touchDistanceX[0], 0, _g.getTextHeight() * 4, COLOR_RED);
-				_g.drawText("Dist_Y: " + MultiTouchHandler2.touchDistanceY[0], Define.SIZEX2,_g.getTextHeight() * 4, COLOR_RED);
-				_g.drawText("Pointer 0: " + MultiTouchHandler2.touchAction[0], 0, _g.getTextHeight() * 5, COLOR_RED);
-				_g.drawText("Pointer 1: " + MultiTouchHandler2.touchAction[1], Define.SIZEX2,_g.getTextHeight() * 5, COLOR_RED);
-				_g.drawText("Pointer 2: " + MultiTouchHandler2.touchAction[2], 0, _g.getTextHeight() * 6, COLOR_RED);
-				_g.drawText("Pointer 3: " + MultiTouchHandler2.touchAction[3], Define.SIZEX2,_g.getTextHeight() * 6, COLOR_RED);
-				_g.drawText("Pointer 4: " + MultiTouchHandler2.touchAction[4], 0, _g.getTextHeight() * 7, COLOR_RED);
+				_g.drawText("TouchAction: " + MultiTouchHandler2.touchAction[0], 0, _g.getTextHeight(),COLOR_WHITE);
+				_g.drawText("Orin_X: " + MultiTouchHandler2.touchOriginX[0], 0, _g.getTextHeight()*2,COLOR_WHITE);
+				_g.drawText("Orin_Y: " + MultiTouchHandler2.touchOriginY[0], Define.SIZEX2,_g.getTextHeight()*2, COLOR_WHITE);
+				_g.drawText("Current_X: " + MultiTouchHandler2.touchX[0], 0, _g.getTextHeight() * 3, COLOR_WHITE);
+				_g.drawText("Current_Y: " + MultiTouchHandler2.touchY[0], Define.SIZEX2,_g.getTextHeight() * 3, COLOR_WHITE);
+				_g.drawText("Dist_X: " + MultiTouchHandler2.touchDistanceX[0], 0, _g.getTextHeight() * 4, COLOR_WHITE);
+				_g.drawText("Dist_Y: " + MultiTouchHandler2.touchDistanceY[0], Define.SIZEX2,_g.getTextHeight() * 4, COLOR_WHITE);
+				_g.drawText("Pointer 0: " + MultiTouchHandler2.touchAction[0], 0, _g.getTextHeight() * 5, COLOR_WHITE);
+				_g.drawText("Pointer 1: " + MultiTouchHandler2.touchAction[1], Define.SIZEX2,_g.getTextHeight() * 5, COLOR_WHITE);
+				_g.drawText("Pointer 2: " + MultiTouchHandler2.touchAction[2], 0, _g.getTextHeight() * 6, COLOR_WHITE);
+				_g.drawText("Pointer 3: " + MultiTouchHandler2.touchAction[3], Define.SIZEX2,_g.getTextHeight() * 6, COLOR_WHITE);
+				_g.drawText("Pointer 4: " + MultiTouchHandler2.touchAction[4], 0, _g.getTextHeight() * 7, COLOR_WHITE);
 
 			}
+			_g.setAlpha(255);
 		} else {
 			drawClock(_g);
 		}
@@ -371,8 +373,6 @@ public class Main extends MyCanvas implements Runnable {
 	public void stop() {
 		SndManager.stopMusic();
 		SndManager.flushSndManager();
-		//MainActivity.vActivity.finish();
-		// System.exit(0);
 	}
 
 	public static boolean isLoading;
@@ -421,7 +421,7 @@ public class Main extends MyCanvas implements Runnable {
 	private static long lClLastCurrentTime;
 	public static int iFrameClock;
 	public static boolean isClock = false;
-	public static Image Clock;
+	public static Image imgClock;
 	private static Thread tClockThread;
 	private static final String TEXT = "Loading...";
 
@@ -436,23 +436,23 @@ public class Main extends MyCanvas implements Runnable {
 			public void run() {
 				while (isClock) {
 					lClLastCurrentTime = System.currentTimeMillis();
-					updateClock(lDeltaTime);
+					repaint();
+					updateClock();
 				}
 			}
 		};
 		tClockThread.start();
 	}
 
-	private void updateClock(long _lDeltaTime) {
-		lClCurrentTime += System.currentTimeMillis() - lClLastCurrentTime;
-		lClLastCurrentTime = System.currentTimeMillis();
+	private void updateClock() {
+		long time = System.currentTimeMillis();
+		lClCurrentTime += time - lClLastCurrentTime;
+		lClLastCurrentTime = time;
 
 		if (lClCurrentTime > SPEED_TIME_ANIMATION) {
 			lClCurrentTime = 0;
 			iFrameClock = iFrameClock + 1 == FRAMES ?0:iFrameClock + 1;
 			repaint();
-		} else {
-			lClCurrentTime += _lDeltaTime;
 		}
 	}
 
@@ -467,24 +467,27 @@ public class Main extends MyCanvas implements Runnable {
 	private void drawClock(Graphics _g) {
 
 		if (isClock) {
-			if (Clock == null){
+			if (imgClock == null){
 				try{
-				Clock = Image.createImage("/clock.png");
+				imgClock = Image.createImage("/clock.png");
 				}catch(Exception e){
 					Log.e("error", "No se encuentra la imagen del reloj de carga");
 				}
 			}
-			if(Clock != null){
-			_g.setClip(Define.SIZEX2 - ((Clock.getWidth() / FRAMES) >> 1),
-					Define.SIZEY2 - Clock.getHeight(),
-					Define.SIZEX2 - ((Clock.getWidth() / FRAMES) >> 1)
-							+ (Clock.getWidth() / FRAMES), Define.SIZEY2
-							- Clock.getHeight() + Clock.getHeight());
+			if(imgClock != null){
+			_g.setColor(COLOR_BLACK);
+			_g.setClip(0, 0, Define.SIZEX, Define.SIZEY);
+			_g.fillRect(0, Define.SIZEY2 - imgClock.getHeight(), Define.SIZEX, imgClock.getHeight());
+			_g.setClip(
+					Define.SIZEX2 - ((imgClock.getWidth() / FRAMES) >> 1),
+					Define.SIZEY2 - imgClock.getHeight(),
+					imgClock.getWidth() / FRAMES,
+					imgClock.getHeight());
 			_g.drawImage(
-					Clock,
-					Define.SIZEX2 - ((Clock.getWidth() / FRAMES) >> 1)
-							- ((Clock.getWidth() / FRAMES) * iFrameClock),
-					Define.SIZEY2 - Clock.getHeight(), 0);
+					imgClock,
+					Define.SIZEX2 - ((imgClock.getWidth() / FRAMES) >> 1)
+							- ((imgClock.getWidth() / FRAMES) * iFrameClock),
+					Define.SIZEY2 - imgClock.getHeight(), 0);
 
 			_g.setClip(0, 0, Define.SIZEX, Define.SIZEY);
 		}

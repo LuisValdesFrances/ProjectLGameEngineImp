@@ -21,12 +21,10 @@ import android.widget.RelativeLayout;
 
 public class MainActivity extends Activity{
 	
-	Thread vGameThread;
-	public static AssetManager vAssets;
-
-	public static Main vMain;
-	
-	Thread ms_RenderView;
+	private Thread vGameThread;
+	private AssetManager vAssets;
+	private Main vMain;
+	private Thread renderView;
 	
 	
 	
@@ -44,52 +42,26 @@ public class MainActivity extends Activity{
 		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
 		WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		
-		Log.i("INFO", "BETA_ENGINE START");
+		Log.i("Debug", "lGameEngine INIT");
 		Settings.getInstance().init(this);
 		vAssets = getAssets();
 		vMain = new Main(this);
 		
-		
+		// Rescale surface view to layout size:
 		RelativeLayout layout = new RelativeLayout(this);
-
-			// Rescale surface view to layout size:
-			DisplayMetrics dm = new DisplayMetrics();
-
-			getWindowManager().getDefaultDisplay()
-					.getMetrics(dm);
-			int real_width = dm.widthPixels;
-			int real_height = dm.heightPixels;
-
-			if (Settings.getInstance().getScreenOrientation() == Settings.ORIENTATION_LANDSCAPE) {
-				real_width = dm.widthPixels > dm.heightPixels ? dm.widthPixels:dm.heightPixels;
-				real_height = dm.heightPixels > dm.widthPixels ? dm.widthPixels:dm.heightPixels;
-			} else if (Settings.getInstance().getScreenOrientation() == Settings.ORIENTATION_PORTRAIT) {
-				real_width = dm.widthPixels > dm.heightPixels ? dm.heightPixels:dm.widthPixels;
-				real_height = dm.heightPixels > dm.widthPixels ? dm.heightPixels:dm.widthPixels;
-			} else {
-				real_width = dm.widthPixels;
-				real_height = dm.heightPixels;
-			}
-
-			layout.addView(vMain, real_width, real_height);
-		
-		//setContentView(vMain);
+		layout.addView(vMain, Settings.getInstance().getRealWidth(), Settings.getInstance().getRealHeight());
 		setContentView(layout);
-		ms_RenderView = new Thread(new Main(this));
+		//setContentView(vMain);
 		
-		
-		//Init engine
-		Log.i("INFO", "Init engine");
+		Log.i("Debug", "lGameEngine START");
 		vGameThread = new Thread(vMain);
 		vGameThread.start();
-		
-		
-		
-		
 		
 		//Screen not sleep:
 		ms_PowerManager = (PowerManager) getSystemService(Context.POWER_SERVICE);
 		ms_WakeLock = ms_PowerManager.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK, "My Tag");
+		
+		//this.finish();
 		
 	}
 	

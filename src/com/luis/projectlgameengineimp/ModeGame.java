@@ -2,18 +2,17 @@ package com.luis.projectlgameengineimp;
 
 import android.util.Log;
 
-import com.luis.lgameengine.gameutils.GameCamera;
-import com.luis.lgameengine.gameutils.GfxEffects;
 import com.luis.lgameengine.gameutils.Settings;
-import com.luis.lgameengine.gameutils.TileManager;
-import com.luis.lgameengine.gameutils.WorldConver;
 import com.luis.lgameengine.gameutils.controls.GameControl;
 import com.luis.lgameengine.gameutils.controls.TouchPadControl;
+import com.luis.lgameengine.gameutils.gameworld.GameCamera;
+import com.luis.lgameengine.gameutils.gameworld.RigidBody;
+import com.luis.lgameengine.gameutils.gameworld.TileManager;
+import com.luis.lgameengine.gameutils.gameworld.WorldConver;
 import com.luis.lgameengine.implementation.graphics.Graphics;
 import com.luis.lgameengine.implementation.graphics.Image;
 import com.luis.lgameengine.implementation.input.MultiTouchHandler2;
 import com.luis.projectlgameengineimp.objects.Player;
-import com.luis.projectlgameengineimp.objects.RigidBody;
 
 /**
  * 
@@ -25,6 +24,7 @@ public class ModeGame {
 	 */
 	public static final int PERF_BUTTON_W = Define.SIZEX12;
 	public static final int PERF_BUTTON_H = Define.SIZEY12;
+	public static boolean isBoundColToScreen = false;
 	public static boolean isDrawTileFast = false;
 	public static boolean isDoubleBuffer = false;
 	
@@ -78,11 +78,11 @@ public class ModeGame {
 					GfxManager.vImgPlayer.getHeight(),
 					0, 
 					-Define.SIZEY,//fWorldHeight/2, 
-					0, RigidBody.transformUnityValue(TILE_SIZE, 2.5f), 0);
+					0, RigidBody.transformUnityValue(0.96f, TILE_SIZE, 2.5f), 0);
 			
-			RigidBody.gravityForce = 3f;//RigidBody.transformUnityValue(TILE_SIZE, 3f);
-			vPlayer.weight = RigidBody.transformUnityValue(TILE_SIZE, 4.8f);
-			vPlayer.fForceJump = RigidBody.transformUnityValue(TILE_SIZE, 9f);
+			vPlayer.gravityForce = 3f;//RigidBody.transformUnityValue(TILE_SIZE, 3f);
+			vPlayer.weight = RigidBody.transformUnityValue(0.96f, TILE_SIZE, 4.8f);
+			vPlayer.fForceJump = RigidBody.transformUnityValue(0.96f, TILE_SIZE, 9f);
 			vGameCamera= new GameCamera(vPlayer.getPosX(), vPlayer.getPosY(), fWorldWidth, fWorldHeight, Define.FRAME_SPEED_DEC);
 			vBgManager = new BGManager();
 			
@@ -177,7 +177,7 @@ public class ModeGame {
 			//Adornos fondo
 			
 			vImgTilesBuffer.getGraphics().setClip(0, 0, Define.SIZEX, Define.SIZEY);
-			vImgTilesBuffer.getGraphics().setColor(Main.COLOR_RED);
+			vImgTilesBuffer.getGraphics().setColor(0xffCED8F6);
 			vImgTilesBuffer.getGraphics().fillRect(0, 0, Define.SIZEX, Define.SIZEY);
 			vBgManager.draw(vImgTilesBuffer.getGraphics());
 			vTileManager.drawLayer(vImgTilesBuffer.getGraphics(), 
@@ -288,10 +288,10 @@ public class ModeGame {
 				isDrawTileFast = !isDrawTileFast;
 				break;
 			case 1:
-				RigidBody.isBoundColToScreen = !RigidBody.isBoundColToScreen;
+				isBoundColToScreen = !isBoundColToScreen;
 				break;
 			case 2:
-				RigidBody.isFastColision = !RigidBody.isFastColision;
+				
 				break;
 				
 			}
@@ -320,9 +320,9 @@ public class ModeGame {
 		
 		_g.drawText(isDrawTileFast ? "TRUE" : "FALSE", Define.SIZEX2, secH * 1 - secH/2, isDrawTileFast ? Main.COLOR_GREEN : Main.COLOR_RED);
 		
-		_g.drawText(RigidBody.isBoundColToScreen ? "TRUE" : "FALSE", Define.SIZEX2, secH * 2 - secH/2, RigidBody.isBoundColToScreen ?Main.COLOR_GREEN : Main.COLOR_RED);
+		_g.drawText(isBoundColToScreen ? "TRUE" : "FALSE", Define.SIZEX2, secH * 2 - secH/2, isBoundColToScreen ?Main.COLOR_GREEN : Main.COLOR_RED);
 		
-		_g.drawText(RigidBody.isFastColision ? "TRUE" : "FALSE", Define.SIZEX2, secH * 3 - secH/2, RigidBody.isFastColision ?Main.COLOR_GREEN : Main.COLOR_RED);
+		_g.drawText("FREE", Define.SIZEX2, secH * 3 - secH/2, Main.COLOR_RED);
 		
 		_g.setColor(0xff000000);
 		_g.fillRect(0, secH * 3, Define.SIZEX, secH * 4);

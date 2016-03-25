@@ -1,8 +1,8 @@
 package com.luis.projectlgameengineimp.objects;
 
 
-import com.luis.lgameengine.gameutils.WorldConver;
 import com.luis.lgameengine.gameutils.controls.GameControl;
+import com.luis.lgameengine.gameutils.gameworld.WorldConver;
 import com.luis.lgameengine.implementation.graphics.Graphics;
 import com.luis.lgameengine.implementation.graphics.Image;
 import com.luis.projectlgameengineimp.GfxManager;

@@ -2,12 +2,10 @@ package com.luis.projectlgameengineimp;
 
 import android.util.Log;
 
-import com.luis.lgameengine.gameutils.Font;
-import com.luis.lgameengine.gameutils.GfxEffects;
 import com.luis.lgameengine.gameutils.MenuManager;
 import com.luis.lgameengine.gameutils.Settings;
-import com.luis.lgameengine.gameutils.SpriteImage;
-import com.luis.lgameengine.gameutils.TextManager;
+import com.luis.lgameengine.gameutils.fonts.Font;
+import com.luis.lgameengine.gameutils.fonts.TextManager;
 import com.luis.lgameengine.implementation.fileio.FileIO;
 import com.luis.lgameengine.implementation.graphics.Graphics;
 import com.luis.lgameengine.implementation.graphics.Image;
@@ -38,7 +36,7 @@ public class ModeMenu {
 			iStateLogo = ST_LOGO_1;
 			iLevelAlpha = 255;
 			lInitialLogoTime = System.currentTimeMillis();
-			Font.initializes(GfxManager.vImgFontSmall, GfxManager.vImgFontMedium, GfxManager.vImgFontBig);
+			Font.init(GfxManager.vImgFontSmall, GfxManager.vImgFontMedium, GfxManager.vImgFontBig);
 //			if(FileIO.isData()){
 //				
 //			}else{
@@ -349,7 +347,7 @@ public class ModeMenu {
 		switch (Main.iState) {
 		case Define.ST_MENU_LOGO:
 			_g.setClip(0, 0, Define.SIZEX, Define.SIZEY);
-			_g.setColor(Main.COLOR_RED);
+			_g.setColor(Main.COLOR_GREEN);
 			_g.fillRect(0, 0, Define.SIZEX, Define.SIZEY);
 			//_g.drawImage(GfxManager.vImgLogo, Define.SIZEX2, Define.SIZEY2, Graphics.VCENTER|Graphics.HCENTER);
 			//_g.setAlpha(255);
@@ -358,27 +356,29 @@ public class ModeMenu {
 		case Define.ST_MENU_ASK_LANGUAGE:
 			_g.setClip(0, 0, Define.SIZEX, Define.SIZEY);
 			//_g.drawImage(GfxManager.vImgBackground, 0, 0, 0);
-			_g.setColor(Main.COLOR_RED);
+			_g.setColor(Main.COLOR_BLACK);
 			_g.fillRect(0, 0, Define.SIZEX, Define.SIZEY);
-			MenuManager.drawButtonsAndTextX(_g, MenuManager.BUTTON_CENTER,NUMBER_OPTS_LANGUAGE, RscManager.TXT_ENGLISH, Font.FONT_BIG,
-					iOptionSelect, GfxManager.vImgSoftkeys,GfxManager.vImgMenuButtons, GfxManager.vImgMenuArrows, RscManager.sAllTexts, Main.iFrame);
+			MenuManager.drawButtonsAndTextX(_g, MenuManager.BUTTON_CENTER,NUMBER_OPTS_LANGUAGE, RscManager.TXT_ENGLISH, 
+					RscManager.sAllTexts, Font.FONT_BIG,
+					iOptionSelect, GfxManager.vImgSoftkeys,GfxManager.vImgMenuButtons, GfxManager.vImgMenuArrows, Main.iFrame);
 			Main.drawSoftkey(_g, Main.SOFT_OK, false);
 			break;
 			
 		case Define.ST_MENU_ASK_SOUND:
 			_g.setClip(0, 0, Define.SIZEX, Define.SIZEY);
 			//_g.drawImage(GfxManager.vImgBackground, 0, 0, 0);
-			_g.setColor(Main.COLOR_RED);
+			_g.setColor(Main.COLOR_BLACK);
 			_g.fillRect(0, 0, Define.SIZEX, Define.SIZEY);
-			MenuManager.drawButtonsAndTextX(_g, MenuManager.BUTTON_CENTER,NUMBER_OPTS_SOUND, RscManager.TXT_SOUND_ON, Font.FONT_BIG,iOptionSelect, 
-					GfxManager.vImgSoftkeys,GfxManager.vImgMenuButtons, GfxManager.vImgMenuArrows, RscManager.sAllTexts, Main.iFrame);
+			MenuManager.drawButtonsAndTextX(_g, MenuManager.BUTTON_CENTER,NUMBER_OPTS_SOUND, RscManager.TXT_SOUND_ON, 
+					RscManager.sAllTexts, Font.FONT_BIG,iOptionSelect, 
+					GfxManager.vImgSoftkeys,GfxManager.vImgMenuButtons, GfxManager.vImgMenuArrows, Main.iFrame);
 			Main.drawSoftkey(_g, Main.SOFT_OK, false);
 			break;
 		
 		case Define.ST_MENU_MAIN:
 			_g.setClip(0, 0, Define.SIZEX, Define.SIZEY);
 			//_g.drawImage(GfxManager.vImgBackground, 0, 0, 0);
-			_g.setColor(Main.COLOR_BLACK);
+			_g.setColor(Main.COLOR_RED);
 			_g.fillRect(0, 0, Define.SIZEX, Define.SIZEY);
 			MenuManager.drawButtonsAndTextY(_g,NUMBER_OPTS_MAIN_MENU, RscManager.TXT_PLAY, RscManager.sAllTexts,
 				    Font.FONT_BIG, iOptionSelect, null, GfxManager.vImgMenuButtons, Main.iFrame);
@@ -387,15 +387,17 @@ public class ModeMenu {
 		case Define.ST_MENU_OPTIONS:
 			_g.setClip(0, 0, Define.SIZEX, Define.SIZEY);
 			//_g.drawImage(GfxManager.vImgBackground, 0, 0, 0);
-			_g.setColor(Main.COLOR_BLACK);
+			_g.setColor(Main.COLOR_GREEN);
 			_g.fillRect(0, 0, Define.SIZEX, Define.SIZEY);
 			
-			MenuManager.drawButtonsAndTextX(_g, MenuManager.BUTTON_UP,NUMBER_OPTS_LANGUAGE, RscManager.TXT_ENGLISH, Font.FONT_BIG, 
+			MenuManager.drawButtonsAndTextX(_g, MenuManager.BUTTON_UP,NUMBER_OPTS_LANGUAGE, RscManager.TXT_ENGLISH, 
+					RscManager.sAllTexts, Font.FONT_BIG, 
 					iLanguageSelect, 
-					GfxManager.vImgSoftkeys,GfxManager.vImgMenuButtons, GfxManager.vImgMenuArrows,RscManager.sAllTexts, Main.iFrame);
-			MenuManager.drawButtonsAndTextX(_g, MenuManager.BUTTON_CENTER,NUMBER_OPTS_SOUND, RscManager.TXT_SOUND_ON, Font.FONT_BIG,
+					GfxManager.vImgSoftkeys,GfxManager.vImgMenuButtons, GfxManager.vImgMenuArrows, Main.iFrame);
+			MenuManager.drawButtonsAndTextX(_g, MenuManager.BUTTON_CENTER,NUMBER_OPTS_SOUND, RscManager.TXT_SOUND_ON, 
+					RscManager.sAllTexts, Font.FONT_BIG,
 					iSoundSelect, 
-					GfxManager.vImgSoftkeys,GfxManager.vImgMenuButtons, GfxManager.vImgMenuArrows, RscManager.sAllTexts, Main.iFrame);
+					GfxManager.vImgSoftkeys,GfxManager.vImgMenuButtons, GfxManager.vImgMenuArrows, Main.iFrame);
 			Main.drawSoftkey(_g, Main.SOFT_OK, false);
 			break;
 			
@@ -423,7 +425,7 @@ public class ModeMenu {
 					Define.SIZEX - Define.SCR_MIDLE/32, Define.SIZEY - Define.SCR_MIDLE/32);
 			_g.setAlpha(255);
        	 
-			TextManager.drawCenterexTextInPosXY(_g, Font.FONT_MEDIUM, 
+			TextManager.draw(_g, Font.FONT_MEDIUM, 
 					RscManager.sAllTexts[Main.iState==Define.ST_MENU_HELP? RscManager.TXT_HELP_DESCRIP:RscManager.TXT_ABOUT_DESCRIP], 
         			Define.SIZEX2, Define.SIZEY2, Define.SIZEX - Define.SIZEX32, TextManager.ALING_CENTER, -1);
 			
@@ -437,9 +439,10 @@ public class ModeMenu {
 			_g.setColor(Main.COLOR_BLACK);
 			_g.fillRect(0, 0, Define.SIZEX, Define.SIZEY);
         	
-        	MenuManager.drawButtonsAndTextX(_g, MenuManager.BUTTON_CENTER,2, RscManager.TXT_NO, Font.FONT_BIG,
+        	MenuManager.drawButtonsAndTextX(_g, MenuManager.BUTTON_CENTER,2, RscManager.TXT_NO, 
+        			RscManager.sAllTexts, Font.FONT_BIG,
 					iOptionSelect, 
-					GfxManager.vImgSoftkeys,GfxManager.vImgMenuButtons, GfxManager.vImgMenuArrows, RscManager.sAllTexts, Main.iFrame);
+					GfxManager.vImgSoftkeys,GfxManager.vImgMenuButtons, GfxManager.vImgMenuArrows, Main.iFrame);
         	
         	_g.setAlpha(120);
         	_g.setColor(Main.COLOR_LILA_BG);
@@ -449,7 +452,7 @@ public class ModeMenu {
                  	     (Font.getFontHeight(Font.FONT_MEDIUM)));
         	_g.setAlpha(255);
         	
-        	TextManager.drawCenterexTextInPosXY(_g, Font.FONT_MEDIUM, RscManager.sAllTexts[RscManager.TXT_WANT_EXIT_GAME], 
+        	TextManager.draw(_g, Font.FONT_MEDIUM, RscManager.sAllTexts[RscManager.TXT_WANT_EXIT_GAME], 
         			Define.SIZEX2,(Font.getFontHeight(Font.FONT_BIG)<<2),Define.SIZEX, TextManager.ALING_CENTER, -1);
         	Main.drawSoftkey(_g, Main.SOFT_OK, false);
         	break;

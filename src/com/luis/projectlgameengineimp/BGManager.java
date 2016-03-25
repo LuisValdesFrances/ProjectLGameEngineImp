@@ -1,6 +1,5 @@
 package com.luis.projectlgameengineimp;
 
-import com.luis.lgameengine.gameutils.WorldConver;
 import com.luis.lgameengine.implementation.graphics.Graphics;
 
 public class BGManager {

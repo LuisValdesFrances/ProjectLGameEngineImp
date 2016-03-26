@@ -1,0 +1,2 @@
+-Retocar TouchControl para el pad solo responda cuando se pulse dentro de su area y no tenga el index 0 por preferencia
+-Algunas de las capas del mapa ha de ser de coliders: normales, no solo por abajo y los diagonales

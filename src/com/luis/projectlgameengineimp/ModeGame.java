@@ -33,7 +33,7 @@ public class ModeGame {
 	 */
 	public static boolean isGamePaused;
 	
-	public static final int TILE_SET_SIZE[] = {64,96,128,128};
+	public static final int TILE_SET_SIZE[] = {8,16,32,64};
 	public static int TILE_SIZE;
 	public static float fWorldWidth;
 	public static float fWorldHeight;
@@ -56,14 +56,14 @@ public class ModeGame {
 		case Define.ST_GAME_INIT:
 			//Init world dimensions
 			TILE_SIZE = TILE_SET_SIZE[Settings.getInstance().getResolution()];
-			fWorldWidth = TILE_SIZE * 20;
-			fWorldHeight = TILE_SIZE * 8;
+			fWorldWidth = TILE_SIZE * 40;
+			fWorldHeight = TILE_SIZE * 20;
 			
 			vWorldConver = new WorldConver(Define.SIZEX, Define.SIZEY, 0, 0, 0, 0, fWorldWidth, fWorldHeight);
 			
 			vTileManager = new TileManager("/bin/levels/level_1.map");
 			vTileManager.idConversionData(
-					new Image[] {GfxManager.vImgGameTilesL0, GfxManager.vImgGameTilesL1, GfxManager.vImgGameTilesL2, GfxManager.vImgGameTilesL1});
+					new Image[] {GfxManager.vImgGameTilesL0, GfxManager.vImgGameTilesL1, GfxManager.vImgGameTilesL2});
 			
 			
 			vGameControl = new TouchPadControl(
@@ -181,14 +181,14 @@ public class ModeGame {
 			vImgTilesBuffer.getGraphics().fillRect(0, 0, Define.SIZEX, Define.SIZEY);
 			vBgManager.draw(vImgTilesBuffer.getGraphics());
 			vTileManager.drawLayer(vImgTilesBuffer.getGraphics(), 
-					new Image[] {GfxManager.vImgGameTilesL0, GfxManager.vImgGameTilesL1, GfxManager.vImgGameTilesL2, GfxManager.vImgGameTilesL1}, 
+					new Image[] {GfxManager.vImgGameTilesL0, GfxManager.vImgGameTilesL1, GfxManager.vImgGameTilesL2}, 
 					0,
 					vWorldConver, 
 					vGameCamera.getPosX(), vGameCamera.getPosY(), 0, TILE_SIZE>>1, isDrawTileFast,
 					Graphics.BOTTOM | Graphics.HCENTER);
 			
 			vTileManager.drawLayer(vImgTilesBuffer.getGraphics(), 
-					new Image[] {GfxManager.vImgGameTilesL0, GfxManager.vImgGameTilesL1, GfxManager.vImgGameTilesL2, GfxManager.vImgGameTilesL1}, 
+					new Image[] {GfxManager.vImgGameTilesL0, GfxManager.vImgGameTilesL1, GfxManager.vImgGameTilesL2}, 
 					2,
 					vWorldConver, 
 					vGameCamera.getPosX(), vGameCamera.getPosY(), 0, 0, isDrawTileFast,
@@ -199,7 +199,7 @@ public class ModeGame {
 			
 			//Adornos 1º plano
 			vTileManager.drawLayer(vImgTilesBuffer.getGraphics(), 
-					new Image[] {GfxManager.vImgGameTilesL0, GfxManager.vImgGameTilesL1, GfxManager.vImgGameTilesL2, GfxManager.vImgGameTilesL1}, 
+					new Image[] {GfxManager.vImgGameTilesL0, GfxManager.vImgGameTilesL1, GfxManager.vImgGameTilesL2}, 
 					1,
 					vWorldConver, 
 					vGameCamera.getPosX(), vGameCamera.getPosY(), 0, TILE_SIZE>>1, isDrawTileFast,

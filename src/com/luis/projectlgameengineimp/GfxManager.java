@@ -27,7 +27,11 @@ public class GfxManager {
 	   public static Image vImgGameTilesL1;
 	   public static Image vImgGameTilesL2;
 	   public static Image vImgGameBG;
-	   public static Image vImgPlayer;
+	   
+	   public static Image imgPlayerIdle;
+	   public static Image imgPlayerRun;
+	   public static Image imgPlayerAtack;
+	   public static Image imgPlayerJump;
 	   //bg
 	   public static Image[] vImgBGs;
 
@@ -67,7 +71,10 @@ public class GfxManager {
 	               vImgGameTilesL0 = Image.createImage("/tile_matrix_bg.png");
 	               vImgGameTilesL1 = Image.createImage("/tile_matrix_bg2.png");
 	               vImgGameTilesL2 = Image.createImage("/tile_matrix.png");
-	               vImgPlayer = Image.createImage("/player.png");
+	               imgPlayerIdle = Image.createImage("/player_idle.png");
+	               imgPlayerRun = Image.createImage("/player_run.png");
+	               imgPlayerAtack = Image.createImage("/player_atack.png");
+	               imgPlayerJump = Image.createImage("/player_jump.png");
 	               //bg
 	               vImgBGs = new Image[5];
 	               for(int i = 0; i < vImgBGs.length; i++){

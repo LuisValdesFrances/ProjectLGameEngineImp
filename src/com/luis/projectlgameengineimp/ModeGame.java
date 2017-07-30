@@ -24,7 +24,7 @@ public class ModeGame {
 	 */
 	public static final int PERF_BUTTON_W = Define.SIZEX12;
 	public static final int PERF_BUTTON_H = Define.SIZEY12;
-	public static boolean isBoundColToScreen = false;
+	public static int systemColision = 0;
 	public static boolean isDrawTileFast = false;
 	public static boolean isDoubleBuffer = false;
 	
@@ -74,11 +74,13 @@ public class ModeGame {
 		    		MultiTouchHandler2.ACTION_DOWN, MultiTouchHandler2.ACTION_DRAG, MultiTouchHandler2.ACTION_UP);
 			vGameControl.reset();
 			vPlayer = new Player(
-					GfxManager.vImgPlayer.getWidth(),
-					GfxManager.vImgPlayer.getHeight(),
-					0, 
+					(int) (TILE_SIZE),//(int)((GfxManager.imgPlayerIdle.getWidth()/Player.IDLE_FRAMES) * 0.30f),
+					(int)(TILE_SIZE*2f),
+					Define.SIZEX8, 
 					-Define.SIZEY,//fWorldHeight/2, 
-					0, RigidBody.transformUnityValue(0.96f, TILE_SIZE, 2.5f), 0);
+					0, 
+					RigidBody.transformUnityValue(0.96f, TILE_SIZE, 3f), 
+					0);
 			
 			vPlayer.gravityForce = 3f;//RigidBody.transformUnityValue(TILE_SIZE, 3f);
 			vPlayer.weight = RigidBody.transformUnityValue(0.96f, TILE_SIZE, 4.8f);
@@ -264,16 +266,16 @@ public class ModeGame {
 	
 	private static boolean isFocusPerformanceMenu(){
 		if(
-				(MultiTouchHandler2.touchAction[0] == MultiTouchHandler2.ACTION_DOWN || MultiTouchHandler2.touchAction[0] == MultiTouchHandler2.ACTION_DRAG) && 
-				UserInput.compareTouch(0, Define.SIZEY - PERF_BUTTON_H, PERF_BUTTON_W, Define.SIZEY, 0)){
+			(MultiTouchHandler2.touchAction[0] == MultiTouchHandler2.ACTION_DOWN || MultiTouchHandler2.touchAction[0] == MultiTouchHandler2.ACTION_DRAG) && 
+			UserInput.compareTouch(0, Define.SIZEY - PERF_BUTTON_H, PERF_BUTTON_W, Define.SIZEY, 0)){
 			return true;
 		}
 		return false;
 	}
 	private static boolean isGoToPerformanceMenu(){
 		if(
-				MultiTouchHandler2.touchAction[0] == MultiTouchHandler2.ACTION_UP && 
-				UserInput.compareTouch(0, Define.SIZEY - PERF_BUTTON_H, PERF_BUTTON_W, Define.SIZEY, 0)){
+			MultiTouchHandler2.touchAction[0] == MultiTouchHandler2.ACTION_UP && 
+			UserInput.compareTouch(0, Define.SIZEY - PERF_BUTTON_H, PERF_BUTTON_W, Define.SIZEY, 0)){
 			return true;
 		}
 		return false;
@@ -288,7 +290,8 @@ public class ModeGame {
 				isDrawTileFast = !isDrawTileFast;
 				break;
 			case 1:
-				isBoundColToScreen = !isBoundColToScreen;
+				if(systemColision == 0)systemColision = 1;
+				else systemColision = 0;
 				break;
 			case 2:
 				
@@ -305,7 +308,7 @@ public class ModeGame {
 		int spaceY = Define.SIZEY - PERF_BUTTON_H;
 		int secH = spaceY / numOpt;
 		
-		String[] nameOpt = {"DrawTileFast : ", "isBoundColtoScreen : ", "isFastColision : "};
+		String[] nameOpt = {"DrawTileFast : ", "colisionType : ", "-"};
 		for(int i = 0; i < numOpt; i++){
 			if(Main.isModule(i))
 				_g.setColor(0xff151515);
@@ -320,7 +323,7 @@ public class ModeGame {
 		
 		_g.drawText(isDrawTileFast ? "TRUE" : "FALSE", Define.SIZEX2, secH * 1 - secH/2, isDrawTileFast ? Main.COLOR_GREEN : Main.COLOR_RED);
 		
-		_g.drawText(isBoundColToScreen ? "TRUE" : "FALSE", Define.SIZEX2, secH * 2 - secH/2, isBoundColToScreen ?Main.COLOR_GREEN : Main.COLOR_RED);
+		_g.drawText(systemColision == 0? "0" : "1", Define.SIZEX2, secH * 2 - secH/2, systemColision == 0 ?Main.COLOR_GREEN : Main.COLOR_RED);
 		
 		_g.drawText("FREE", Define.SIZEX2, secH * 3 - secH/2, Main.COLOR_RED);
 		

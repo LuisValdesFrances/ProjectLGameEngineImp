@@ -1,6 +1,7 @@
 package com.luis.projectlgameengineimp.objects;
 
 import com.luis.lgameengine.gameutils.gameworld.RigidBody;
+import com.luis.lgameengine.gameutils.gameworld.SpriteImage;
 import com.luis.lgameengine.gameutils.gameworld.WorldConver;
 import com.luis.lgameengine.implementation.graphics.Graphics;
 import com.luis.lgameengine.implementation.graphics.Image;
@@ -40,12 +41,13 @@ public abstract class GameObject extends RigidBody{
     }
 
     public void update(float _fDeltaTime, int[][] _iTilesMatrixID, float _fTileW, float _fTileH) {
-    	super.runPhysics (_fDeltaTime, _iTilesMatrixID, _fTileW, _fTileH, Define.SIZEX, Define.SIZEY, ModeGame.isBoundColToScreen);
+    	super.runPhysics (_fDeltaTime, _iTilesMatrixID, _fTileW, _fTileH, Define.SIZEX, Define.SIZEY, ModeGame.systemColision);
     }
     
     public void draw(
-    		Graphics _g, Image _vImage, WorldConver _vWorldConver, float _fCameraX, float _fCameraY, 
-    		int _iModAnimX, int _iModAnimY, int _iModDrawX, int _iModDrawY, 
+    		Graphics _g, Image _vImage, SpriteImage spriteImage, WorldConver _vWorldConver, float _fCameraX, float _fCameraY, 
+    		int _iModAnimX, int _iModAnimY, int _iModDrawX, int _iModDrawY,
+    		boolean flip,
     		int _iAnchor) {
     	
     	int extraX = 0;
@@ -63,20 +65,15 @@ public abstract class GameObject extends RigidBody{
 			extraX = (int) getWidth() / 2;
 		}
 		
-		/*
-    	 * Como los tiles se pintan con anclaje arriba-izquierda, pero se procesan en la logica abajo centro
-    	 * es necesario desplazar todos los objetos para que coincidan en la posicion real de los tiles 
-    	 */
-    	int adjustTileX = ModeGame.TILE_SIZE/2;
-    	int adjustTileY = ModeGame.TILE_SIZE;
-    	
-    	int posX = _vWorldConver.getConversionDrawX(_fCameraX, getPosX()) + adjustTileX;
-        int posY = _vWorldConver.getConversionDrawY(_fCameraY, getPosY()) + adjustTileY;
-        
-        _g.setClip(posX - extraX + _iModDrawX, posY - extraY + _iModDrawY, (int) getWidth(), (int) getHeight());
-        //_g.setClip(0, 0, Define.SIZEX, Define.SIZEY);
-        
-        _g.drawImage(_vImage, posX - _iModAnimX + _iModDrawX, posY - _iModAnimY + _iModDrawY, _iAnchor);
+		int posX = _vWorldConver.getConversionDrawX(_fCameraX, getPosX());
+        int posY = _vWorldConver.getConversionDrawY(_fCameraY, getPosY());
+        if(spriteImage != null)
+        	spriteImage.drawFrame(_g, _vImage, posX + _iModDrawX, posY + _iModDrawY, flip, _iAnchor);
+        else{
+        	_g.setClip(posX - extraX + _iModDrawX, posY - extraY + _iModDrawY, (int) getWidth(), (int) getHeight());
+            //_g.setClip(0, 0, Define.SIZEX, Define.SIZEY);
+            _g.drawImage(_vImage, posX - _iModAnimX + _iModDrawX, posY - _iModAnimY + _iModDrawY, _iAnchor);
+        }
      }
     
     

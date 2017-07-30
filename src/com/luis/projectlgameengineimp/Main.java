@@ -1,24 +1,17 @@
 package com.luis.projectlgameengineimp;
 
 
-import java.util.List;
 import java.util.Random;
 
 /**
- * 
  * @author Luis Valdes Frances
  */
 
 import android.app.Activity;
-import android.content.Context;
-import android.text.method.MetaKeyKeyListener;
 import android.util.Log;
-import android.view.MotionEvent;
 
-import com.luis.lgameengine.gameutils.MenuManager;
 import com.luis.lgameengine.gameutils.Settings;
 
-import com.luis.lgameengine.implementation.fileio.FileIO;
 import com.luis.lgameengine.implementation.graphics.Graphics;
 import com.luis.lgameengine.implementation.graphics.Image;
 import com.luis.lgameengine.implementation.graphics.MyCanvas;
@@ -156,7 +149,7 @@ public class Main extends MyCanvas implements Runnable {
 			            }
 			            break;
 		         }
-
+				MultiTouchHandler2.updateTouch();
 				repaint();
 
 				while (System.currentTimeMillis() - lInitTime < MINIM_DURATION_FRAME)
@@ -249,6 +242,7 @@ public class Main extends MyCanvas implements Runnable {
 				_g.drawText("Pointer 2: " + MultiTouchHandler2.touchAction[2], 0, _g.getTextHeight() * 6, COLOR_WHITE);
 				_g.drawText("Pointer 3: " + MultiTouchHandler2.touchAction[3], Define.SIZEX2,_g.getTextHeight() * 6, COLOR_WHITE);
 				_g.drawText("Pointer 4: " + MultiTouchHandler2.touchAction[4], 0, _g.getTextHeight() * 7, COLOR_WHITE);
+				_g.drawText("TF 0: " + MultiTouchHandler2.touchFrames[0], 0, _g.getTextHeight() * 8, COLOR_WHITE);
 
 			}
 			_g.setAlpha(255);

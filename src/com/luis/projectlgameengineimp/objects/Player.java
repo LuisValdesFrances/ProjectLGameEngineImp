@@ -4,6 +4,8 @@ package com.luis.projectlgameengineimp.objects;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.util.Log;
+
 import com.luis.lgameengine.gameutils.controls.GameControl;
 import com.luis.lgameengine.gameutils.gameworld.SpriteImage;
 import com.luis.lgameengine.gameutils.gameworld.WorldConver;
@@ -18,6 +20,9 @@ public class Player extends GameObject{
 	private int animation;
 	private boolean flip;
 	private boolean fall;
+	private static final float HIGHT_FALL = 650; 
+	private float fallForce;
+	
 	public static final int ANIM_IDLE = 0;
 	public static final int ANIM_RUN = 1;
 	public static final int ANIM_ATACK = 2;
@@ -72,6 +77,8 @@ public class Player extends GameObject{
 	}
 	
 	public void update(float _fDeltaTime, int[][] _iTilesMatrixID, float _fTileW, float _fTileH, GameControl _vGameControl) {
+		//Guardo la fuerza de caida
+		fallForce = getSpeedY();
 		super.update(_fDeltaTime, _iTilesMatrixID, _fTileW, _fTileH);
 		listenControls(_vGameControl);
 		updateAnimations(_fDeltaTime);
@@ -149,9 +156,16 @@ public class Player extends GameObject{
 				if(isColisionBotton()) 
 					newState = STATE_JUMP;
 			}
-			if(_vGameControl.isButtonPressed(1)){
-				if(isColisionBotton())
+		}
+		//Boton ataque
+		if(_vGameControl.isButtonPressed(1) && isColisionBotton()){
+			if(state == STATE_IDLE || state == STATE_RUN || state == STATE_ATACK){
+				if(state != STATE_ATACK){
 					newState = STATE_ATACK;
+				}else if(spriteImageList.get(animation).getFrame() >= 28 && 
+						spriteImageList.get(animation).getFrame() <= 32){
+					spriteImageList.get(animation).setFrame(8);
+				}
 			}
 		}
 	 }
@@ -182,8 +196,11 @@ public class Player extends GameObject{
 				break;
 			case ANIM_JUMP_SUB_2:
 				if(isColisionBotton()){
+					//Dependendido de la fuerza en la que caiga, empieza en un fra u otro
 					spriteImageList.get(animation).setFileIndex(ANIM_JUMP_SUB_3);
-					//newState = STATE_IDLE;
+					if(fallForce < 650){
+						spriteImageList.get(animation).setFrame(3);
+					}
 				}else{
 					if(getSpeedY() < 0){
 						spriteImageList.get(animation).setFrame(0);

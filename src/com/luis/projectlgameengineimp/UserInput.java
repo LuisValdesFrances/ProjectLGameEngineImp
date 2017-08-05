@@ -6,6 +6,8 @@ import com.luis.lgameengine.implementation.input.MultiTouchHandler2;
 
 public class UserInput {
 	
+	private static MultiTouchHandler2 multiTouchHandler;
+	
 	//Teclas
 	public static boolean isKeyLeft;
 	public static boolean isKeyRight;
@@ -38,6 +40,10 @@ public class UserInput {
 	public static final int KEYCODE_JXD_RIGHT = 96;
 	public static final int KEYCODE_JXD_UP = 99;
 	public static final int KEYCODE_JXD_LEFT = 100;
+	
+	public static void init(MultiTouchHandler2 _multiTouchHandler){
+		multiTouchHandler = _multiTouchHandler;
+	}
 	
 	
 	public static void resetKeys(){
@@ -139,7 +145,7 @@ public class UserInput {
         		&& MultiTouchHandler2.touchAction[0] == MultiTouchHandler2.ACTION_UP) {
 
             //SndManager.playFX(SndManager.FX_BLOCK);
-        	MultiTouchHandler2.resetTouch();
+        	multiTouchHandler.resetTouch();
             return true;
         } else {
             return false;

@@ -21,7 +21,7 @@ import com.luis.lgameengine.implementation.sound.SndManager;
 
 public class Main extends MyCanvas implements Runnable {
 
-	public static Main vMain;
+	public static Main main;
 	public static boolean isTouchDevice = true;
 	
 	public static final boolean IS_MOVE_SOFT_BANNER = false;
@@ -45,7 +45,8 @@ public class Main extends MyCanvas implements Runnable {
 	private static final long MINIM_DURATION_FRAME = 1000 / Define.FPS;
 	public static boolean isGameHeart;
 
-	KeyboardHandler vKeyData;
+	private static MultiTouchHandler2 multiTouchHandler;
+	private KeyboardHandler vKeyData;
 
 	public static int iState;
 	public static int iLastState;
@@ -77,16 +78,18 @@ public class Main extends MyCanvas implements Runnable {
 
 	public static int iLanguage;
 
-	public Main(Activity _vActivity) {
-		super(_vActivity, Define.SIZEX, Define.SIZEY);
-		vMain = this;
+	public Main(Activity activity) {
+		super(activity, Define.SIZEX, Define.SIZEY);
+		main = this;
 
 		// if(Integer.parseInt(VERSION.SDK) < 5)
 		// touchHandler = new SingleTouchHandler(view, scaleX, scaleY);
 		// else
 		// touchHandler = new MultiTouchHandler(view, scaleX, scaleY);
-		MultiTouchHandler2.getInstance(this, Settings.getInstance().getScaleX(), Settings.getInstance().getScaleY());
-		SndManager.inicialize(_vActivity);
+		multiTouchHandler = 
+				MultiTouchHandler2.getInstance(this, Settings.getInstance().getScaleX(), Settings.getInstance().getScaleY());
+		UserInput.init(multiTouchHandler);
+		SndManager.inicialize(activity);
 		isGameHeart = true;
 	}
 
@@ -149,7 +152,7 @@ public class Main extends MyCanvas implements Runnable {
 			            }
 			            break;
 		         }
-				MultiTouchHandler2.updateTouch();
+				multiTouchHandler.update();
 				repaint();
 
 				while (System.currentTimeMillis() - lInitTime < MINIM_DURATION_FRAME)
@@ -373,7 +376,7 @@ public class Main extends MyCanvas implements Runnable {
 	public static void changeState(int _iNewState, boolean _isLoadGraphics) {
 		isLoading = true;
 		
-		MultiTouchHandler2.resetTouch();
+		multiTouchHandler.resetTouch();
 		UserInput.resetKeys();
 
 		iLastState = iState;
@@ -381,7 +384,7 @@ public class Main extends MyCanvas implements Runnable {
 		ModeMenu.iOptionSelect = 0;
 		
 		if(_isLoadGraphics){
-			vMain.startClock();
+			main.startClock();
 			GfxManager.loadGFX(_iNewState);
 		}
 
@@ -392,7 +395,7 @@ public class Main extends MyCanvas implements Runnable {
 		else
 			 ModeGame.init(iState);
 		
-		vMain.stopClock();
+		main.stopClock();
 		isLoading = false;
 
 	}

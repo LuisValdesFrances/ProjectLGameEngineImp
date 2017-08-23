@@ -23,15 +23,20 @@ public class GfxManager {
 	   public static Image vImagePlanetLocked;
 	   //Game images:
 	   public static Image vImgPause;
-	   public static Image vImgGameTilesL0;
 	   public static Image vImgGameTilesL1;
 	   public static Image vImgGameTilesL2;
+	   public static Image vImgGameTilesL3;
 	   public static Image vImgGameBG;
 	   
 	   public static Image imgPlayerIdle;
 	   public static Image imgPlayerRun;
 	   public static Image imgPlayerAtack;
 	   public static Image imgPlayerJump;
+	   
+	   public static Image imgEnemyTile;
+	   public static Image imgBadRockIdle;
+	   public static Image imgBadRockAtack;
+	   public static Image imgBadRockSuff;
 	   //bg
 	   public static Image[] vImgBGs;
 
@@ -68,13 +73,18 @@ public class GfxManager {
 	         case Define.ST_GAME_INIT:
 	            try {
 	               vImgPause = Image.createImage("/pause.png");
-	               vImgGameTilesL0 = Image.createImage("/tile_matrix_bg.png");
-	               vImgGameTilesL1 = Image.createImage("/tile_matrix_bg2.png");
-	               vImgGameTilesL2 = Image.createImage("/tile_matrix.png");
+	               vImgGameTilesL1 = Image.createImage("/tile_matrix_layer_1.png");
+	               vImgGameTilesL2 = Image.createImage("/tile_matrix_layer_2.png");
+	               vImgGameTilesL3 = Image.createImage("/tile_matrix_layer_3.png");
 	               imgPlayerIdle = Image.createImage("/player_idle.png");
 	               imgPlayerRun = Image.createImage("/player_run.png");
 	               imgPlayerAtack = Image.createImage("/player_atack.png");
 	               imgPlayerJump = Image.createImage("/player_jump.png");
+	               
+	               imgEnemyTile = Image.createImage("/enemy_tile.png");
+	               imgBadRockIdle = Image.createImage("/badrock_idle.png");
+	               imgBadRockAtack = Image.createImage("/badrock_atack.png");
+	               imgBadRockSuff = Image.createImage("/badrock_suff.png");
 	               //bg
 	               vImgBGs = new Image[5];
 	               for(int i = 0; i < vImgBGs.length; i++){

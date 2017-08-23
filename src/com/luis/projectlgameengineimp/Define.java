@@ -1,6 +1,7 @@
 package com.luis.projectlgameengineimp;
 
 import com.luis.lgameengine.gameutils.Settings;
+import com.luis.lgameengine.gameutils.gameworld.RigidBody;
 
 import android.annotation.SuppressLint;
 import android.util.Log;
@@ -91,6 +92,19 @@ public class Define {
 	   public static final int ST_GAME_RUN = 101;
 	   public static final int ST_GAME_PAUSE = 102;
 	   public static final int ST_GAME_PERFORMANCE_OPTIONS = 200;
+	   
+	   //Game constans
+	   public static final int BADROCK_ID = 191;
+	   
+	   public static final long HIT_PAUSE = 85;
+	   public static final float GRAVITY_FORCE = 3f;
+		
+	   public static final float PLAYER_WEIGHT = 4.8f;
+	   public static final float PLAYER_FORCE_JUMP = 9f;
+	   public static final float PLAYER_FORCE_ATACK = 2.5f;
+		
+	   public static final float BADROCK_WEIGHT = 4.8f;
+	   public static final float BADROCK_IDLE_TIME = 2f;
 	   
 	  
 	 

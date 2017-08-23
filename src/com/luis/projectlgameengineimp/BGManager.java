@@ -15,15 +15,15 @@ public class BGManager {
 		
 		for(int i = 0; i < GfxManager.vImgBGs.length; i++){
 			fPosX[i] = 0;
-			fCamX = ModeGame.vGameCamera.getPosX();
+			fCamX = ModeGame.gameCamera.getPosX();
 		}
 	}
 	
 	public void update(){
 		//Pos x
-		float movCam = fCamX - ModeGame.vGameCamera.getPosX();
-		fCamX = ModeGame.vGameCamera.getPosX();
-		if(ModeGame.vGameCamera.getPosX() > Define.SIZEX2 && ModeGame.vGameCamera.getPosX() < ModeGame.fWorldWidth - Define.SIZEX2)
+		float movCam = fCamX - ModeGame.gameCamera.getPosX();
+		fCamX = ModeGame.gameCamera.getPosX();
+		if(ModeGame.gameCamera.getPosX() > Define.SIZEX2 && ModeGame.gameCamera.getPosX() < ModeGame.worldWidth - Define.SIZEX2)
 		{
 			for(int i = GfxManager.vImgBGs.length -1; i > -1; i--){
 				float div = 2f * (i + 1);
@@ -39,8 +39,8 @@ public class BGManager {
 			}
 		}
 		//Pos y
-		float rY = ModeGame.fWorldHeight - Define.SIZEY;//Es el rango de desplazamiento de la camara en ele eje y
-		float camRY = (ModeGame.fWorldHeight - ModeGame.vGameCamera.getPosY())- Define.SIZEY2;//Recorrido de la camara
+		float rY = ModeGame.worldHeight - Define.SIZEY;//Es el rango de desplazamiento de la camara en ele eje y
+		float camRY = (ModeGame.worldHeight - ModeGame.gameCamera.getPosY())- Define.SIZEY2;//Recorrido de la camara
 		for(int i = GfxManager.vImgBGs.length -1; i > -1; i--){
 			float div = (i + 1);
 			int idx = (GfxManager.vImgBGs.length -1) - i;

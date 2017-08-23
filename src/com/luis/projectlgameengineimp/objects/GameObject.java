@@ -14,124 +14,132 @@ import com.luis.projectlgameengineimp.ModeGame;
  */
 public abstract class GameObject extends RigidBody{
     
-    private static int ms_iID = 0;
-    private int iID;
+    private static int msID = 0;
+    private int id;
     
     
     //States:
-    protected int iNewState;
-    protected int iState;
-    protected int iLastState;
+    protected int newState;
+    protected int state;
+    protected int lastState;
     
-    protected float fSpeed;
-    protected float fAngle;
-    protected float fCos;
-    protected float fSin;
+    protected float speed;
+    protected float angle;
+    protected float cos;
+    protected float sin;
+    
+    protected boolean flip;
     
     public static final int DESP_SHADOW = ((Define.SIZEX+Define.SIZEY)/2)/16;
 
-    public GameObject(int _fWidth, int _fHeight, float _fPosX, float _fPosY, float _fPosZ, float _fSpeed, float _fAngle) {
-        super.init(_fPosX, _fPosY, _fWidth, _fHeight);
-        this.fSpeed = _fSpeed;
-        this.fAngle = _fAngle;
-        this.iID = ms_iID;
-        ms_iID++;
+    public GameObject(int width, int height, float posX, float posY, float posZ, float speed, float angle) {
+        super.init(posX, posY, width, height);
+        this.speed = speed;
+        this.angle = angle;
+        this.id = msID;
+        msID++;
         
         
     }
 
-    public void update(float _fDeltaTime, int[][] _iTilesMatrixID, float _fTileW, float _fTileH) {
-    	super.runPhysics (_fDeltaTime, _iTilesMatrixID, _fTileW, _fTileH, Define.SIZEX, Define.SIZEY, ModeGame.systemColision);
+    public void update(float deltaTime, int[][] tilesMatrixID, float tileW, float tileH) {
+    	super.runPhysics (deltaTime, tilesMatrixID, tileW, tileH, Define.SIZEX, Define.SIZEY);
     }
     
     public void draw(
-    		Graphics _g, Image _vImage, SpriteImage spriteImage, WorldConver _vWorldConver, float _fCameraX, float _fCameraY, 
-    		int _iModAnimX, int _iModAnimY, int _iModDrawX, int _iModDrawY,
-    		boolean flip,
-    		int _iAnchor) {
+    		Graphics _g, Image image, SpriteImage spriteImage, WorldConver worldConver, float cameraX, float cameraY, 
+    		int modAnimX, int modAnimY, int modDrawX, int modDrawY, int anchor) {
     	
     	int extraX = 0;
     	int extraY = 0;
-		if ((_iAnchor & Graphics.BOTTOM) != 0) {
+		if ((anchor & Graphics.BOTTOM) != 0) {
 			extraY = (int) getHeight();
 		}
-		if ((_iAnchor & Graphics.RIGHT) != 0) {
+		if ((anchor & Graphics.RIGHT) != 0) {
 			extraX = (int) getWidth();
 		}
-		if ((_iAnchor & Graphics.VCENTER) != 0) {
+		if ((anchor & Graphics.VCENTER) != 0) {
 			extraY = (int) getHeight() / 2;
 		}
-		if ((_iAnchor & Graphics.HCENTER) != 0) {
+		if ((anchor & Graphics.HCENTER) != 0) {
 			extraX = (int) getWidth() / 2;
 		}
 		
-		int posX = _vWorldConver.getConversionDrawX(_fCameraX, getPosX());
-        int posY = _vWorldConver.getConversionDrawY(_fCameraY, getPosY());
+		int posX = worldConver.getConversionDrawX(cameraX, getPosX());
+        int posY = worldConver.getConversionDrawY(cameraY, getPosY());
         if(spriteImage != null)
-        	spriteImage.drawFrame(_g, _vImage, posX + _iModDrawX, posY + _iModDrawY, flip, _iAnchor);
+        	spriteImage.drawFrame(_g, image, posX + modDrawX, posY + modDrawY, flip, anchor);
         else{
-        	_g.setClip(posX - extraX + _iModDrawX, posY - extraY + _iModDrawY, (int) getWidth(), (int) getHeight());
+        	_g.setClip(posX - extraX + modDrawX, posY - extraY + modDrawY, (int) getWidth(), (int) getHeight());
             //_g.setClip(0, 0, Define.SIZEX, Define.SIZEY);
-            _g.drawImage(_vImage, posX - _iModAnimX + _iModDrawX, posY - _iModAnimY + _iModDrawY, _iAnchor);
+            _g.drawImage(image, posX - modAnimX + modDrawX, posY - modAnimY + modDrawY, anchor);
         }
      }
     
     
-    public void move(float _fDeltaTime){
+    public void move(float deltaTime){
 	   //Get speed angle x and 
        float angle = getAngle();
 	   float angleToRadiants = (float)(angle * Math.PI) / 180f;
-	   fCos = (float) Math.cos(angleToRadiants);
-	   fSin = (float) Math.sin(angleToRadiants);
-	   float speedX = (fCos * getSpeed());
-	   float speedY = (fSin * getSpeed());
+	   cos = (float) Math.cos(angleToRadiants);
+	   sin = (float) Math.sin(angleToRadiants);
+	   float speedX = (cos * getSpeed());
+	   float speedY = (sin * getSpeed());
 	   
-	   movePosX(getPosX() + (speedX * _fDeltaTime));
-	   movePosY(getPosY() - (speedY * _fDeltaTime));
+	   movePosX(getPosX() + (speedX * deltaTime));
+	   movePosY(getPosY() - (speedY * deltaTime));
    }
    
-   public int getID() {
-        return iID;
+   public int getId() {
+        return id;
    }
    
-   public static int getTotalID() {
-        return ms_iID;
+   public static int getTotalId() {
+        return msID;
    }
    
    public int getState() {
-        return iState;
+        return state;
    }
    
-   public void setNewState(int _iNewState) {
-        iNewState=_iNewState;
+   public void setNewState(int newState) {
+        this.newState = newState;
    }
    
-   public void setState(int _iState) {
-        iState=_iState;
+   public void setState(int state) {
+	   this.state = state;
    }
    
    public float getSpeed() {
-		return fSpeed;
+		return speed;
 	}
 
-	public void setSpeed(float _fSpeed) {
-		this.fSpeed = _fSpeed;
+	public void setSpeed(float speed) {
+		this.speed = speed;
 	}
 	
 	public float getAngle(){
-		return fAngle;
+		return angle;
 	}
 	
-	public void setAngle(float _fAngle){
-		this.fAngle = _fAngle;
+	public void setAngle(float angle){
+		this.angle = angle;
 	}
 
 	public float getCos() {
-		return fCos;
+		return cos;
 	}
 
 	public float getSin() {
-		return fSin;
+		return sin;
+	}
+
+	public boolean isFlip() {
+		return flip;
+	}
+
+	public void setFlip(boolean flip) {
+		this.flip = flip;
 	}
     
     

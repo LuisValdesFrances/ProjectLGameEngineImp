@@ -1,5 +1,9 @@
 package com.luis.projectlgameengineimp;
 
+import java.nio.DoubleBuffer;
+import java.util.ArrayList;
+import java.util.List;
+
 import android.util.Log;
 
 import com.luis.lgameengine.gameutils.Settings;
@@ -12,6 +16,8 @@ import com.luis.lgameengine.gameutils.gameworld.WorldConver;
 import com.luis.lgameengine.implementation.graphics.Graphics;
 import com.luis.lgameengine.implementation.graphics.Image;
 import com.luis.lgameengine.implementation.input.MultiTouchHandler2;
+import com.luis.projectlgameengineimp.objects.BadRock;
+import com.luis.projectlgameengineimp.objects.Enemy;
 import com.luis.projectlgameengineimp.objects.Player;
 
 /**
@@ -25,7 +31,6 @@ public class ModeGame {
 	public static final int PERF_BUTTON_W = Define.SIZEX12;
 	public static final int PERF_BUTTON_H = Define.SIZEY12;
 	public static int systemColision = 0;
-	public static boolean isDrawTileFast = false;
 	public static boolean isDoubleBuffer = false;
 	
 	/*
@@ -35,45 +40,47 @@ public class ModeGame {
 	
 	public static final int TILE_SET_SIZE[] = {8,16,32,64};
 	public static int TILE_SIZE;
-	public static float fWorldWidth;
-	public static float fWorldHeight;
+	public static float worldWidth;
+	public static float worldHeight;
 	//Levels design:
 	private static final int[] COLOR_BG = {0xff458071, 0xffbeeee2};
 	
-	static GameCamera vGameCamera;
-	private static WorldConver vWorldConver;
-	private static TileManager vTileManager;
-	private static GameControl vGameControl;
+	static GameCamera gameCamera;
+	private static WorldConver worldConver;
+	private static TileManager tileManager;
+	private static GameControl gameControl;
 	
-	private static BGManager vBgManager;
-	private static Player vPlayer;
+	private static BGManager bgManager;
+	private static Player player;
+	private static List<Enemy> enemyList;
 	private static final int CAMERA_EXPLORER_SPEED = Define.SCR_MIDLE/2;
 	
-	private static Image vImgTilesBuffer;
+	private static Image gameBuffer;
+	private static boolean drawBuffer;
 	public static void init(int _iState) {
 		
 		switch(_iState){
 		case Define.ST_GAME_INIT:
 			//Init world dimensions
 			TILE_SIZE = TILE_SET_SIZE[Settings.getInstance().getResolution()];
-			fWorldWidth = TILE_SIZE * 40;
-			fWorldHeight = TILE_SIZE * 20;
+			worldWidth = TILE_SIZE * 40;
+			worldHeight = TILE_SIZE * 20;
 			
-			vWorldConver = new WorldConver(Define.SIZEX, Define.SIZEY, 0, 0, 0, 0, fWorldWidth, fWorldHeight);
+			worldConver = new WorldConver(Define.SIZEX, Define.SIZEY, 0, 0, 0, 0, worldWidth, worldHeight);
 			
-			vTileManager = new TileManager("/bin/levels/level_1.map");
-			vTileManager.idConversionData(
-					new Image[] {GfxManager.vImgGameTilesL0, GfxManager.vImgGameTilesL1, GfxManager.vImgGameTilesL2});
+			tileManager = new TileManager("/bin/levels/level_1.map");
+			tileManager.idConversionData(
+					new Image[] {GfxManager.vImgGameTilesL1, GfxManager.vImgGameTilesL2, GfxManager.vImgGameTilesL3, GfxManager.imgEnemyTile});
 			
 			
-			vGameControl = new TouchPadControl(
+			gameControl = new TouchPadControl(
 		    		null, null, Define.SIZEX / 6, Define.SIZEY - Define.SIZEY / 4,
 		    		new Image[] {null, null}, new Image[] {null, null},
 		    		new int[] {Define.SIZEX - Define.SIZEX/4, Define.SIZEX - Define.SIZEX/8},
 		    		new int[] {Define.SIZEY - Define.SIZEY/8, Define.SIZEY - Define.SIZEY/4},
 		    		MultiTouchHandler2.ACTION_DOWN, MultiTouchHandler2.ACTION_DRAG, MultiTouchHandler2.ACTION_UP);
-			vGameControl.reset();
-			vPlayer = new Player(
+			gameControl.reset();
+			player = new Player(
 					(int) (TILE_SIZE),//(int)((GfxManager.imgPlayerIdle.getWidth()/Player.IDLE_FRAMES) * 0.30f),
 					(int)(TILE_SIZE*2f),
 					Define.SIZEX8, 
@@ -82,13 +89,28 @@ public class ModeGame {
 					RigidBody.transformUnityValue(0.96f, TILE_SIZE, 3f), 
 					0);
 			
-			vPlayer.gravityForce = 3f;//RigidBody.transformUnityValue(TILE_SIZE, 3f);
-			vPlayer.weight = RigidBody.transformUnityValue(0.96f, TILE_SIZE, 4.8f);
-			vPlayer.fForceJump = RigidBody.transformUnityValue(0.96f, TILE_SIZE, 9f);
-			vGameCamera= new GameCamera(vPlayer.getPosX(), vPlayer.getPosY(), fWorldWidth, fWorldHeight, Define.FRAME_SPEED_DEC);
-			vBgManager = new BGManager();
+			player.setGravityForce(Define.GRAVITY_FORCE);
+			player.setWeight(RigidBody.transformUnityValue(0.96f, TILE_SIZE, Define.PLAYER_WEIGHT));
+			player.setForceJump(RigidBody.transformUnityValue(0.96f, TILE_SIZE, Define.PLAYER_FORCE_JUMP));
+			player.setForceAtack(RigidBody.transformUnityValue(0.96f, TILE_SIZE, Define.PLAYER_FORCE_ATACK));
 			
-			vImgTilesBuffer = Image.createImage(Define.SIZEX, Define.SIZEY);
+			enemyList = new ArrayList<Enemy>();
+			
+			gameCamera= new GameCamera(player.getPosX(), player.getPosY(), worldWidth, worldHeight, Define.FRAME_SPEED_DEC);
+			bgManager = new BGManager();
+			
+			gameBuffer = Image.createImage(Define.SIZEX, Define.SIZEY);
+			
+			
+			
+			if(isDoubleBuffer){
+				tileManager.enableBuffer(
+						worldConver,
+						TILE_SIZE, Define.SIZEX, Define.SIZEY, gameCamera.getPosX(), gameCamera.getPosY());
+				Log.i("Debug", ""+worldConver.getLayoutX() + "x" + worldConver.getLayoutY());
+				drawBuffer = true;
+			}
+			
 			Main.changeState(Define.ST_GAME_RUN, false);
 			break;
 			
@@ -108,17 +130,24 @@ public class ModeGame {
 					Main.changeState(Define.ST_GAME_PERFORMANCE_OPTIONS, false);
 			}else{
 				//Obtengo el dt en segundos (Esta en milisegundos)
-				vGameCamera.updateCamera(vPlayer.getPosX(), vPlayer.getPosY());
-				vBgManager.update();
+				gameCamera.updateCamera(player.getPosX(), player.getPosY());
+				if(!isDoubleBuffer)
+					bgManager.update();
+				else{
+					drawBuffer = tileManager.updateBuffer(gameCamera.getPosX(), gameCamera.getPosY(), TILE_SIZE);
+				}
 				
-				vGameControl.update(
+				gameControl.update(
 						MultiTouchHandler2.touchOriginX, 
 						MultiTouchHandler2.touchOriginY, 
 						MultiTouchHandler2.touchX, 
 						MultiTouchHandler2.touchY, 
 						MultiTouchHandler2.touchAction);
 				
-				vPlayer.update(Main.getDeltaSec(), vTileManager.getLayerID(2), TILE_SIZE, TILE_SIZE, vGameControl);
+				player.update(Main.getDeltaSec(), tileManager.getLayerID(1), TILE_SIZE, TILE_SIZE, gameControl);
+				
+				checkEnemy();
+				updateEnemy();
 			}
 			
 			break;
@@ -176,40 +205,68 @@ public class ModeGame {
 			int _iAnchor)
 			 */
 			
-			//Adornos fondo
+			if(isDoubleBuffer){
+				if(drawBuffer){
+					
+					//Adornos fondo
+					tileManager.getBuffer().getGraphics().setClip(0, 0, tileManager.getBuffer().getWidth(), tileManager.getBuffer().getHeight());
+					tileManager.getBuffer().getGraphics().setColor(0xffCED8F6);
+					tileManager.getBuffer().getGraphics().fillRect(0, 0, tileManager.getBuffer().getWidth(), tileManager.getBuffer().getHeight());
+					
+					int modBufferX = tileManager.getExtraWidth()>>1;
+					int modBufferY = tileManager.getExtraHeight()>>1;
+					
+					tileManager.drawLayers(tileManager.getBuffer().getGraphics(),
+							new Image[] {GfxManager.vImgGameTilesL1, GfxManager.vImgGameTilesL2, GfxManager.vImgGameTilesL3},
+							worldConver, 
+							gameCamera.getPosX(), gameCamera.getPosY(), 
+							new int[]{modBufferX, modBufferX, modBufferX}, 
+							new int[]{modBufferY + (TILE_SIZE>>1), modBufferY, modBufferY + (TILE_SIZE>>1)},
+							Graphics.BOTTOM | Graphics.HCENTER);
+				}
+				tileManager.drawBuffer(gameBuffer.getGraphics(), Define.SIZEX, Define.SIZEY);
+			}
+			else{
+				//Adornos fondo
+				gameBuffer.getGraphics().setClip(0, 0, Define.SIZEX, Define.SIZEY);
+				gameBuffer.getGraphics().setColor(0xffCED8F6);
+				gameBuffer.getGraphics().fillRect(0, 0, Define.SIZEX, Define.SIZEY);
+				bgManager.draw(gameBuffer.getGraphics());
+				
+				tileManager.drawLayer(gameBuffer.getGraphics(), 
+						new Image[] {GfxManager.vImgGameTilesL1, GfxManager.vImgGameTilesL2, GfxManager.vImgGameTilesL3},
+						0,
+						worldConver, 
+						gameCamera.getPosX(), gameCamera.getPosY(), 0, TILE_SIZE>>1,
+						Graphics.BOTTOM | Graphics.HCENTER);
+				
+				tileManager.drawLayer(gameBuffer.getGraphics(), 
+						new Image[] {GfxManager.vImgGameTilesL1, GfxManager.vImgGameTilesL2, GfxManager.vImgGameTilesL3},
+						1,
+						worldConver, 
+						gameCamera.getPosX(), gameCamera.getPosY(), 0, 0,
+						Graphics.BOTTOM | Graphics.HCENTER);
+			}
 			
-			vImgTilesBuffer.getGraphics().setClip(0, 0, Define.SIZEX, Define.SIZEY);
-			vImgTilesBuffer.getGraphics().setColor(0xffCED8F6);
-			vImgTilesBuffer.getGraphics().fillRect(0, 0, Define.SIZEX, Define.SIZEY);
-			vBgManager.draw(vImgTilesBuffer.getGraphics());
-			vTileManager.drawLayer(vImgTilesBuffer.getGraphics(), 
-					new Image[] {GfxManager.vImgGameTilesL0, GfxManager.vImgGameTilesL1, GfxManager.vImgGameTilesL2}, 
-					0,
-					vWorldConver, 
-					vGameCamera.getPosX(), vGameCamera.getPosY(), 0, TILE_SIZE>>1, isDrawTileFast,
+			player.draw(gameBuffer.getGraphics(), worldConver, gameCamera.getPosX(), gameCamera.getPosY(), 
+					0, 0, 0, 0, 
 					Graphics.BOTTOM | Graphics.HCENTER);
 			
-			vTileManager.drawLayer(vImgTilesBuffer.getGraphics(), 
-					new Image[] {GfxManager.vImgGameTilesL0, GfxManager.vImgGameTilesL1, GfxManager.vImgGameTilesL2}, 
-					2,
-					vWorldConver, 
-					vGameCamera.getPosX(), vGameCamera.getPosY(), 0, 0, isDrawTileFast,
-					Graphics.BOTTOM | Graphics.HCENTER);
-			
-			
-			vPlayer.draw(vImgTilesBuffer.getGraphics(), vWorldConver, vGameCamera.getPosX(), vGameCamera.getPosY(), 0, 0, 0, 0, Graphics.BOTTOM | Graphics.HCENTER);
+			drawEnemy(gameBuffer.getGraphics());
 			
 			//Adornos 1º plano
-			vTileManager.drawLayer(vImgTilesBuffer.getGraphics(), 
-					new Image[] {GfxManager.vImgGameTilesL0, GfxManager.vImgGameTilesL1, GfxManager.vImgGameTilesL2}, 
-					1,
-					vWorldConver, 
-					vGameCamera.getPosX(), vGameCamera.getPosY(), 0, TILE_SIZE>>1, isDrawTileFast,
-					Graphics.BOTTOM | Graphics.HCENTER);
+			if(!isDoubleBuffer){
+				tileManager.drawLayer(gameBuffer.getGraphics(), 
+						new Image[] {GfxManager.vImgGameTilesL1, GfxManager.vImgGameTilesL2, GfxManager.vImgGameTilesL3},
+						2,
+						worldConver, 
+						gameCamera.getPosX(), gameCamera.getPosY(), 0, TILE_SIZE>>1,
+						Graphics.BOTTOM | Graphics.HCENTER);
+			}
 			
-			_g.drawImage(vImgTilesBuffer, Define.SIZEX2, Define.SIZEY2, Graphics.VCENTER | Graphics.HCENTER);
+			_g.drawImage(gameBuffer, Define.SIZEX2, Define.SIZEY2, Graphics.VCENTER | Graphics.HCENTER);
 			
-			vGameControl.draw(_g);
+			gameControl.draw(_g);
 			
 			drawPerformanceButton(_g);
 			
@@ -227,29 +284,72 @@ public class ModeGame {
 				_g.drawText("DeltaTime: " + Main.getDeltaSec(), Define.SIZEX2, _g.getTextHeight(), Main.COLOR_RED);
 				//Colisiones
 				_g.drawText(
-						"ColT: " + vPlayer.isColisionTop()
-						+ " ColB: " + vPlayer.isColisionBotton()
-						+ " ColL: " + vPlayer.isColisionLeft()
-						+ " ColR: " + vPlayer.isColisionRight()
+						"ColT: " + player.isColisionTop()
+						+ " ColB: " + player.isColisionBotton()
+						+ " ColL: " + player.isColisionLeft()
+						+ " ColR: " + player.isColisionRight()
 						, 0, _g.getTextHeight()*3, Main.COLOR_RED);
 				
 				
 			}
-			
-			/*
-			try {
-				Thread.sleep(120);
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			*/
 			
 			break;
 			
 		case Define.ST_GAME_PERFORMANCE_OPTIONS:
 			drawPerformanceMenu(_g);
 			break;
+		}
+	}
+	
+	private static void checkEnemy(){
+		for(int f = 0; f < tileManager.getLayerID(3).length; f++){
+			for(int c = 0; c < tileManager.getLayerID(3)[f].length; c++){
+				if(tileManager.getLayerID(3)[f][c] != 0){
+					
+					if (worldConver.isObjectInGameLayout(gameCamera.getPosX(), gameCamera.getPosY(),
+                            (TILE_SIZE * c),
+                            (TILE_SIZE * f),
+                            TILE_SIZE, TILE_SIZE)) {
+						
+						int w;
+						int h;
+						switch(tileManager.getLayerID(3)[f][c]){
+						case Define.BADROCK_ID:
+							w = (int) (TILE_SIZE * 0.5f);
+							h = (int) (TILE_SIZE * 1.5f);
+							Enemy e = new BadRock(player, Define.BADROCK_ID, w, h, 
+									TILE_SIZE * c + w/2, TILE_SIZE * f+TILE_SIZE, 0, 0, 0);
+							enemyList.add(e);
+							
+							e.setGravityForce(Define.GRAVITY_FORCE);
+							e.setWeight(RigidBody.transformUnityValue(0.96f, TILE_SIZE, Define.PLAYER_WEIGHT));
+							
+							tileManager.getLayerID(3)[f][c] = 0;
+							Log.i("Debug", "Spawn enemy type: " + Define.BADROCK_ID + " x: " + e.getPosX() + " y: " + e.getPosY());
+							break;
+							
+						}
+						
+					}
+					
+				}
+			}
+		}
+	}
+	
+	private static void updateEnemy(){
+		for(Enemy e : enemyList){
+			e.update(Main.getDeltaSec(), tileManager.getLayerID(1), TILE_SIZE, TILE_SIZE);
+		}
+	}
+	
+	private static void drawEnemy(Graphics _g){
+		if(enemyList.size() > 0){
+			for(Enemy e : enemyList){
+				e.draw(_g, null, null, worldConver, gameCamera.getPosX(), gameCamera.getPosY(), 
+						0, 0, 0, 0, 
+						Graphics.BOTTOM | Graphics.HCENTER);
+			}
 		}
 	}
 	
@@ -267,7 +367,7 @@ public class ModeGame {
 	private static boolean isFocusPerformanceMenu(){
 		if(
 			(MultiTouchHandler2.touchAction[0] == MultiTouchHandler2.ACTION_DOWN || MultiTouchHandler2.touchAction[0] == MultiTouchHandler2.ACTION_DRAG) && 
-			UserInput.compareTouch(0, Define.SIZEY - PERF_BUTTON_H, PERF_BUTTON_W, Define.SIZEY, 0)){
+			UserInput.getInstance().compareTouch(0, Define.SIZEY - PERF_BUTTON_H, PERF_BUTTON_W, Define.SIZEY, 0)){
 			return true;
 		}
 		return false;
@@ -275,7 +375,7 @@ public class ModeGame {
 	private static boolean isGoToPerformanceMenu(){
 		if(
 			MultiTouchHandler2.touchAction[0] == MultiTouchHandler2.ACTION_UP && 
-			UserInput.compareTouch(0, Define.SIZEY - PERF_BUTTON_H, PERF_BUTTON_W, Define.SIZEY, 0)){
+			UserInput.getInstance().compareTouch(0, Define.SIZEY - PERF_BUTTON_H, PERF_BUTTON_W, Define.SIZEY, 0)){
 			return true;
 		}
 		return false;
@@ -287,7 +387,22 @@ public class ModeGame {
 		}else{
 			switch(getPerformanceOpt()){
 			case 0:
-				isDrawTileFast = !isDrawTileFast;
+				isDoubleBuffer = !isDoubleBuffer;
+				if(isDoubleBuffer){
+					tileManager.enableBuffer(
+						worldConver,
+						TILE_SIZE, Define.SIZEX, Define.SIZEY, gameCamera.getPosX(), gameCamera.getPosY());
+					drawBuffer = true;
+					//Reinicio worldConver, ahora las dismensiones de la pantalla deben de ser la de la imagen del buffer
+					worldConver = new WorldConver(tileManager.getBuffer().getWidth(), tileManager.getBuffer().getHeight(), 
+							-tileManager.getExtraHeight()/2, tileManager.getExtraHeight()/2, tileManager.getExtraWidth()/2, -tileManager.getExtraWidth()/2, 
+							worldConver.getWorldWidth(), worldConver.getWorldHeight());
+					Log.i("Debug", ""+worldConver.getLayoutX() + "x" + worldConver.getLayoutY());
+				}else{
+					//Vuelvo a poner world convert con las dimensiones normales
+					worldConver = new WorldConver(Define.SIZEX, Define.SIZEY, 0, 0, 0, 0, worldWidth, worldHeight);
+					Log.i("Debug", ""+worldConver.getLayoutX() + "x" + worldConver.getLayoutY());
+				}
 				break;
 			case 1:
 				if(systemColision == 0)systemColision = 1;
@@ -308,7 +423,7 @@ public class ModeGame {
 		int spaceY = Define.SIZEY - PERF_BUTTON_H;
 		int secH = spaceY / numOpt;
 		
-		String[] nameOpt = {"DrawTileFast : ", "colisionType : ", "-"};
+		String[] nameOpt = {"DoubleBuffer : ", "colisionType : ", "-"};
 		for(int i = 0; i < numOpt; i++){
 			if(Main.isModule(i))
 				_g.setColor(0xff151515);
@@ -321,7 +436,7 @@ public class ModeGame {
 		}
 		
 		
-		_g.drawText(isDrawTileFast ? "TRUE" : "FALSE", Define.SIZEX2, secH * 1 - secH/2, isDrawTileFast ? Main.COLOR_GREEN : Main.COLOR_RED);
+		_g.drawText(isDoubleBuffer ? "TRUE" : "FALSE", Define.SIZEX2, secH * 1 - secH/2, isDoubleBuffer ? Main.COLOR_GREEN : Main.COLOR_RED);
 		
 		_g.drawText(systemColision == 0? "0" : "1", Define.SIZEX2, secH * 2 - secH/2, systemColision == 0 ?Main.COLOR_GREEN : Main.COLOR_RED);
 		
@@ -338,7 +453,7 @@ public class ModeGame {
 		int secH = spaceY / numOpt;
 		if(MultiTouchHandler2.touchAction[0] == MultiTouchHandler2.ACTION_DOWN && MultiTouchHandler2.touchFrames[0] == 1){
 			for(int i = 0; i < numOpt; i++){
-				if(UserInput.compareTouch(0, i * secH, Define.SIZEX, (i + 1) * secH, 0)){
+				if(UserInput.getInstance().compareTouch(0, i * secH, Define.SIZEX, (i + 1) * secH, 0)){
 					return i;
 				}
 			}

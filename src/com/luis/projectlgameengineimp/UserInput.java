@@ -6,16 +6,20 @@ import com.luis.lgameengine.implementation.input.MultiTouchHandler2;
 
 public class UserInput {
 	
-	private static MultiTouchHandler2 multiTouchHandler;
+	private MultiTouchHandler2 multiTouchHandler;
+	
+	public MultiTouchHandler2 getMultiTouchHandler(){
+		return multiTouchHandler;
+	}
 	
 	//Teclas
-	public static boolean isKeyLeft;
-	public static boolean isKeyRight;
-	public static boolean isKeyUp;
-	public static boolean isKeyDown;
-	public static boolean isKeyFire;
-	public static boolean isSoftkeyLeft;
-	public static boolean isSoftkeyRight;
+	public boolean isKeyLeft;
+	public boolean isKeyRight;
+	public boolean isKeyUp;
+	public boolean isKeyDown;
+	public boolean isKeyFire;
+	public boolean isSoftkeyLeft;
+	public boolean isSoftkeyRight;
 	
 	public static final int KEYCODE_UP = 19;
 	public static final int KEYCODE_DOWN = 20;
@@ -36,17 +40,24 @@ public class UserInput {
 	public static final int KEYCODE_ENTER = 66;
 	
 	//Controls for pads
-	public static final int KEYCODE_JXD_DOWN = 97;
-	public static final int KEYCODE_JXD_RIGHT = 96;
-	public static final int KEYCODE_JXD_UP = 99;
-	public static final int KEYCODE_JXD_LEFT = 100;
+	public final int KEYCODE_JXD_DOWN = 97;
+	public final int KEYCODE_JXD_RIGHT = 96;
+	public final int KEYCODE_JXD_UP = 99;
+	public final int KEYCODE_JXD_LEFT = 100;
 	
-	public static void init(MultiTouchHandler2 _multiTouchHandler){
-		multiTouchHandler = _multiTouchHandler;
+	public static UserInput userInput;
+	public static UserInput getInstance(){
+		if(userInput == null)
+			userInput = new UserInput();
+		return userInput;
+	}
+	
+	public void init(MultiTouchHandler2 _multiTouchHandler){
+		this.multiTouchHandler = _multiTouchHandler;
 	}
 	
 	
-	public static void resetKeys(){
+	public void resetKeys(){
     	isKeyLeft=false;
     	isKeyRight=false;
     	isKeyUp=false;
@@ -59,14 +70,14 @@ public class UserInput {
 	
 	
    //Controlador de foco
-    public static boolean isTouchSoftRight(int _iPadingX, int _iPadingY) {
+    public boolean isTouchSoftRight(int _iPadingX, int _iPadingY) {
     	int upBanner = Main.IS_MOVE_SOFT_BANNER?(GfxManager.vImgSoftkeys.getHeight() >> 1):0;
 		return compareTouch(Define.SIZEX - (GfxManager.vImgSoftkeys.getWidth()>>1), 
 				Define.SIZEY - (GfxManager.vImgSoftkeys.getHeight()>>1)-upBanner, 
 				Define.SIZEX, Define.SIZEY-upBanner, 0);
 	}
 	//Lazador de estado
-	public static boolean goToSoftRight(int _iPadingX, int _iPadingY) {
+	public boolean goToSoftRight(int _iPadingX, int _iPadingY) {
 		int upBanner = Main.IS_MOVE_SOFT_BANNER?(GfxManager.vImgSoftkeys.getHeight() >> 1):0;
 		return compareTouch(Define.SIZEX - (GfxManager.vImgSoftkeys.getWidth()>>1), 
 				Define.SIZEY - (GfxManager.vImgSoftkeys.getHeight()>>1)-upBanner, 
@@ -74,26 +85,26 @@ public class UserInput {
 	}
 	
 	//Controlador de foco
-    public static boolean isTouchSoftLeft(int _iPadingX, int _iPadingY) {
+    public boolean isTouchSoftLeft(int _iPadingX, int _iPadingY) {
     	int upBanner = Main.IS_MOVE_SOFT_BANNER?(GfxManager.vImgSoftkeys.getHeight() >> 1):0;
 		return compareTouch(0, 
 				Define.SIZEY - (GfxManager.vImgSoftkeys.getHeight()>>1)-upBanner, 
 				GfxManager.vImgSoftkeys.getWidth()>>1, Define.SIZEY-upBanner, 0);
 	}
 	//Lazador de estado
-	public static boolean goToSoftLeft(int _iPadingX, int _iPadingY) {
+	public boolean goToSoftLeft(int _iPadingX, int _iPadingY) {
 		int upBanner = Main.IS_MOVE_SOFT_BANNER?(GfxManager.vImgSoftkeys.getHeight() >> 1):0;
 		return compareTouch(0, 
 				Define.SIZEY - (GfxManager.vImgSoftkeys.getHeight()>>1)-upBanner, 
 				GfxManager.vImgSoftkeys.getWidth()>>1, Define.SIZEY-upBanner, 0);
 	}
     
-    public static void putTouchDistance(int _iPoint){
+    public void putTouchDistance(int _iPoint){
     	MultiTouchHandler2.touchDistanceX[_iPoint] = MultiTouchHandler2.touchX[_iPoint] - MultiTouchHandler2.touchOriginX[_iPoint];
     	MultiTouchHandler2.touchDistanceY[_iPoint] = MultiTouchHandler2.touchY[_iPoint] - MultiTouchHandler2.touchOriginY[_iPoint];
     }
     
-    public static boolean compareTouch(int _iX0, int _iY0, int _iX1, int _iY1, int _iPoint) {
+    public boolean compareTouch(int _iX0, int _iY0, int _iX1, int _iY1, int _iPoint) {
         if ((MultiTouchHandler2.touchX[_iPoint] > _iX0
                 && MultiTouchHandler2.touchX[_iPoint] < _iX1)
                 && (MultiTouchHandler2.touchY[_iPoint] > _iY0
@@ -107,7 +118,7 @@ public class UserInput {
     public static final int SIDE_BUTTON_Y_LEFT = 0;
     public static final int SIDE_BUTTON_Y_RIGHT = 1;
     //Controles de Menu:
-    public static boolean getOptionMenuTouched_X(int pos_button, int side_option) {
+    public boolean getOptionMenuTouched_X(int pos_button, int side_option) {
 
         // Obtenemos la posición y dependiendo de donde se haya ubicaod el
         // botón:
@@ -151,9 +162,9 @@ public class UserInput {
             return false;
         }
     }
-    public static int iFirstValidTouch=-1;
+    public int iFirstValidTouch=-1;
 
-    public static int getOptionMenuTouched_Y(int number_options, int iCurrentOption) {
+    public int getOptionMenuTouched_Y(int number_options, int iCurrentOption) {
 
         int selectOption = iCurrentOption;
 
@@ -184,7 +195,7 @@ public class UserInput {
     // pointerReleased,
     // se entre en la opcion seleccionada SIEMPE Y CUANDO EL DEDO ESTE ENCIMA
     // de la opción.
-    public static boolean getOkTouched_Y(int confirmedOption) {
+    public boolean getOkTouched_Y(int confirmedOption) {
         boolean t = false;
 
         if (MenuManager.iListPosY != null) {

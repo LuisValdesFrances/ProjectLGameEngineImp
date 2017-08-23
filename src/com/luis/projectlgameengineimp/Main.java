@@ -45,7 +45,6 @@ public class Main extends MyCanvas implements Runnable {
 	private static final long MINIM_DURATION_FRAME = 1000 / Define.FPS;
 	public static boolean isGameHeart;
 
-	private static MultiTouchHandler2 multiTouchHandler;
 	private KeyboardHandler vKeyData;
 
 	public static int iState;
@@ -86,9 +85,8 @@ public class Main extends MyCanvas implements Runnable {
 		// touchHandler = new SingleTouchHandler(view, scaleX, scaleY);
 		// else
 		// touchHandler = new MultiTouchHandler(view, scaleX, scaleY);
-		multiTouchHandler = 
-				MultiTouchHandler2.getInstance(this, Settings.getInstance().getScaleX(), Settings.getInstance().getScaleY());
-		UserInput.init(multiTouchHandler);
+		
+		UserInput.getInstance().init(multiTouchHandler);
 		SndManager.inicialize(activity);
 		isGameHeart = true;
 	}
@@ -128,6 +126,7 @@ public class Main extends MyCanvas implements Runnable {
 
 				lDeltaTime = System.currentTimeMillis() - lLastTime;
 				lLastTime = System.currentTimeMillis();
+				multiTouchHandler.update();
 
 				switch (iState) {
 					 case Define.ST_MENU_LOGO:
@@ -152,7 +151,6 @@ public class Main extends MyCanvas implements Runnable {
 			            }
 			            break;
 		         }
-				multiTouchHandler.update();
 				repaint();
 
 				while (System.currentTimeMillis() - lInitTime < MINIM_DURATION_FRAME)
@@ -207,10 +205,10 @@ public class Main extends MyCanvas implements Runnable {
 			
 			if (Main.IS_DEBUG) {
 				_g.setClip(0, 0, Define.SIZEX, Define.SIZEY);
-				_g.setTextSize((int) (24 * Settings.getInstance().getScale()));
+				_g.setTextSize(32);
 				_g.setAlpha(160);
 				_g.setColor(0x88000000);
-				_g.fillRect(0, 0, Define.SIZEX, _g.getTextHeight() * 6);
+				_g.fillRect(0, 0, Define.SIZEX, _g.getTextHeight() * 5);
 				_g.setAlpha(255);
 				_g.drawText("LGameEngine version: : " + Settings.LGAME_ENGINE_VERSION, 0, _g.getTextHeight(), COLOR_WHITE);
 				_g.drawText("FramesXSecond: " + Define.MAX_FPS + "/" + iFramesXSecond, 0, _g.getTextHeight() * 2, COLOR_WHITE);
@@ -228,10 +226,10 @@ public class Main extends MyCanvas implements Runnable {
 				
 			}else if (Main.IS_INPUT_DEBUG){
 				_g.setClip(0, 0, Define.SIZEX, Define.SIZEY);
-				_g.setTextSize((int) (24 * Settings.getInstance().getScale()));
+				_g.setTextSize(32);
 				_g.setAlpha(160);
 				_g.setColor(0x88000000);
-				_g.fillRect(0, 0, Define.SIZEX, _g.getTextHeight() * 10);
+				_g.fillRect(0, 0, Define.SIZEX, _g.getTextHeight() * 9);
 				_g.setAlpha(255);
 				_g.drawText("TouchAction: " + MultiTouchHandler2.touchAction[0], 0, _g.getTextHeight(),COLOR_WHITE);
 				_g.drawText("Orin_X: " + MultiTouchHandler2.touchOriginX[0], 0, _g.getTextHeight()*2,COLOR_WHITE);
@@ -274,7 +272,7 @@ public class Main extends MyCanvas implements Runnable {
 						Define.SIZEY - (GfxManager.vImgSoftkeys.getHeight() >> 1) - upBanner,
 						Define.SIZEX, Define.SIZEY - upBanner);
 
-				if (UserInput.isTouchSoftRight(0,0)) {
+				if (UserInput.getInstance().isTouchSoftRight(0,0)) {
 					g.drawImage(GfxManager.vImgSoftkeys,
 							Define.SIZEX- (GfxManager.vImgSoftkeys.getWidth()),
 							Define.SIZEY- (GfxManager.vImgSoftkeys.getHeight() >> 1) - upBanner, 0);
@@ -289,7 +287,7 @@ public class Main extends MyCanvas implements Runnable {
 						0,Define.SIZEY- (GfxManager.vImgSoftkeys.getHeight() >> 1) - upBanner,
 						GfxManager.vImgSoftkeys.getWidth() >> 1, Define.SIZEY - upBanner);
 
-				if (UserInput.isTouchSoftLeft(0,0)) {
+				if (UserInput.getInstance().isTouchSoftLeft(0,0)) {
 					g.drawImage(GfxManager.vImgSoftkeys,-(GfxManager.vImgSoftkeys.getWidth() >> 1),
 							Define.SIZEY- GfxManager.vImgSoftkeys.getHeight() - upBanner, 0);
 				} else {
@@ -376,8 +374,8 @@ public class Main extends MyCanvas implements Runnable {
 	public static void changeState(int _iNewState, boolean _isLoadGraphics) {
 		isLoading = true;
 		
-		multiTouchHandler.resetTouch();
-		UserInput.resetKeys();
+		UserInput.getInstance().getMultiTouchHandler().resetTouch();
+		UserInput.getInstance().resetKeys();
 
 		iLastState = iState;
 		iState = _iNewState;

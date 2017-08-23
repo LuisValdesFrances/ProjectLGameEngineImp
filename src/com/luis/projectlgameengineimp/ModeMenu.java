@@ -71,24 +71,24 @@ public class ModeMenu {
 			runLogo();
 			break;
 		case Define.ST_MENU_ASK_LANGUAGE:
-			if (UserInput.isKeyLeft || UserInput.getOptionMenuTouched_X(
+			if (UserInput.getInstance().isKeyLeft || UserInput.getInstance().getOptionMenuTouched_X(
 					MenuManager.BUTTON_CENTER,0)) {
 				if (iOptionSelect <= 0) 
 					iOptionSelect = 1;
 				else 
 					iOptionSelect--;
 				
-				UserInput.isKeyLeft = false;
+				UserInput.getInstance().isKeyLeft = false;
 				
-			} else if (UserInput.isKeyRight || UserInput.getOptionMenuTouched_X(
+			} else if (UserInput.getInstance().isKeyRight || UserInput.getInstance().getOptionMenuTouched_X(
 					MenuManager.BUTTON_CENTER,1)) {
 				if (iOptionSelect >= NUMBER_OPTS_LANGUAGE-1) 
 					iOptionSelect = 0;
 				 else 
 					 iOptionSelect++;
 				
-				UserInput.isKeyRight = false;
-			} else if (UserInput.isSoftkeyLeft || UserInput.isKeyFire || (UserInput.goToSoftLeft(0,0))){
+				UserInput.getInstance().isKeyRight = false;
+			} else if (UserInput.getInstance().isSoftkeyLeft || UserInput.getInstance().isKeyFire || (UserInput.getInstance().goToSoftLeft(0,0))){
 				
 				/*
 				if (iOptionSelect == Resources.ENGLISH){
@@ -123,24 +123,24 @@ public class ModeMenu {
 			break;
 		
 		case Define.ST_MENU_ASK_SOUND:
-			if (UserInput.isKeyLeft || UserInput.getOptionMenuTouched_X(
+			if (UserInput.getInstance().isKeyLeft || UserInput.getInstance().getOptionMenuTouched_X(
 					MenuManager.BUTTON_CENTER,0)) {
 				if (iOptionSelect <= 0) 
 					iOptionSelect = 1;
 				else 
 					iOptionSelect--;
 				
-				UserInput.isKeyLeft = false;
+				UserInput.getInstance().isKeyLeft = false;
 				
-			} else if (UserInput.isKeyRight || UserInput.getOptionMenuTouched_X(
+			} else if (UserInput.getInstance().isKeyRight || UserInput.getInstance().getOptionMenuTouched_X(
 					MenuManager.BUTTON_CENTER,1)) {
 				if (iOptionSelect >= NUMBER_OPTS_SOUND-1) 
 					iOptionSelect = 0;
 				 else 
 					 iOptionSelect++;
 				
-				UserInput.isKeyRight = false;
-			} else if (UserInput.isSoftkeyLeft || UserInput.isKeyFire || (UserInput.goToSoftLeft(0,0))
+				UserInput.getInstance().isKeyRight = false;
+			} else if (UserInput.getInstance().isSoftkeyLeft || UserInput.getInstance().isKeyFire || (UserInput.getInstance().goToSoftLeft(0,0))
 					) {
 				
 				if (iOptionSelect == 0){
@@ -158,28 +158,28 @@ public class ModeMenu {
 			break;
 		
 		case Define.ST_MENU_MAIN:
-			if (UserInput.isKeyUp) {
+			if (UserInput.getInstance().isKeyUp) {
 				if (iOptionSelect <= 0) {
 					iOptionSelect = NUMBER_OPTS_MAIN_MENU - 1;
 				} else {
 					iOptionSelect--;
 				}
-				UserInput.isKeyUp = false;
+				UserInput.getInstance().isKeyUp = false;
 				
-			} else if (UserInput.isKeyDown) {
+			} else if (UserInput.getInstance().isKeyDown) {
 				if (iOptionSelect >= NUMBER_OPTS_MAIN_MENU - 1) {
 					iOptionSelect = 0;
 				} else {
 					iOptionSelect++;
 				}
-				UserInput.isKeyDown = false;
+				UserInput.getInstance().isKeyDown = false;
 				
 			}else {
-				iOptionSelect = UserInput.getOptionMenuTouched_Y(
+				iOptionSelect = UserInput.getInstance().getOptionMenuTouched_Y(
 						NUMBER_OPTS_MAIN_MENU,
 						iOptionSelect);
-			}if (UserInput.isKeyFire
-					|| UserInput.getOkTouched_Y(iOptionSelect)) {
+			}if (UserInput.getInstance().isKeyFire
+					|| UserInput.getInstance().getOkTouched_Y(iOptionSelect)) {
 
 				switch (iOptionSelect) {
 				case 0:// Jugar
@@ -199,27 +199,27 @@ public class ModeMenu {
 			break;
 			
 		case Define.ST_MENU_MORE:
-			if (UserInput.isKeyUp) {
+			if (UserInput.getInstance().isKeyUp) {
 				if (iOptionSelect <= 0) {
 					iOptionSelect = NUMBER_OPTS_MORE_MENU - 1;
 				} else {
 					iOptionSelect--;
 				}
-				UserInput.isKeyUp = false;
+				UserInput.getInstance().isKeyUp = false;
 				
-			} else if (UserInput.isKeyDown) {
+			} else if (UserInput.getInstance().isKeyDown) {
 				if (iOptionSelect >= NUMBER_OPTS_MORE_MENU - 1) {
 					iOptionSelect = 0;
 				} else {
 					iOptionSelect++;
 				}
-				UserInput.isKeyDown = false;
+				UserInput.getInstance().isKeyDown = false;
 				
 			}else {
-				iOptionSelect = UserInput.getOptionMenuTouched_Y(
+				iOptionSelect = UserInput.getInstance().getOptionMenuTouched_Y(
 						NUMBER_OPTS_MORE_MENU, iOptionSelect);
-			}if (UserInput.isKeyFire
-					|| UserInput.getOkTouched_Y(iOptionSelect)) {
+			}if (UserInput.getInstance().isKeyFire
+					|| UserInput.getInstance().getOkTouched_Y(iOptionSelect)) {
 
 				switch (iOptionSelect) {
 				case 0:
@@ -229,16 +229,16 @@ public class ModeMenu {
 					Main.changeState(Define.ST_MENU_ABOUT,false);
 					break;
 				}
-			}else if (UserInput.isSoftkeyRight || UserInput.isKeyFire
-					|| (UserInput.goToSoftRight(0,0))) {
+			}else if (UserInput.getInstance().isSoftkeyRight || UserInput.getInstance().isKeyFire
+					|| (UserInput.getInstance().goToSoftRight(0,0))) {
 				Main.changeState(Define.ST_MENU_MAIN,false);
 			}
 			break;
 			
 		case Define.ST_MENU_OPTIONS:
 			//Language
-			if (UserInput.isKeyLeft
-					|| UserInput.getOptionMenuTouched_X(
+			if (UserInput.getInstance().isKeyLeft
+					|| UserInput.getInstance().getOptionMenuTouched_X(
 							MenuManager.BUTTON_UP,0)) {
 				if (iLanguageSelect <= 0) 
 					iLanguageSelect = NUMBER_OPTS_LANGUAGE -1;
@@ -247,10 +247,10 @@ public class ModeMenu {
 				
 				RscManager.loadLanguage(iLanguageSelect);
 				
-				UserInput.isKeyLeft = false;
+				UserInput.getInstance().isKeyLeft = false;
 				
-			} else if (UserInput.isKeyRight
-					|| UserInput.getOptionMenuTouched_X(
+			} else if (UserInput.getInstance().isKeyRight
+					|| UserInput.getInstance().getOptionMenuTouched_X(
 							MenuManager.BUTTON_UP,1)) {
 				if (iLanguageSelect >= NUMBER_OPTS_LANGUAGE -1) 
 					iLanguageSelect = 0;
@@ -259,12 +259,12 @@ public class ModeMenu {
 				
 				RscManager.loadLanguage(iLanguageSelect);
 				
-				UserInput.isKeyRight = false;
+				UserInput.getInstance().isKeyRight = false;
 				}
 			
 			//Sound
-			if (UserInput.isKeyLeft
-					|| UserInput.getOptionMenuTouched_X(
+			if (UserInput.getInstance().isKeyLeft
+					|| UserInput.getInstance().getOptionMenuTouched_X(
 							MenuManager.BUTTON_CENTER,0)) {
 				if (iSoundSelect <= 0) 
 					iSoundSelect = NUMBER_OPTS_SOUND -1;
@@ -279,10 +279,10 @@ public class ModeMenu {
 					SndManager.isSound = false;
 				}
 				
-				UserInput.isKeyLeft = false;
+				UserInput.getInstance().isKeyLeft = false;
 				
-			} else if (UserInput.isKeyRight
-					|| UserInput.getOptionMenuTouched_X(
+			} else if (UserInput.getInstance().isKeyRight
+					|| UserInput.getInstance().getOptionMenuTouched_X(
 							MenuManager.BUTTON_CENTER,1)) {
 				if (iSoundSelect >= NUMBER_OPTS_SOUND -1) 
 					iSoundSelect = 0;
@@ -296,9 +296,9 @@ public class ModeMenu {
 					SndManager.stopMusic();
 					SndManager.isSound = false;
 				}
-				UserInput.isKeyRight = false;
+				UserInput.getInstance().isKeyRight = false;
 			}
-			if (UserInput.isSoftkeyLeft || UserInput.isKeyFire || (UserInput.goToSoftLeft(0,0))) {
+			if (UserInput.getInstance().isSoftkeyLeft || UserInput.getInstance().isKeyFire || (UserInput.getInstance().goToSoftLeft(0,0))) {
 				Main.iLanguage = iLanguageSelect;
 //				//saveSystemData();
 				Main.changeState(Define.ST_MENU_MAIN,false);
@@ -306,31 +306,31 @@ public class ModeMenu {
 			break;
 		case Define.ST_MENU_HELP:
 		case Define.ST_MENU_ABOUT:
-			if (UserInput.isSoftkeyRight || UserInput.isKeyFire || (UserInput.goToSoftRight(0,0))) {
+			if (UserInput.getInstance().isSoftkeyRight || UserInput.getInstance().isKeyFire || (UserInput.getInstance().goToSoftRight(0,0))) {
 				Main.changeState(Define.ST_MENU_MORE,false);
 			}
 			break;
 			
 		case Define.ST_MENU_EXIT:
         	
-        	if (UserInput.isKeyLeft || UserInput.getOptionMenuTouched_X(
+        	if (UserInput.getInstance().isKeyLeft || UserInput.getInstance().getOptionMenuTouched_X(
 					MenuManager.BUTTON_CENTER,0)) {
 				if (iOptionSelect <= 0) 
 					iOptionSelect = 1;
 				else 
 					iOptionSelect--;
 				
-				UserInput.isKeyLeft = false;
+				UserInput.getInstance().isKeyLeft = false;
 				
-			} else if (UserInput.isKeyRight || UserInput.getOptionMenuTouched_X(
+			} else if (UserInput.getInstance().isKeyRight || UserInput.getInstance().getOptionMenuTouched_X(
 					MenuManager.BUTTON_CENTER,1)) {
 				if (iOptionSelect >= 1) 
 					iOptionSelect = 0;
 				 else 
 					 iOptionSelect++;
 				
-				UserInput.isKeyRight = false;
-			} else if (UserInput.isSoftkeyLeft || UserInput.isKeyFire || (UserInput.goToSoftLeft(0,0))
+				UserInput.getInstance().isKeyRight = false;
+			} else if (UserInput.getInstance().isSoftkeyLeft || UserInput.getInstance().isKeyFire || (UserInput.getInstance().goToSoftLeft(0,0))
 					) {
 				
 			if (iOptionSelect == 0){

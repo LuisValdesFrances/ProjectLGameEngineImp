@@ -10,6 +10,7 @@ import com.luis.lgameengine.gameutils.Settings;
 import com.luis.lgameengine.gameutils.controls.GameControl;
 import com.luis.lgameengine.gameutils.controls.TouchPadControl;
 import com.luis.lgameengine.gameutils.gameworld.GameCamera;
+import com.luis.lgameengine.gameutils.gameworld.ParticlesManager;
 import com.luis.lgameengine.gameutils.gameworld.RigidBody;
 import com.luis.lgameengine.gameutils.gameworld.TileManager;
 import com.luis.lgameengine.gameutils.gameworld.WorldConver;
@@ -19,6 +20,7 @@ import com.luis.lgameengine.implementation.input.MultiTouchHandler2;
 import com.luis.projectlgameengineimp.objects.BadRock;
 import com.luis.projectlgameengineimp.objects.Enemy;
 import com.luis.projectlgameengineimp.objects.Player;
+import com.luis.projectlgameengineimp.objects.Rock;
 
 /**
  * 
@@ -49,6 +51,7 @@ public class ModeGame {
 	private static WorldConver worldConver;
 	private static TileManager tileManager;
 	private static GameControl gameControl;
+	private static ParticlesManager particlesManager;
 	
 	private static BGManager bgManager;
 	private static Player player;
@@ -84,7 +87,7 @@ public class ModeGame {
 					(int) (TILE_SIZE),//(int)((GfxManager.imgPlayerIdle.getWidth()/Player.IDLE_FRAMES) * 0.30f),
 					(int)(TILE_SIZE*2f),
 					Define.SIZEX8, 
-					-Define.SIZEY,//fWorldHeight/2, 
+					-TILE_SIZE,//fWorldHeight/2,
 					0, 
 					RigidBody.transformUnityValue(0.96f, TILE_SIZE, 3f), 
 					0);
@@ -111,6 +114,7 @@ public class ModeGame {
 				drawBuffer = true;
 			}
 			
+			particlesManager = ParticlesManager.getInstance();
 			Main.changeState(Define.ST_GAME_RUN, false);
 			break;
 			
@@ -144,10 +148,12 @@ public class ModeGame {
 						MultiTouchHandler2.touchY, 
 						MultiTouchHandler2.touchAction);
 				
-				player.update(Main.getDeltaSec(), tileManager.getLayerID(1), TILE_SIZE, TILE_SIZE, gameControl);
-				
 				checkEnemy();
 				updateEnemy();
+				
+				player.update(Main.getDeltaSec(), tileManager.getLayerID(1), TILE_SIZE, TILE_SIZE, gameControl);
+				
+				particlesManager.runParticles(Main.getDeltaSec());
 			}
 			
 			break;
@@ -248,11 +254,12 @@ public class ModeGame {
 						Graphics.BOTTOM | Graphics.HCENTER);
 			}
 			
+			drawEnemy(gameBuffer.getGraphics());
+			
 			player.draw(gameBuffer.getGraphics(), worldConver, gameCamera.getPosX(), gameCamera.getPosY(), 
 					0, 0, 0, 0, 
 					Graphics.BOTTOM | Graphics.HCENTER);
 			
-			drawEnemy(gameBuffer.getGraphics());
 			
 			//Adornos 1º plano
 			if(!isDoubleBuffer){
@@ -263,6 +270,8 @@ public class ModeGame {
 						gameCamera.getPosX(), gameCamera.getPosY(), 0, TILE_SIZE>>1,
 						Graphics.BOTTOM | Graphics.HCENTER);
 			}
+			
+			particlesManager.drawParticles(gameBuffer.getGraphics(), worldConver, gameCamera);
 			
 			_g.drawImage(gameBuffer, Define.SIZEX2, Define.SIZEY2, Graphics.VCENTER | Graphics.HCENTER);
 			
@@ -305,7 +314,7 @@ public class ModeGame {
 		for(int f = 0; f < tileManager.getLayerID(3).length; f++){
 			for(int c = 0; c < tileManager.getLayerID(3)[f].length; c++){
 				if(tileManager.getLayerID(3)[f][c] != 0){
-					
+					Enemy e = null;
 					if (worldConver.isObjectInGameLayout(gameCamera.getPosX(), gameCamera.getPosY(),
                             (TILE_SIZE * c),
                             (TILE_SIZE * f),
@@ -317,18 +326,18 @@ public class ModeGame {
 						case Define.BADROCK_ID:
 							w = (int) (TILE_SIZE * 0.5f);
 							h = (int) (TILE_SIZE * 1.5f);
-							Enemy e = new BadRock(player, Define.BADROCK_ID, w, h, 
-									TILE_SIZE * c + w/2, TILE_SIZE * f+TILE_SIZE, 0, 0, 0);
+							e = new BadRock(Define.BADROCK_ID, player, w, h, 
+									TILE_SIZE * c + w/2, TILE_SIZE * f+TILE_SIZE, 0, 0, 0, Define.BADROCK_LIVE);
 							enemyList.add(e);
 							
 							e.setGravityForce(Define.GRAVITY_FORCE);
 							e.setWeight(RigidBody.transformUnityValue(0.96f, TILE_SIZE, Define.PLAYER_WEIGHT));
 							
 							tileManager.getLayerID(3)[f][c] = 0;
-							Log.i("Debug", "Spawn enemy type: " + Define.BADROCK_ID + " x: " + e.getPosX() + " y: " + e.getPosY());
 							break;
 							
 						}
+						Log.i("Debug", "Spawn enemy type: " + e.getType() + " x: " + e.getPosX() + " y: " + e.getPosY());
 						
 					}
 					
@@ -338,8 +347,58 @@ public class ModeGame {
 	}
 	
 	private static void updateEnemy(){
-		for(Enemy e : enemyList){
-			e.update(Main.getDeltaSec(), tileManager.getLayerID(1), TILE_SIZE, TILE_SIZE);
+		for(int i = 0; i < enemyList.size(); i++){
+			
+			enemyList.get(i).update(Main.getDeltaSec(), tileManager.getLayerID(1), TILE_SIZE, TILE_SIZE);
+			
+			if(enemyList.get(i).getType() == Define.BADROCK_ID){
+				if(enemyList.get(i).getState() == BadRock.STATE_DEAD){
+					
+					particlesManager.createParticles(
+							3,
+							enemyList.get(i).getPosX(), enemyList.get(i).getPosY()-enemyList.get(i).getHeight()/2, 
+							350, 
+							(int)(enemyList.get(i).getWidth()*0.75f), (int)(enemyList.get(i).getWidth()*0.85f),
+							ParticlesManager.COL_CENTER, 
+							new int[]{0xffE2C683, 0xff724611, 0xffD2872C, 0xffD5FCB5, 0Xff4E4032, 0xff426129},
+							0.95f, false, false);
+					enemyList.remove(i);
+					i--;
+				}
+				else if(enemyList.get(i).createObject()){
+					float x = enemyList.get(i).getPosX();
+					float y = enemyList.get(i).getPosY()-enemyList.get(i).getHeight()*0.7f;
+					Enemy e = new Rock(Define.ROCK_ID, player, 
+							GfxManager.imgRock.getWidth(), GfxManager.imgRock.getHeight(), 
+							x, 
+							y, 0, 0, 0);
+					enemyList.add(e);
+					
+					e.setGravityForce(Define.GRAVITY_FORCE);
+					e.setWeight(RigidBody.transformUnityValue(0.96f, TILE_SIZE, Define.ROCK_WEIGHT));
+					float speedX = RigidBody.transformUnityValue(0.96f, TILE_SIZE, 
+							enemyList.get(i).isFlip()?Define.BADROCK_FORCE_LAUNCH:-Define.BADROCK_FORCE_LAUNCH);
+					float speedY = RigidBody.transformUnityValue(0.96f, TILE_SIZE, 
+							Define.BADROCK_FORCE_LAUNCH);
+					e.setSpeedX(-speedX);
+					e.setSpeedY(-speedY);
+				}
+			}else if(enemyList.get(i).getType() == Define.ROCK_ID){
+				if(enemyList.get(i).getState() == Rock.STATE_DESTROY){
+					
+					particlesManager.createParticles(
+							2,
+							enemyList.get(i).getPosX(), enemyList.get(i).getPosY(), 
+							650, 
+							(int)(enemyList.get(i).getWidth()*0.45f), (int)(enemyList.get(i).getWidth()*0.45f),
+							ParticlesManager.COL_CENTER, 
+							new int[]{0xff35302A, 0Xff4E4032, 0xff918274},
+							0.45f, false, false);
+					
+					enemyList.remove(i);
+					i--;
+				}
+			}
 		}
 	}
 	

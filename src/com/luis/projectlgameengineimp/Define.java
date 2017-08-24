@@ -94,6 +94,7 @@ public class Define {
 	   public static final int ST_GAME_PERFORMANCE_OPTIONS = 200;
 	   
 	   //Game constans
+	   public static final int ROCK_ID = 1;
 	   public static final int BADROCK_ID = 191;
 	   
 	   public static final long HIT_PAUSE = 85;
@@ -102,9 +103,14 @@ public class Define {
 	   public static final float PLAYER_WEIGHT = 4.8f;
 	   public static final float PLAYER_FORCE_JUMP = 9f;
 	   public static final float PLAYER_FORCE_ATACK = 2.5f;
+	   public static final float PLAYER_DAMAGE = 100;
 		
 	   public static final float BADROCK_WEIGHT = 4.8f;
 	   public static final float BADROCK_IDLE_TIME = 2f;
+	   public static final float BADROCK_FORCE_LAUNCH = 8f;
+	   public static final int BADROCK_LIVE = 500;
+	   
+	   public static final float ROCK_WEIGHT = 5f;
 	   
 	  
 	 

@@ -1,9 +1,6 @@
 package com.luis.projectlgameengineimp.objects;
 
 import java.util.ArrayList;
-
-import android.util.Log;
-
 import com.luis.lgameengine.gameutils.gameworld.SpriteImage;
 import com.luis.lgameengine.gameutils.gameworld.WorldConver;
 import com.luis.lgameengine.implementation.graphics.Graphics;
@@ -17,12 +14,10 @@ public class BadRock extends Enemy{
 	public static final int ANIM_IDLE = 0;
 	public static final int ANIM_ATACK = 1;
 	public static final int ANIM_SUFF = 2;
-	public static final int ANIM_DEAD = 3;
 	
 	public static final int IDLE_FRAMES = 10;
 	public static final int ATACK_FRAMES = 20;
 	public static final int SUFF_FRAMES = 5;
-	public static final int SUFF_DEAD = 25;
 	
 	public static final int STATE_IDLE = 0;
 	public static final int STATE_ATACK = 1;
@@ -30,15 +25,17 @@ public class BadRock extends Enemy{
 	public static final int STATE_SUFF = 3;
 	public static final int STATE_DEAD = 4;
 	
+	private boolean launchRock;
+	
 	//Tembleque
 	private float idleTime;
 	private float idleCount;
 	private float tremorCount;
 	private float tremorFrameCount;
 
-	public BadRock(Player player, int id, int width, int height, float posX, float posY, float posZ,
-			float speed, float angle) {
-		super(player, id, width, height, posX, posY, posZ, speed, angle);
+	public BadRock(int id, Player player, int width, int height, float posX, float posY, float posZ,
+			float speed, float angle, int live) {
+		super(id, player, width, height, posX, posY, posZ, speed, angle, live);
 		
 		spriteImageList = new ArrayList<SpriteImage>();
 		 
@@ -60,8 +57,24 @@ public class BadRock extends Enemy{
 		idleTime = Define.BADROCK_IDLE_TIME + (float)Main.getRandom(0, 20)*0.1f;
 	}
 	
+	public boolean createObject(){
+		if(launchRock && state == STATE_ATACK){
+			
+			if(launchRock && spriteImageList.get(animation).getFrame()==13){
+				launchRock = false;
+				return true;
+			}
+		}
+		return false;
+	}
+	
 	public void update(float deltaTime, int[][] _iTilesMatrixID, float _fTileW, float _fTileH) {
     	super.update (deltaTime, _iTilesMatrixID, _fTileW, _fTileH);
+    	
+    	if(isDead()){
+    		state = STATE_DEAD;
+    		return;
+    	}
     	
     	//if(state != STATE_SUFF){
     		if(checkDamageFromPlayer(player)){
@@ -89,7 +102,7 @@ public class BadRock extends Enemy{
 			break;
 			
 		case STATE_ATACK:
-			if(lastState != STATE_TREMOR && spriteImageList.get(animation).getFrame() == 11){
+			if(lastState != STATE_TREMOR && spriteImageList.get(animation).getFrame() == 10){
 				lastState = state;
 				state = STATE_TREMOR;
 				newState = state;
@@ -111,10 +124,10 @@ public class BadRock extends Enemy{
 					tremorFrameCount+= deltaTime;
 				}else{
 					tremorFrameCount = 0;
-					if(spriteImageList.get(animation).getFrame() == 11){
-						spriteImageList.get(animation).setFrame(12);
-					}else{
+					if(spriteImageList.get(animation).getFrame() == 10){
 						spriteImageList.get(animation).setFrame(11);
+					}else{
+						spriteImageList.get(animation).setFrame(10);
 					}
 				}
 				
@@ -148,6 +161,7 @@ public class BadRock extends Enemy{
 				case STATE_ATACK:
 					animation = ANIM_ATACK;
 					spriteImageList.get(animation).setTimeUpdate(0.08f);
+					launchRock = true;
 					break;
 				case STATE_SUFF:
 					animation = ANIM_SUFF;

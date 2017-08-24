@@ -9,17 +9,29 @@ public abstract class Enemy extends GameObject{
 	
 	protected int type;
 	protected int animation;
+	protected int live;
 	
 	protected List<SpriteImage> spriteImageList;
 	
 	protected Player player;
 
-	public Enemy(Player player, int type, int width, int height, float posX, float posY, float posZ,
-			float speed, float angle) {
+	public Enemy(int type, Player player, int width, int height, float posX, float posY, float posZ,
+			float speed, float angle, int live) {
 		super(width, height, posX, posY, posZ, speed, angle);
-		this.player = player;
 		this.type = type;
+		this.player = player;
+		this.live = live;
 	}
+	
+	public void update(float deltaTime, int[][] tilesMatrixID, float tileW, float tileH) {
+    	super.update (deltaTime, tilesMatrixID, tileW, tileH);
+    }
+    
+    public abstract boolean createObject();
+    
+    public boolean isDead(){
+    	return live < 1; 
+    }
 	
 	protected boolean checkDamageFromPlayer(Player player){
 		
@@ -35,6 +47,7 @@ public abstract class Enemy extends GameObject{
     	}
     	
     	if(colisionY && colisionX && damageFrame){
+    		live -= Define.PLAYER_DAMAGE;
     		try{
     			Thread.sleep(Define.HIT_PAUSE);
     			return true;
@@ -67,6 +80,14 @@ public abstract class Enemy extends GameObject{
 
 	public void setFlip(boolean flip) {
 		this.flip = flip;
+	}
+
+	public int getLive() {
+		return live;
+	}
+
+	public void setLive(int live) {
+		this.live = live;
 	}
 	
 	

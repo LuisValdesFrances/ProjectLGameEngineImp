@@ -1,6 +1,5 @@
 package com.luis.projectlgameengineimp;
 
-import java.nio.DoubleBuffer;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,7 +15,7 @@ import com.luis.lgameengine.gameutils.gameworld.TileManager;
 import com.luis.lgameengine.gameutils.gameworld.WorldConver;
 import com.luis.lgameengine.implementation.graphics.Graphics;
 import com.luis.lgameengine.implementation.graphics.Image;
-import com.luis.lgameengine.implementation.input.MultiTouchHandler2;
+import com.luis.lgameengine.implementation.input.TouchData;
 import com.luis.projectlgameengineimp.objects.BadRock;
 import com.luis.projectlgameengineimp.objects.Enemy;
 import com.luis.projectlgameengineimp.objects.Player;
@@ -40,7 +39,7 @@ public class ModeGame {
 	 */
 	public static boolean isGamePaused;
 	
-	public static final int TILE_SET_SIZE[] = {8,16,32,64};
+	public static final int TILE_SET_SIZE[] = {24,32,48,64};
 	public static int TILE_SIZE;
 	public static float worldWidth;
 	public static float worldHeight;
@@ -71,7 +70,8 @@ public class ModeGame {
 			
 			worldConver = new WorldConver(Define.SIZEX, Define.SIZEY, 0, 0, 0, 0, worldWidth, worldHeight);
 			
-			tileManager = new TileManager("/bin/levels/level_1.map");
+			tileManager = new TileManager(
+					"/bin/levels/" + Settings.BITMAP_FOLDER[Settings.getInstance().getResolution()]  + "/level_1.map");
 			tileManager.idConversionData(
 					new Image[] {GfxManager.vImgGameTilesL1, GfxManager.vImgGameTilesL2, GfxManager.vImgGameTilesL3, GfxManager.imgEnemyTile});
 			
@@ -81,15 +81,16 @@ public class ModeGame {
 		    		new Image[] {null, null}, new Image[] {null, null},
 		    		new int[] {Define.SIZEX - Define.SIZEX/4, Define.SIZEX - Define.SIZEX/8},
 		    		new int[] {Define.SIZEY - Define.SIZEY/8, Define.SIZEY - Define.SIZEY/4},
-		    		MultiTouchHandler2.ACTION_DOWN, MultiTouchHandler2.ACTION_DRAG, MultiTouchHandler2.ACTION_UP);
+		    		TouchData.ACTION_DOWN, TouchData.ACTION_DRAG, TouchData.ACTION_UP);
+			
 			gameControl.reset();
+			
 			player = new Player(
 					(int) (TILE_SIZE),//(int)((GfxManager.imgPlayerIdle.getWidth()/Player.IDLE_FRAMES) * 0.30f),
 					(int)(TILE_SIZE*2f),
 					Define.SIZEX8, 
 					-TILE_SIZE,//fWorldHeight/2,
 					0, 
-					RigidBody.transformUnityValue(0.96f, TILE_SIZE, 3f), 
 					0);
 			
 			player.setGravityForce(Define.GRAVITY_FORCE);
@@ -142,16 +143,16 @@ public class ModeGame {
 				}
 				
 				gameControl.update(
-						MultiTouchHandler2.touchOriginX, 
-						MultiTouchHandler2.touchOriginY, 
-						MultiTouchHandler2.touchX, 
-						MultiTouchHandler2.touchY, 
-						MultiTouchHandler2.touchAction);
+						UserInput.getInstance().getMultiTouchHandler().getTouchOriginX(), 
+						UserInput.getInstance().getMultiTouchHandler().getTouchOriginY(), 
+						UserInput.getInstance().getMultiTouchHandler().getTouchX(), 
+						UserInput.getInstance().getMultiTouchHandler().getTouchY(), 
+						UserInput.getInstance().getMultiTouchHandler().getTouchAction());
 				
 				checkEnemy();
 				updateEnemy();
 				
-				player.update(Main.getDeltaSec(), tileManager.getLayerID(1), TILE_SIZE, TILE_SIZE, gameControl);
+				player.update(Main.getDeltaSec(), tileManager.getLayerID(1), enemyList, TILE_SIZE, TILE_SIZE, gameControl);
 				
 				particlesManager.runParticles(Main.getDeltaSec());
 			}
@@ -340,7 +341,6 @@ public class ModeGame {
 						Log.i("Debug", "Spawn enemy type: " + e.getType() + " x: " + e.getPosX() + " y: " + e.getPosY());
 						
 					}
-					
 				}
 			}
 		}
@@ -369,7 +369,7 @@ public class ModeGame {
 					float x = enemyList.get(i).getPosX();
 					float y = enemyList.get(i).getPosY()-enemyList.get(i).getHeight()*0.7f;
 					Enemy e = new Rock(Define.ROCK_ID, player, 
-							GfxManager.imgRock.getWidth(), GfxManager.imgRock.getHeight(), 
+							TILE_SIZE, TILE_SIZE, 
 							x, 
 							y, 0, 0, 0);
 					enemyList.add(e);
@@ -424,17 +424,19 @@ public class ModeGame {
 	}
 	
 	private static boolean isFocusPerformanceMenu(){
-		if(
-			(MultiTouchHandler2.touchAction[0] == MultiTouchHandler2.ACTION_DOWN || MultiTouchHandler2.touchAction[0] == MultiTouchHandler2.ACTION_DRAG) && 
+		if((
+			UserInput.getInstance().getMultiTouchHandler().getTouchAction(0) == TouchData.ACTION_DOWN || 
+			UserInput.getInstance().getMultiTouchHandler().getTouchAction(0) == TouchData.ACTION_DRAG) && 
 			UserInput.getInstance().compareTouch(0, Define.SIZEY - PERF_BUTTON_H, PERF_BUTTON_W, Define.SIZEY, 0)){
 			return true;
 		}
 		return false;
 	}
+	
 	private static boolean isGoToPerformanceMenu(){
 		if(
-			MultiTouchHandler2.touchAction[0] == MultiTouchHandler2.ACTION_UP && 
-			UserInput.getInstance().compareTouch(0, Define.SIZEY - PERF_BUTTON_H, PERF_BUTTON_W, Define.SIZEY, 0)){
+				UserInput.getInstance().getMultiTouchHandler().getTouchAction(0) == TouchData.ACTION_UP && 
+				UserInput.getInstance().compareTouch(0, Define.SIZEY - PERF_BUTTON_H, PERF_BUTTON_W, Define.SIZEY, 0)){
 			return true;
 		}
 		return false;
@@ -510,7 +512,9 @@ public class ModeGame {
 		int numOpt = 3;
 		int spaceY = Define.SIZEY - PERF_BUTTON_H;
 		int secH = spaceY / numOpt;
-		if(MultiTouchHandler2.touchAction[0] == MultiTouchHandler2.ACTION_DOWN && MultiTouchHandler2.touchFrames[0] == 1){
+		if(
+			UserInput.getInstance().getMultiTouchHandler().getTouchAction(0) == TouchData.ACTION_DOWN && 
+			UserInput.getInstance().getMultiTouchHandler().getTouchFrames(0) == 1){
 			for(int i = 0; i < numOpt; i++){
 				if(UserInput.getInstance().compareTouch(0, i * secH, Define.SIZEX, (i + 1) * secH, 0)){
 					return i;

@@ -2,24 +2,21 @@ package com.luis.projectlgameengineimp;
 
 
 import com.luis.lgameengine.gameutils.MenuManager;
-import com.luis.lgameengine.implementation.input.MultiTouchHandler2;
+import com.luis.lgameengine.implementation.input.KeyboardHandler;
+import com.luis.lgameengine.implementation.input.MultiTouchHandler;
+import com.luis.lgameengine.implementation.input.TouchData;
 
 public class UserInput {
 	
-	private MultiTouchHandler2 multiTouchHandler;
-	
-	public MultiTouchHandler2 getMultiTouchHandler(){
+	private MultiTouchHandler multiTouchHandler;
+	public MultiTouchHandler getMultiTouchHandler(){
 		return multiTouchHandler;
 	}
 	
-	//Teclas
-	public boolean isKeyLeft;
-	public boolean isKeyRight;
-	public boolean isKeyUp;
-	public boolean isKeyDown;
-	public boolean isKeyFire;
-	public boolean isSoftkeyLeft;
-	public boolean isSoftkeyRight;
+	private KeyboardHandler keyboardHandler;
+	public KeyboardHandler getKeyboardHandler(){
+		return keyboardHandler;
+	}
 	
 	public static final int KEYCODE_UP = 19;
 	public static final int KEYCODE_DOWN = 20;
@@ -40,10 +37,10 @@ public class UserInput {
 	public static final int KEYCODE_ENTER = 66;
 	
 	//Controls for pads
-	public final int KEYCODE_JXD_DOWN = 97;
-	public final int KEYCODE_JXD_RIGHT = 96;
-	public final int KEYCODE_JXD_UP = 99;
-	public final int KEYCODE_JXD_LEFT = 100;
+	public static final int KEYCODE_SHIELD_A = 96;
+	public static final int KEYCODE_SHIELD_B = 97;
+	public static final int KEYCODE_SHIELD_X = 99;
+	public static final int KEYCODE_SHIELD_Y = 100;
 	
 	public static UserInput userInput;
 	public static UserInput getInstance(){
@@ -52,24 +49,15 @@ public class UserInput {
 		return userInput;
 	}
 	
-	public void init(MultiTouchHandler2 _multiTouchHandler){
-		this.multiTouchHandler = _multiTouchHandler;
+	public void init(MultiTouchHandler multiTouchHandler, KeyboardHandler keyboardHandler){
+		this.multiTouchHandler = multiTouchHandler;
+		this.multiTouchHandler.resetTouch();
+		this.keyboardHandler = keyboardHandler;
+		this.keyboardHandler.resetKeys();
 	}
 	
 	
-	public void resetKeys(){
-    	isKeyLeft=false;
-    	isKeyRight=false;
-    	isKeyUp=false;
-    	isKeyDown=false;
-    	isKeyFire=false;
-    	isSoftkeyLeft=false;
-    	isSoftkeyRight=false;
-    }
-	
-	
-	
-   //Controlador de foco
+	//Controlador de foco
     public boolean isTouchSoftRight(int _iPadingX, int _iPadingY) {
     	int upBanner = Main.IS_MOVE_SOFT_BANNER?(GfxManager.vImgSoftkeys.getHeight() >> 1):0;
 		return compareTouch(Define.SIZEX - (GfxManager.vImgSoftkeys.getWidth()>>1), 
@@ -99,16 +87,18 @@ public class UserInput {
 				GfxManager.vImgSoftkeys.getWidth()>>1, Define.SIZEY-upBanner, 0);
 	}
     
+	/*
     public void putTouchDistance(int _iPoint){
-    	MultiTouchHandler2.touchDistanceX[_iPoint] = MultiTouchHandler2.touchX[_iPoint] - MultiTouchHandler2.touchOriginX[_iPoint];
-    	MultiTouchHandler2.touchDistanceY[_iPoint] = MultiTouchHandler2.touchY[_iPoint] - MultiTouchHandler2.touchOriginY[_iPoint];
+    	multiTouchHandler.setTouchDistanceX(multiTouchHandler.getTouchX() - multiTouchHandler.getTouchOriginX());
+    	multiTouchHandler.setTouchDistanceY(multiTouchHandler.getTouchY() - multiTouchHandler.getTouchOriginY());
     }
+    */
     
     public boolean compareTouch(int _iX0, int _iY0, int _iX1, int _iY1, int _iPoint) {
-        if ((MultiTouchHandler2.touchX[_iPoint] > _iX0
-                && MultiTouchHandler2.touchX[_iPoint] < _iX1)
-                && (MultiTouchHandler2.touchY[_iPoint] > _iY0
-                && MultiTouchHandler2.touchY[_iPoint] < _iY1)) {
+        if ((multiTouchHandler.getTouchX(0) > _iX0
+                && multiTouchHandler.getTouchX(0) < _iX1)
+                && (multiTouchHandler.getTouchY(0) > _iY0
+                && multiTouchHandler.getTouchY(0) < _iY1)) {
         	return true;
         } else {
             return false;
@@ -153,7 +143,7 @@ public class UserInput {
         if (compareTouch(posX, posY,
         		(posX + (GfxManager.vImgMenuButtons.getWidth() >> 1)) + GfxManager.vImgMenuArrows.getWidth(), 
         		posY + (GfxManager.vImgMenuButtons.getHeight() >> 1), 0) 
-        		&& MultiTouchHandler2.touchAction[0] == MultiTouchHandler2.ACTION_UP) {
+        		&& multiTouchHandler.getTouchAction(0) == TouchData.ACTION_UP) {
 
             //SndManager.playFX(SndManager.FX_BLOCK);
         	multiTouchHandler.resetTouch();
@@ -177,7 +167,7 @@ public class UserInput {
                             (Define.SIZEX2 - (GfxManager.vImgMenuButtons.getWidth() >> 1))+ GfxManager.vImgMenuButtons.getWidth(),
                             (MenuManager.iListPosY[i]) + (GfxManager.vImgMenuButtons.getHeight() >> 1), 0)) {
                         selectOption = i;
-                        if (MultiTouchHandler2.touchAction[0] == MultiTouchHandler2.ACTION_DOWN) {
+                        if (multiTouchHandler.getTouchAction(0) == TouchData.ACTION_DOWN) {
                             iFirstValidTouch = i;
                         }
                         break;
@@ -205,7 +195,7 @@ public class UserInput {
                     MenuManager.iListPosY[confirmedOption] - GfxManager.vImgMenuButtons.getHeight() >> 2,
                     (Define.SIZEX2 - (GfxManager.vImgMenuButtons.getWidth() >> 1)) + GfxManager.vImgMenuButtons.getWidth(),
                     (MenuManager.iListPosY[confirmedOption]) + (GfxManager.vImgMenuButtons.getHeight() >> 1), 0)
-                    && MultiTouchHandler2.touchAction[0] == MultiTouchHandler2.ACTION_UP
+                    && multiTouchHandler.getTouchAction(0) == TouchData.ACTION_UP
                     && iFirstValidTouch == confirmedOption) {
                 t = true;
 

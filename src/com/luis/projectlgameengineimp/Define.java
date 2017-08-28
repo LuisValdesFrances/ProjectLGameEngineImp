@@ -99,16 +99,33 @@ public class Define {
 	   
 	   public static final long HIT_PAUSE = 85;
 	   public static final float GRAVITY_FORCE = 3f;
-		
+	   public static final float SPEED_BLICK = 0.08f;
+	
+	   public static final float PLAYER_SPEED = 3.8f;
 	   public static final float PLAYER_WEIGHT = 4.8f;
 	   public static final float PLAYER_FORCE_JUMP = 9f;
-	   public static final float PLAYER_FORCE_ATACK = 2.5f;
+	   public static final float PLAYER_FORCE_ATACK = 2f;
 	   public static final float PLAYER_DAMAGE = 100;
+	   public static final float PLAYER_SUFF_DURATION = 2.5f;
+	   
+	   //ANIMATION DURATION FRAME
+	   public static final float PLAYER_DUR_ANIM_IDLE = 0.1f;
+	   public static final float PLAYER_DUR_ANIM_RUN = 0.015f;
+	   public static final float PLAYER_DUR_ANIM_ATACK = 0.01f;
+	   public static final float PLAYER_DUR_ANIM_JUMP_1 = 0.04f;
+	   public static final float PLAYER_DUR_ANIM_JUMP_2 = 0.4f;
+	   public static final float PLAYER_DUR_ANIM_JUMP_3 = 0.04f;
+	   
 		
 	   public static final float BADROCK_WEIGHT = 4.8f;
 	   public static final float BADROCK_IDLE_TIME = 2f;
 	   public static final float BADROCK_FORCE_LAUNCH = 8f;
-	   public static final int BADROCK_LIVE = 500;
+	   public static final int BADROCK_LIVE = 800;
+	   
+	 //ANIMATION DURATION FRAME
+	   public static final float BADROCK_DUR_ANIM_IDLE = 0.1f;
+	   public static final float BADROCK_DUR_ANIM_ATACK = 0.06f;
+	   public static final float BADROCK_DUR_ANIM_SUFF = 0.14f;
 	   
 	   public static final float ROCK_WEIGHT = 5f;
 	   

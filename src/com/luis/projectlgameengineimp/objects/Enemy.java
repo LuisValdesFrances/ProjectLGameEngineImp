@@ -39,7 +39,7 @@ public abstract class Enemy extends GameObject{
     	float offsetX = player.getWidth()*0.65f;
     	boolean colisionY = isColisionY(player);
     	boolean colisionX = false;
-    	float atackW = player.getWidth()*2f;
+    	float atackW = player.getWidth()*2.2f;
     	if(!player.isFlip()){
     		colisionX = player.getPosX() + offsetX + atackW > getPosX() - getWidth()/2 && player.getPosX() + offsetX < getPosX() - getWidth()/2;
     	}else{

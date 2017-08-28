@@ -18,6 +18,7 @@ public class Rock extends Enemy{
 		super(type, player, width, height, posX, posY, posZ, speed, angle, -1);
 		
 		imgRock = GfxManager.imgRock;
+		setElasticity(0.65f);
 		
 	}
 	

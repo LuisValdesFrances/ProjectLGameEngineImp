@@ -16,7 +16,6 @@ import com.luis.lgameengine.implementation.graphics.Graphics;
 import com.luis.lgameengine.implementation.graphics.Image;
 import com.luis.lgameengine.implementation.graphics.MyCanvas;
 import com.luis.lgameengine.implementation.input.KeyboardHandler;
-import com.luis.lgameengine.implementation.input.MultiTouchHandler2;
 import com.luis.lgameengine.implementation.sound.SndManager;
 
 public class Main extends MyCanvas implements Runnable {
@@ -66,7 +65,8 @@ public class Main extends MyCanvas implements Runnable {
 	public static final int COLOR_YELOW_BG = 0xfffcf659;
 
 	public static final boolean IS_DEBUG = true;
-	public static final boolean IS_INPUT_DEBUG = false;
+	public static final boolean IS_TOUCH_INPUT_DEBUG = false;
+	public static final boolean IS_KEY_INPUT_DEBUG = false;
 	public static final boolean IS_GAME_DEBUG = false;
 
 	// Nombre del fichero donde se guardaran y cargaran los datos:
@@ -86,7 +86,7 @@ public class Main extends MyCanvas implements Runnable {
 		// else
 		// touchHandler = new MultiTouchHandler(view, scaleX, scaleY);
 		
-		UserInput.getInstance().init(multiTouchHandler);
+		UserInput.getInstance().init(multiTouchHandler, keyboardHandler);
 		SndManager.inicialize(activity);
 		isGameHeart = true;
 	}
@@ -208,7 +208,7 @@ public class Main extends MyCanvas implements Runnable {
 				_g.setTextSize(32);
 				_g.setAlpha(160);
 				_g.setColor(0x88000000);
-				_g.fillRect(0, 0, Define.SIZEX, _g.getTextHeight() * 5);
+				_g.fillRect(0, 0, Define.SIZEX, _g.getTextHeight() * 4);
 				_g.setAlpha(255);
 				_g.drawText("LGameEngine version: : " + Settings.LGAME_ENGINE_VERSION, 0, _g.getTextHeight(), COLOR_WHITE);
 				_g.drawText("FramesXSecond: " + Define.MAX_FPS + "/" + iFramesXSecond, 0, _g.getTextHeight() * 2, COLOR_WHITE);
@@ -224,26 +224,40 @@ public class Main extends MyCanvas implements Runnable {
 				_g.fillRect(Define.SIZEX-Define.SCR_MIDLE/64, 0, Define.SCR_MIDLE/64, Define.SCR_MIDLE/64);
 				_g.fillRect(Define.SIZEX-Define.SCR_MIDLE/64, Define.SIZEY-Define.SCR_MIDLE/64, Define.SCR_MIDLE/64, Define.SCR_MIDLE/64);
 				
-			}else if (Main.IS_INPUT_DEBUG){
+			}else if (Main.IS_TOUCH_INPUT_DEBUG){
 				_g.setClip(0, 0, Define.SIZEX, Define.SIZEY);
 				_g.setTextSize(32);
 				_g.setAlpha(160);
 				_g.setColor(0x88000000);
-				_g.fillRect(0, 0, Define.SIZEX, _g.getTextHeight() * 9);
+				_g.fillRect(0, 0, Define.SIZEX, _g.getTextHeight() * 7);
 				_g.setAlpha(255);
-				_g.drawText("TouchAction: " + MultiTouchHandler2.touchAction[0], 0, _g.getTextHeight(),COLOR_WHITE);
-				_g.drawText("Orin_X: " + MultiTouchHandler2.touchOriginX[0], 0, _g.getTextHeight()*2,COLOR_WHITE);
-				_g.drawText("Orin_Y: " + MultiTouchHandler2.touchOriginY[0], Define.SIZEX2,_g.getTextHeight()*2, COLOR_WHITE);
-				_g.drawText("Current_X: " + MultiTouchHandler2.touchX[0], 0, _g.getTextHeight() * 3, COLOR_WHITE);
-				_g.drawText("Current_Y: " + MultiTouchHandler2.touchY[0], Define.SIZEX2,_g.getTextHeight() * 3, COLOR_WHITE);
-				_g.drawText("Dist_X: " + MultiTouchHandler2.touchDistanceX[0], 0, _g.getTextHeight() * 4, COLOR_WHITE);
-				_g.drawText("Dist_Y: " + MultiTouchHandler2.touchDistanceY[0], Define.SIZEX2,_g.getTextHeight() * 4, COLOR_WHITE);
-				_g.drawText("Pointer 0: " + MultiTouchHandler2.touchAction[0], 0, _g.getTextHeight() * 5, COLOR_WHITE);
-				_g.drawText("Pointer 1: " + MultiTouchHandler2.touchAction[1], Define.SIZEX2,_g.getTextHeight() * 5, COLOR_WHITE);
-				_g.drawText("Pointer 2: " + MultiTouchHandler2.touchAction[2], 0, _g.getTextHeight() * 6, COLOR_WHITE);
-				_g.drawText("Pointer 3: " + MultiTouchHandler2.touchAction[3], Define.SIZEX2,_g.getTextHeight() * 6, COLOR_WHITE);
-				_g.drawText("Pointer 4: " + MultiTouchHandler2.touchAction[4], 0, _g.getTextHeight() * 7, COLOR_WHITE);
-				_g.drawText("TF 0: " + MultiTouchHandler2.touchFrames[0], 0, _g.getTextHeight() * 8, COLOR_WHITE);
+				_g.drawText("TouchAction: " + multiTouchHandler.getTouchAction(0), 0, _g.getTextHeight(),COLOR_WHITE);
+				_g.drawText("TouchFrame: " + multiTouchHandler.getTouchFrames(0), Define.SIZEX2, 0, COLOR_WHITE);
+				_g.drawText("Orin_X: " + multiTouchHandler.getTouchOriginX(0), 0, _g.getTextHeight()*2,COLOR_WHITE);
+				_g.drawText("Orin_Y: " + multiTouchHandler.getTouchOriginY(0), Define.SIZEX2,_g.getTextHeight()*2, COLOR_WHITE);
+				_g.drawText("Current_X: " + multiTouchHandler.getTouchX(0), 0, _g.getTextHeight() * 3, COLOR_WHITE);
+				_g.drawText("Current_Y: " + multiTouchHandler.getTouchY(0), Define.SIZEX2,_g.getTextHeight() * 3, COLOR_WHITE);
+				_g.drawText("Dist_X: " + multiTouchHandler.getTouchDistanceX(0), 0, _g.getTextHeight() * 4, COLOR_WHITE);
+				_g.drawText("Dist_Y: " + multiTouchHandler.getTouchDistanceY(0), Define.SIZEX2,_g.getTextHeight() * 4, COLOR_WHITE);
+				_g.drawText("Pointer 2: " + multiTouchHandler.getTouchAction(1), 0,_g.getTextHeight() * 6, COLOR_WHITE);
+				_g.drawText("Pointer 3: " + multiTouchHandler.getTouchAction(2), Define.SIZEX2, _g.getTextHeight() * 6, COLOR_WHITE);
+				_g.drawText("Pointer 4: " + multiTouchHandler.getTouchAction(3), 0,_g.getTextHeight() * 7, COLOR_WHITE);
+				_g.drawText("Pointer 5: " + multiTouchHandler.getTouchAction(4), Define.SIZEX2, _g.getTextHeight() * 7, COLOR_WHITE);
+
+			}else if (Main.IS_KEY_INPUT_DEBUG){
+				_g.setClip(0, 0, Define.SIZEX, Define.SIZEY);
+				_g.setTextSize(32);
+				_g.setAlpha(160);
+				_g.setColor(0x88000000);
+				_g.fillRect(0, 0, Define.SIZEX, _g.getTextHeight() * 4);
+				_g.setAlpha(255);
+				//_g.drawText("KeyAction: " + multiTouchHandler.getTouchAction(0), 0, _g.getTextHeight(),COLOR_WHITE);
+				//_g.drawText("TouchFrame: " + multiTouchHandler.getTouchFrames(0), Define.SIZEX2, 0, COLOR_WHITE);
+				_g.drawText("Key UP: " + (keyboardHandler.getPressedKeys(UserInput.KEYCODE_UP)), 0, _g.getTextHeight()*2,COLOR_WHITE);
+				_g.drawText("Key DOWN: " + (keyboardHandler.getPressedKeys(UserInput.KEYCODE_DOWN)), Define.SIZEX2,_g.getTextHeight()*2, COLOR_WHITE);
+				_g.drawText("Key LEFT: " + (keyboardHandler.getPressedKeys(UserInput.KEYCODE_LEFT)), 0, _g.getTextHeight() * 3, COLOR_WHITE);
+				_g.drawText("Key RIGHT: " + (keyboardHandler.getPressedKeys(UserInput.KEYCODE_RIGHT)), Define.SIZEX2,_g.getTextHeight() * 3, COLOR_WHITE);
+				
 
 			}
 			_g.setAlpha(255);
@@ -338,12 +352,8 @@ public class Main extends MyCanvas implements Runnable {
         }
     }
     
-    public static boolean isDispareCount(long _lDeltaTime, long _lCurrentCount, long _lTotalCount){
-        if((_lCurrentCount%_lTotalCount < _lTotalCount) && ((_lCurrentCount + _lDeltaTime)%_lTotalCount < _lCurrentCount%_lTotalCount) ){
-            return true;
-        }else{
-            return false;
-        }
+    public static boolean isDispareCount(float deltaTime, float currentCount, float totalCount){
+        return (currentCount%totalCount < totalCount) && ((currentCount + deltaTime)%totalCount < currentCount%totalCount);
         
     }
 
@@ -375,7 +385,7 @@ public class Main extends MyCanvas implements Runnable {
 		isLoading = true;
 		
 		UserInput.getInstance().getMultiTouchHandler().resetTouch();
-		UserInput.getInstance().resetKeys();
+		UserInput.getInstance().getKeyboardHandler().resetKeys();
 
 		iLastState = iState;
 		iState = _iNewState;

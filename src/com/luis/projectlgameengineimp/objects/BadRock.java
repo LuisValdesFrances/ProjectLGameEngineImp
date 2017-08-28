@@ -42,17 +42,17 @@ public class BadRock extends Enemy{
 		spriteImageList.add(new SpriteImage(
 				GfxManager.imgBadRockIdle.getWidth(),
 				GfxManager.imgBadRockIdle.getHeight(),
-				0.1f, IDLE_FRAMES));
+				Define.BADROCK_DUR_ANIM_IDLE, IDLE_FRAMES));
 		
 		spriteImageList.add(new SpriteImage(
 				GfxManager.imgBadRockAtack.getWidth(),
 				GfxManager.imgBadRockAtack.getHeight(),
-				0.08f, ATACK_FRAMES));
+				Define.BADROCK_DUR_ANIM_ATACK, ATACK_FRAMES));
 		
 		spriteImageList.add(new SpriteImage(
 				GfxManager.imgBadRockSuff.getWidth(),
 				GfxManager.imgBadRockSuff.getHeight(),
-				0.14f, SUFF_FRAMES));
+				Define.BADROCK_DUR_ANIM_SUFF, SUFF_FRAMES));
 		
 		idleTime = Define.BADROCK_IDLE_TIME + (float)Main.getRandom(0, 20)*0.1f;
 	}
@@ -79,9 +79,9 @@ public class BadRock extends Enemy{
     	//if(state != STATE_SUFF){
     		if(checkDamageFromPlayer(player)){
     			newState = STATE_SUFF;
-    			int forceMod = Main.getRandom(0, 100);
+    			int forceMod = Main.getRandom(0, (int)(player.getForceAtack()*0.5f));
     			setSpeedX(player.isFlip() ? -player.getForceAtack()-forceMod : player.getForceAtack()-forceMod);
-    			forceMod = Main.getRandom(0, 100);
+    			forceMod = Main.getRandom(0, (int)(player.getForceAtack()*0.5f));
     			setSpeedY(-player.getForceAtack()-forceMod);
     			//Si ya esta sufriendo, lo reinico
     			spriteImageList.get(animation).setFrame(0);

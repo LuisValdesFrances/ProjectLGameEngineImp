@@ -81,7 +81,7 @@ public class ModeGame {
 		    		new Image[] {null, null}, new Image[] {null, null},
 		    		new int[] {Define.SIZEX - Define.SIZEX/4, Define.SIZEX - Define.SIZEX/8},
 		    		new int[] {Define.SIZEY - Define.SIZEY/8, Define.SIZEY - Define.SIZEY/4},
-		    		TouchData.ACTION_DOWN, TouchData.ACTION_DRAG, TouchData.ACTION_UP);
+		    		TouchData.ACTION_DOWN, TouchData.ACTION_MOVE, TouchData.ACTION_UP);
 			
 			gameControl.reset();
 			
@@ -96,6 +96,7 @@ public class ModeGame {
 			player.setGravityForce(Define.GRAVITY_FORCE);
 			player.setWeight(RigidBody.transformUnityValue(0.96f, TILE_SIZE, Define.PLAYER_WEIGHT));
 			player.setForceJump(RigidBody.transformUnityValue(0.96f, TILE_SIZE, Define.PLAYER_FORCE_JUMP));
+			player.setForceJumpShort(RigidBody.transformUnityValue(0.96f, TILE_SIZE, Define.PLAYER_FORCE_JUMP_SHORT));
 			player.setForceAtack(RigidBody.transformUnityValue(0.96f, TILE_SIZE, Define.PLAYER_FORCE_ATACK));
 			
 			enemyList = new ArrayList<Enemy>();
@@ -426,7 +427,7 @@ public class ModeGame {
 	private static boolean isFocusPerformanceMenu(){
 		if((
 			UserInput.getInstance().getMultiTouchHandler().getTouchAction(0) == TouchData.ACTION_DOWN || 
-			UserInput.getInstance().getMultiTouchHandler().getTouchAction(0) == TouchData.ACTION_DRAG) && 
+			UserInput.getInstance().getMultiTouchHandler().getTouchAction(0) == TouchData.ACTION_MOVE) && 
 			UserInput.getInstance().compareTouch(0, Define.SIZEY - PERF_BUTTON_H, PERF_BUTTON_W, Define.SIZEY, 0)){
 			return true;
 		}

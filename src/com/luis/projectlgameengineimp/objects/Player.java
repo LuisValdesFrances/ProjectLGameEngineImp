@@ -11,6 +11,7 @@ import com.luis.lgameengine.gameutils.gameworld.RigidBody;
 import com.luis.lgameengine.gameutils.gameworld.SpriteImage;
 import com.luis.lgameengine.gameutils.gameworld.WorldConver;
 import com.luis.lgameengine.implementation.graphics.Graphics;
+import com.luis.lgameengine.implementation.input.KeyData;
 import com.luis.projectlgameengineimp.Define;
 import com.luis.projectlgameengineimp.GfxManager;
 import com.luis.projectlgameengineimp.Main;
@@ -24,6 +25,7 @@ public class Player extends GameObject{
 	private static final float HIGHT_FALL = 650; 
 	private float fallForce;
 	private boolean saveAtack;
+	private boolean saveJump;
 	
 	public static final int ANIM_IDLE = 0;
 	public static final int ANIM_RUN = 1;
@@ -48,7 +50,10 @@ public class Player extends GameObject{
 	private List<SpriteImage> spriteImageList;
 	
 	private float forceJump;
+	private float forceJumpShort;
 	private float forceAtack;
+	
+	private boolean jumpCancel;
 	
 	private boolean isSuff;
 	private float blinkCount;
@@ -140,17 +145,29 @@ public class Player extends GameObject{
 	
 	private void listenControls(GameControl _vGameControl){
 		
-		boolean keyUp = (UserInput.getInstance().getKeyboardHandler().getPressedKeys(UserInput.KEYCODE_UP));
-		boolean keyDown = (UserInput.getInstance().getKeyboardHandler().getPressedKeys(UserInput.KEYCODE_DOWN));
-		boolean keyLeft = (UserInput.getInstance().getKeyboardHandler().getPressedKeys(UserInput.KEYCODE_LEFT));
-		boolean keyRight = (UserInput.getInstance().getKeyboardHandler().getPressedKeys(UserInput.KEYCODE_RIGHT));
+		int keyUp = (UserInput.getInstance().getKeyboardHandler().getPressedKeys(UserInput.KEYCODE_UP).getAction());
+		int keyDown = (UserInput.getInstance().getKeyboardHandler().getPressedKeys(UserInput.KEYCODE_DOWN).getAction());
+		boolean keyLeft = (
+				UserInput.getInstance().getKeyboardHandler().getPressedKeys(UserInput.KEYCODE_LEFT).getAction() == KeyData.KEY_DOWN
+				||
+				UserInput.getInstance().getKeyboardHandler().getPressedKeys(UserInput.KEYCODE_LEFT).getAction() == KeyData.KEY_PRESS);
+		boolean keyRight = (
+				UserInput.getInstance().getKeyboardHandler().getPressedKeys(UserInput.KEYCODE_RIGHT).getAction() == KeyData.KEY_DOWN
+				||
+				UserInput.getInstance().getKeyboardHandler().getPressedKeys(UserInput.KEYCODE_RIGHT).getAction() == KeyData.KEY_PRESS);
 		
-		boolean keyAtack = UserInput.getInstance().getKeyboardHandler().getPressedKeys(UserInput.KEYCODE_SHIELD_A)||UserInput.getInstance().getKeyboardHandler().getPressedKeys(UserInput.KEYCODE_SHIELD_Y);
-		boolean keyJump = UserInput.getInstance().getKeyboardHandler().getPressedKeys(UserInput.KEYCODE_SHIELD_B)||UserInput.getInstance().getKeyboardHandler().getPressedKeys(UserInput.KEYCODE_SHIELD_X);
+		boolean keyAtack =(
+				UserInput.getInstance().getKeyboardHandler().getPressedKeys(UserInput.KEYCODE_SHIELD_B).getAction() == KeyData.KEY_DOWN);
+		boolean keyJump =(
+				UserInput.getInstance().getKeyboardHandler().getPressedKeys(UserInput.KEYCODE_SHIELD_A).getAction() == KeyData.KEY_DOWN);
+		boolean keyJumpCancel =(
+				UserInput.getInstance().getKeyboardHandler().getPressedKeys(UserInput.KEYCODE_SHIELD_A).getAction() == KeyData.KEY_UP);
 		
 		if(state == STATE_IDLE || state == STATE_RUN || state == STATE_JUMP){
-			if(_vGameControl.getForce() > 0 || (keyLeft || keyRight)){
-				if((_vGameControl.getAngle() != -1 && (_vGameControl.getAngle() > 315 || _vGameControl.getAngle() < 45)) ||  keyRight){
+			if(_vGameControl.getForce() > 0 || 
+					(keyLeft || keyRight)){
+				if((_vGameControl.getAngle() != -1 && (_vGameControl.getAngle() > 315 || _vGameControl.getAngle() < 45)) 
+						||  keyRight){
 					if(state != STATE_JUMP || (state == STATE_JUMP && spriteImageList.get(animation).getFileIndex() == ANIM_JUMP_SUB_2)){
 						setAngle(360);
 						move(Main.getDeltaSec());
@@ -162,7 +179,8 @@ public class Player extends GameObject{
 				else if((_vGameControl.getAngle() != -1 && (_vGameControl.getAngle() > 45 && _vGameControl.getAngle() < 135))){
 					 
 				}
-				else if((_vGameControl.getAngle() != -1 && (_vGameControl.getAngle() > 135 && _vGameControl.getAngle() < 225)) || keyLeft){
+				else if((_vGameControl.getAngle() != -1 && (_vGameControl.getAngle() > 135 && _vGameControl.getAngle() < 225)) 
+						|| keyLeft){
 					if(state != STATE_JUMP || (state == STATE_JUMP && spriteImageList.get(animation).getFileIndex() == ANIM_JUMP_SUB_2)){
 						setAngle(180);
 						setSpeed(getSpeed());
@@ -183,23 +201,14 @@ public class Player extends GameObject{
 			}
 		}
 		if(isColisionBotton() && (state == STATE_IDLE || state == STATE_RUN  || state == STATE_ATACK)){
-			//Boton salto
-			if(
-				(_vGameControl.getButtonCounter(0) == 1 &&_vGameControl.isButtonPressed(0)) || keyAtack){
-				
-				if(state != STATE_ATACK){
-					newState = STATE_JUMP;
-				}
-			//Boton ataque
-			}else if(
-					(_vGameControl.getButtonCounter(1) == 1 &&_vGameControl.isButtonPressed(1)) || keyJump){
-				
+			//Input ataque
+			if((_vGameControl.getButtonCounter(1) == 1 &&_vGameControl.isButtonPressed(1)) || keyAtack){
 				if(state != STATE_ATACK){
 					newState = STATE_ATACK;
 				}else if(state == STATE_ATACK){
 					
 					if(spriteImageList.get(animation).getFrame() >= 22 && 
-						spriteImageList.get(animation).getFrame() <= 33){
+							spriteImageList.get(animation).getFrame() <= 33){
 						spriteImageList.get(animation).setFrame(8);
 					}
 					//Si pulsa antes de acabar la animacion, le doy un tiempo de cortesia (Gracias Javi Cepa)
@@ -208,6 +217,26 @@ public class Player extends GameObject{
 					}
 				}
 			}
+			//Input salto
+			else if((_vGameControl.getButtonCounter(0) == 1 &&_vGameControl.isButtonPressed(0)) || keyJump){
+				if(state != STATE_ATACK){
+					newState = STATE_JUMP;
+				}
+			}
+		}
+		
+		/*Perfecccion del salto*/
+		
+		//Si esta terminando el salto y se pulsa vover a saltar, guardo el salto para efectuar otra cuando acabe la animación
+		else if(isColisionBotton() && (state == STATE_JUMP) && spriteImageList.get(animation).getFileIndex()==ANIM_JUMP_SUB_3){
+			if((_vGameControl.getButtonCounter(0) == 1 &&_vGameControl.isButtonPressed(0)) || keyJump){
+				saveJump = true;
+			}
+		}
+		
+		//Jump canceled
+		if(!isColisionBotton() && state == STATE_JUMP && !_vGameControl.isButtonPressed(0) && keyJumpCancel){
+			jumpCancel = true;
 		}
 	 }
 	
@@ -238,6 +267,7 @@ public class Player extends GameObject{
 				if(spriteImageList.get(animation).isEndAnimation()){
 					spriteImageList.get(animation).setFileIndex(ANIM_JUMP_SUB_2);
 					setSpeedY(-forceJump);
+					jumpCancel = false;
 				}
 				break;
 			case ANIM_JUMP_SUB_2:
@@ -248,17 +278,34 @@ public class Player extends GameObject{
 						spriteImageList.get(animation).setFrame(3);
 					}
 				}else{
+					//Subiendo
 					if(getSpeedY() < 0){
 						spriteImageList.get(animation).setFrame(0);
-					}else{
+						if(jumpCancel){
+							if(Math.abs(getSpeedY()) > forceJumpShort){
+								setSpeedY(-forceJumpShort);
+								jumpCancel = false;
+							}
+						}
+					}
+					//Bajando
+					else{
 						spriteImageList.get(animation).setFrame(1);
 					}
 				}
-				
 				break;
 			case ANIM_JUMP_SUB_3:
 				if(spriteImageList.get(animation).isEndAnimation()){
-					newState = STATE_IDLE;
+					if(saveJump){
+						saveJump = false;
+						spriteImageList.get(animation).setFileIndex(ANIM_JUMP_SUB_1);
+						//Reseteo las tres fases del salto
+						spriteImageList.get(animation).resetAnimation(ANIM_JUMP_SUB_1);
+						spriteImageList.get(animation).resetAnimation(ANIM_JUMP_SUB_2);
+						spriteImageList.get(animation).resetAnimation(ANIM_JUMP_SUB_3);
+					}else{
+						newState = STATE_IDLE;
+					}
 				}
 				break;
 			}
@@ -321,6 +368,14 @@ public class Player extends GameObject{
 
 	public void setForceJump(float forceJump) {
 		this.forceJump = forceJump;
+	}
+	
+	public float getForceJumpShort() {
+		return forceJumpShort;
+	}
+
+	public void setForceJumpShort(float forceJumpShort) {
+		this.forceJumpShort = forceJumpShort;
 	}
 
 	public float getForceAtack() {

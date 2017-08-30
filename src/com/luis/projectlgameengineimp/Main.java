@@ -126,8 +126,7 @@ public class Main extends MyCanvas implements Runnable {
 
 				lDeltaTime = System.currentTimeMillis() - lLastTime;
 				lLastTime = System.currentTimeMillis();
-				multiTouchHandler.update();
-
+				
 				switch (iState) {
 					 case Define.ST_MENU_LOGO:
 			         case Define.ST_MENU_ASK_LANGUAGE:
@@ -152,6 +151,9 @@ public class Main extends MyCanvas implements Runnable {
 			            break;
 		         }
 				repaint();
+				
+				multiTouchHandler.update();
+				keyboardHandler.update();
 
 				while (System.currentTimeMillis() - lInitTime < MINIM_DURATION_FRAME)
 					Thread.yield();
@@ -231,32 +233,56 @@ public class Main extends MyCanvas implements Runnable {
 				_g.setColor(0x88000000);
 				_g.fillRect(0, 0, Define.SIZEX, _g.getTextHeight() * 7);
 				_g.setAlpha(255);
-				_g.drawText("TouchAction: " + multiTouchHandler.getTouchAction(0), 0, _g.getTextHeight(),COLOR_WHITE);
-				_g.drawText("TouchFrame: " + multiTouchHandler.getTouchFrames(0), Define.SIZEX2, 0, COLOR_WHITE);
-				_g.drawText("Orin_X: " + multiTouchHandler.getTouchOriginX(0), 0, _g.getTextHeight()*2,COLOR_WHITE);
-				_g.drawText("Orin_Y: " + multiTouchHandler.getTouchOriginY(0), Define.SIZEX2,_g.getTextHeight()*2, COLOR_WHITE);
-				_g.drawText("Current_X: " + multiTouchHandler.getTouchX(0), 0, _g.getTextHeight() * 3, COLOR_WHITE);
-				_g.drawText("Current_Y: " + multiTouchHandler.getTouchY(0), Define.SIZEX2,_g.getTextHeight() * 3, COLOR_WHITE);
-				_g.drawText("Dist_X: " + multiTouchHandler.getTouchDistanceX(0), 0, _g.getTextHeight() * 4, COLOR_WHITE);
-				_g.drawText("Dist_Y: " + multiTouchHandler.getTouchDistanceY(0), Define.SIZEX2,_g.getTextHeight() * 4, COLOR_WHITE);
-				_g.drawText("Pointer 2: " + multiTouchHandler.getTouchAction(1), 0,_g.getTextHeight() * 6, COLOR_WHITE);
-				_g.drawText("Pointer 3: " + multiTouchHandler.getTouchAction(2), Define.SIZEX2, _g.getTextHeight() * 6, COLOR_WHITE);
-				_g.drawText("Pointer 4: " + multiTouchHandler.getTouchAction(3), 0,_g.getTextHeight() * 7, COLOR_WHITE);
-				_g.drawText("Pointer 5: " + multiTouchHandler.getTouchAction(4), Define.SIZEX2, _g.getTextHeight() * 7, COLOR_WHITE);
+				_g.drawText("TouchAction: " + 
+				multiTouchHandler.getTouchAction(0), 0, _g.getTextHeight(),COLOR_WHITE);
+				_g.drawText("TouchFrame: " + 
+				multiTouchHandler.getTouchFrames(0), Define.SIZEX2-Define.SIZEX4, _g.getTextHeight(), COLOR_WHITE);
+				/*
+				_g.drawText("Buffer size: " + 
+						UserInput.getInstance().getMultiTouchHandler().getBufferSize(), Define.SIZEX2+Define.SIZEX4,_g.getTextHeight() * 5, 
+						UserInput.getInstance().getMultiTouchHandler().getBufferSize() <= MultiTouchHandler.BUFFER_SIZE ? COLOR_WHITE : COLOR_RED);
+				*/
+				_g.drawText("Orin_X: " + 
+				multiTouchHandler.getTouchOriginX(0), 0, _g.getTextHeight()*2,COLOR_WHITE);
+				_g.drawText("Orin_Y: " + 
+				multiTouchHandler.getTouchOriginY(0), Define.SIZEX2-Define.SIZEX4,_g.getTextHeight()*2, COLOR_WHITE);
+				_g.drawText("Current_X: " + 
+					UserInput.getInstance().getMultiTouchHandler().getTouchX(0), 0, _g.getTextHeight() * 3, COLOR_WHITE);
+				_g.drawText("Current_Y: " +
+					UserInput.getInstance().getMultiTouchHandler().getTouchY(0), Define.SIZEX2-Define.SIZEX4,_g.getTextHeight() * 3, COLOR_WHITE);
+				_g.drawText("Dist_X: " + 
+					UserInput.getInstance().getMultiTouchHandler().getTouchDistanceX(0), 0, _g.getTextHeight() * 4, COLOR_WHITE);
+				_g.drawText("Dist_Y: " + 
+					UserInput.getInstance().getMultiTouchHandler().getTouchDistanceY(0), Define.SIZEX2-Define.SIZEX4,_g.getTextHeight() * 4, COLOR_WHITE);
+				
+				_g.drawText("Pointer 2: " +
+					UserInput.getInstance().getMultiTouchHandler().getTouchAction(1), 0,_g.getTextHeight() * 6, COLOR_WHITE);
+				_g.drawText("Pointer 3: " +
+					UserInput.getInstance().getMultiTouchHandler().getTouchAction(2), Define.SIZEX2-Define.SIZEX4, _g.getTextHeight() * 6, COLOR_WHITE);
+				_g.drawText("Pointer 4: " +
+					UserInput.getInstance().getMultiTouchHandler().getTouchAction(3), 0,_g.getTextHeight() * 7, COLOR_WHITE);
+				_g.drawText("Pointer 5: " + 
+					UserInput.getInstance().getMultiTouchHandler().getTouchAction(4), Define.SIZEX2-Define.SIZEX4, _g.getTextHeight() * 7, COLOR_WHITE);
 
 			}else if (Main.IS_KEY_INPUT_DEBUG){
 				_g.setClip(0, 0, Define.SIZEX, Define.SIZEY);
 				_g.setTextSize(32);
 				_g.setAlpha(160);
 				_g.setColor(0x88000000);
-				_g.fillRect(0, 0, Define.SIZEX, _g.getTextHeight() * 4);
+				_g.fillRect(0, 0, Define.SIZEX, _g.getTextHeight() * 3);
 				_g.setAlpha(255);
-				//_g.drawText("KeyAction: " + multiTouchHandler.getTouchAction(0), 0, _g.getTextHeight(),COLOR_WHITE);
-				//_g.drawText("TouchFrame: " + multiTouchHandler.getTouchFrames(0), Define.SIZEX2, 0, COLOR_WHITE);
-				_g.drawText("Key UP: " + (keyboardHandler.getPressedKeys(UserInput.KEYCODE_UP)), 0, _g.getTextHeight()*2,COLOR_WHITE);
-				_g.drawText("Key DOWN: " + (keyboardHandler.getPressedKeys(UserInput.KEYCODE_DOWN)), Define.SIZEX2,_g.getTextHeight()*2, COLOR_WHITE);
-				_g.drawText("Key LEFT: " + (keyboardHandler.getPressedKeys(UserInput.KEYCODE_LEFT)), 0, _g.getTextHeight() * 3, COLOR_WHITE);
-				_g.drawText("Key RIGHT: " + (keyboardHandler.getPressedKeys(UserInput.KEYCODE_RIGHT)), Define.SIZEX2,_g.getTextHeight() * 3, COLOR_WHITE);
+				_g.drawText("Key UP: " + 
+					(UserInput.getInstance().getKeyboardHandler().getPressedKeys(UserInput.KEYCODE_UP).getAction()), 0, _g.getTextHeight(),COLOR_WHITE);
+				_g.drawText("Key DOWN: " + 
+					(UserInput.getInstance().getKeyboardHandler().getPressedKeys(UserInput.KEYCODE_DOWN).getAction()), Define.SIZEX2,_g.getTextHeight(), COLOR_WHITE);
+				_g.drawText("Key LEFT: " + 
+					(UserInput.getInstance().getKeyboardHandler().getPressedKeys(UserInput.KEYCODE_LEFT).getAction()), 0, _g.getTextHeight() * 2, COLOR_WHITE);
+				_g.drawText("Key RIGHT: " + 
+					(UserInput.getInstance().getKeyboardHandler().getPressedKeys(UserInput.KEYCODE_RIGHT).getAction()), Define.SIZEX2,_g.getTextHeight() * 2, COLOR_WHITE);
+				_g.drawText("Key A: " + 
+					(UserInput.getInstance().getKeyboardHandler().getPressedKeys(UserInput.KEYCODE_SHIELD_A).getAction()), 0, _g.getTextHeight() * 3, COLOR_WHITE);
+				_g.drawText("Key B: " + 
+					(UserInput.getInstance().getKeyboardHandler().getPressedKeys(UserInput.KEYCODE_SHIELD_B).getAction()), Define.SIZEX2,_g.getTextHeight() * 3, COLOR_WHITE);
 				
 
 			}

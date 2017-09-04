@@ -4,6 +4,7 @@ import com.luis.lgameengine.gameutils.gameworld.SpriteImage;
 import com.luis.lgameengine.gameutils.gameworld.WorldConver;
 import com.luis.lgameengine.implementation.graphics.Graphics;
 import com.luis.lgameengine.implementation.graphics.Image;
+import com.luis.projectlgameengineimp.Define;
 import com.luis.projectlgameengineimp.GfxManager;
 
 public class Rock extends Enemy{
@@ -18,6 +19,8 @@ public class Rock extends Enemy{
 		super(type, player, width, height, posX, posY, posZ, speed, angle, -1);
 		
 		imgRock = GfxManager.imgRock;
+		rotatePX = 0;
+		rotatePY = -imgRock.getHeight()/2;
 		setElasticity(0.65f);
 		
 	}
@@ -25,10 +28,14 @@ public class Rock extends Enemy{
 	public void update(float deltaTime, int[][] _iTilesMatrixID, float _fTileW, float _fTileH) {
     	super.update (deltaTime, _iTilesMatrixID, _fTileW, _fTileH);
     	if(state == STATE_FLIGHT){
-    		if(isColisionBotton()){
+    		boolean colPlayer = isColision(player);
+    		if(isColisionBotton() || colPlayer){
     			state = STATE_DESTROY;
+    			if(colPlayer)
+    				player.setDamage(0);
     		}
     	}
+    	setRotation(rotation+(rotationSpeed*deltaTime));
 	}
 	
 	public void draw(

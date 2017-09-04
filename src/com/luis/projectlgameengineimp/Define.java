@@ -94,13 +94,16 @@ public class Define {
 
 	// Game constans
 	public static final int ROCK_ID = 1;
-	public static final int BADROCK_ID = 191;
+	public static final int PLAYER_ID = 191;
+	public static final int BADROCK_ID = 192;
+	public static final int BIGROCK_RIGHT_ID = 193;
+	public static final int BIGROCK_LEFT_ID = 194;
 
 	public static final long HIT_PAUSE = 85;
 	public static final float GRAVITY_FORCE = 3f;
 	public static final float SPEED_BLICK = 0.08f;
 
-	public static final float PLAYER_SPEED = 3.8f;
+	public static final float PLAYER_SPEED = 4f;
 	public static final float PLAYER_WEIGHT = 4.8f;
 	public static final float PLAYER_FORCE_JUMP = 9f;
 	public static final float PLAYER_FORCE_JUMP_SHORT = 4.5f;
@@ -118,7 +121,7 @@ public class Define {
 
 	public static final float BADROCK_WEIGHT = 4.8f;
 	public static final float BADROCK_IDLE_TIME = 2f;
-	public static final float BADROCK_FORCE_LAUNCH = 8f;
+	public static final float BADROCK_FORCE_LAUNCH = 10f;
 	public static final int BADROCK_LIVE = 400;
 
 	// ANIMATION DURATION FRAME
@@ -126,7 +129,26 @@ public class Define {
 	public static final float BADROCK_DUR_ANIM_ATACK = 0.06f;
 	public static final float BADROCK_DUR_ANIM_SUFF = 0.14f;
 
-	public static final float ROCK_WEIGHT = 5f;
+	public static final float ROCK_WEIGHT = 8f;
+	public static final float ROCK_SPEED_ROTATION = 120f;
+	
+	public static final float BIG_ROCK_SPEED = PLAYER_SPEED*0.55f;
+	public static final float BIG_ROCK_WEIGHT = 10f;
+	public static final float BIG_ROCK_SPEED_ROTATION = 110f;
+	public static final int[] BIG_ROCK_TILE_DESTROY = {93, 94, 95, 96, 97};
+	
+	//PARTICLES
+	public static final float PARTICLE_ROCK_DESTROY_DURATION = 0.7f;
+	public static final float PARTICLE_ROCK_DESTROY_SPEED = 8f;
+	public static final float PARTICLE_ROCK_DESTROY_WEIGHT = 4f;
+	
+	public static final float PARTICLE_BIG_ROCK_DESTROY_DURATION = 1f;
+	public static final float PARTICLE_BIG_ROCK_DESTROY_SPEED = 6f;
+	public static final float PARTICLE_BIG_ROCK_DESTROY_WEIGHT = 5f;
+	
+	public static final float PARTICLE_ENEMY_DESTROY_DURATION = 0.75f;
+	public static final float PARTICLE_ENEMY_DESTROY_SPEED = 6f;
+	public static final float PARTICLE_ENEMY_DESTROY_WEIGHT = 2f;
 	   
 	  
 	 

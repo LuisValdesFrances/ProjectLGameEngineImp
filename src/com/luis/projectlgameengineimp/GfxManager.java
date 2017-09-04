@@ -39,6 +39,7 @@ public class GfxManager {
 	   public static Image imgBadRockSuff;
 	   
 	   public static Image imgRock;
+	   public static Image imgBigRock;
 	   //bg
 	   public static Image[] vImgBGs;
 
@@ -89,6 +90,7 @@ public class GfxManager {
 	               imgBadRockSuff = Image.createImage("/badrock_suff.png");
 	               
 	               imgRock = Image.createImage("/rock.png");
+	               imgBigRock = Image.createImage("/big_rock.png");
 	               //bg
 	               vImgBGs = new Image[5];
 	               for(int i = 0; i < vImgBGs.length; i++){

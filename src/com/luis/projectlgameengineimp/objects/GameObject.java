@@ -6,6 +6,7 @@ import com.luis.lgameengine.gameutils.gameworld.WorldConver;
 import com.luis.lgameengine.implementation.graphics.Graphics;
 import com.luis.lgameengine.implementation.graphics.Image;
 import com.luis.projectlgameengineimp.Define;
+import com.luis.projectlgameengineimp.GfxManager;
 import com.luis.projectlgameengineimp.ModeGame;
 
 /**
@@ -27,6 +28,11 @@ public abstract class GameObject extends RigidBody{
     protected float angle;
     protected float cos;
     protected float sin;
+    
+    protected float rotation;
+    protected float rotationSpeed;
+    protected int rotatePX;
+    protected int rotatePY;
     
     protected boolean flip;
     
@@ -65,14 +71,26 @@ public abstract class GameObject extends RigidBody{
 			extraX = (int) getWidth() / 2;
 		}
 		
-		int posX = worldConver.getConversionDrawX(cameraX, getPosX());
-        int posY = worldConver.getConversionDrawY(cameraY, getPosY());
+		int posX = worldConver.getConversionDrawX(cameraX, getPosX())+ modDrawX;
+        int posY = worldConver.getConversionDrawY(cameraY, getPosY())+ modDrawY;
+        
         if(spriteImage != null)
-        	spriteImage.drawFrame(_g, image, posX + modDrawX, posY + modDrawY, flip, anchor);
+        	spriteImage.drawFrame(_g, image, posX, posY, flip, anchor);
         else{
-        	_g.setClip(posX - extraX + modDrawX, posY - extraY + modDrawY, (int) getWidth(), (int) getHeight());
-            //_g.setClip(0, 0, Define.SIZEX, Define.SIZEY);
-            _g.drawImage(image, posX - modAnimX + modDrawX, posY - modAnimY + modDrawY, anchor);
+        	if(rotation == 0){
+	        	_g.setClip(posX - extraX, posY - extraY, (int) getWidth(), (int) getHeight());
+	            _g.drawImage(image, posX - modAnimX, posY - modAnimY, anchor);
+        	}else{
+        		_g.setClip(0, 0, Define.SIZEX, Define.SIZEY);
+                _g.drawRegion(
+    					image, 
+    					posX - extraX, posY - extraY, 
+    					0, 0, 
+    					image.getWidth(), image.getHeight(), 
+    					rotation, 
+    					posX + rotatePX,
+    					posY + rotatePY);
+        	}
         }
      }
     
@@ -141,6 +159,23 @@ public abstract class GameObject extends RigidBody{
 	public void setFlip(boolean flip) {
 		this.flip = flip;
 	}
+
+	public float getRotation() {
+		return rotation;
+	}
+
+	public void setRotation(float rotation) {
+		this.rotation = rotation;
+	}
+
+	public float getRotationSpeed() {
+		return rotationSpeed;
+	}
+
+	public void setRotationSpeed(float rotationSpeed) {
+		this.rotationSpeed = rotationSpeed;
+	}
     
+	
     
 }

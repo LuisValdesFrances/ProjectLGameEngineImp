@@ -59,9 +59,8 @@ public class Player extends GameObject{
 	private float blinkCount;
 	private boolean blink;
 	
-	public Player(int width, int height, float posX, float posY, float posZ, float angle) {
-		 super(width, height, posX, posY, posZ,
-				 RigidBody.transformUnityValue(0.96f, ModeGame.TILE_SIZE, Define.PLAYER_SPEED), angle);
+	public Player(int width, int height, float posX, float posY, float posZ, float speed, float angle) {
+		 super(width, height, posX, posY, posZ, speed, angle);
 		 
 		 spriteImageList = new ArrayList<SpriteImage>();
 		 
@@ -87,7 +86,7 @@ public class Player extends GameObject{
 				 new int[]{JUMP_1_FRAMES, JUMP_2_FRAMES, JUMP_3_FRAMES}));
 	}
 	
-	public void update(float deltaTime, int[][] tilesMatrixID, List<Enemy> enemyList, float tileW, float tileH, GameControl gameControl) {
+	public void update(float deltaTime, int[][] tilesMatrixID, float tileW, float tileH, GameControl gameControl) {
 		//Guardo la fuerza de caida
 		fallForce = getSpeedY();
 		super.update(deltaTime, tilesMatrixID, tileW, tileH);
@@ -97,21 +96,12 @@ public class Player extends GameObject{
 		
 		if(isSuff){
 			blinkCount +=deltaTime;
-			
 			if(blinkCount >= Define.PLAYER_SUFF_DURATION){
 				isSuff = false;
 				blink = false;
 			}else{
 				if(Main.isDispareCount(deltaTime, blinkCount, Define.SPEED_BLICK)){
 					blink = !blink;
-				}
-			}
-		}else{
-			for(Enemy e: enemyList){
-				if(isColision(e)){
-					isSuff = true;
-					blink = true;
-					blinkCount = 0;
 				}
 			}
 		}
@@ -140,7 +130,14 @@ public class Player extends GameObject{
 				break;
 			}
 		}
-		
+	}
+	
+	public void setDamage(int damage){
+		if(!isSuff){
+			isSuff = true;
+			blink = true;
+			blinkCount = 0;
+		}
 	}
 	
 	private void listenControls(GameControl _vGameControl){

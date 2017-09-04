@@ -85,6 +85,10 @@ public class BadRock extends Enemy{
     			setSpeedY(-player.getForceAtack()-forceMod);
     			//Si ya esta sufriendo, lo reinico
     			spriteImageList.get(animation).setFrame(0);
+    		}else{
+    			if(isColision(player)){
+    				player.setDamage(0);
+    			}
     		}
     	//}
     		

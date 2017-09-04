@@ -2,7 +2,10 @@ package com.luis.projectlgameengineimp.objects;
 
 import java.util.List;
 
+import com.luis.lgameengine.gameutils.gameworld.GfxEffects;
+import com.luis.lgameengine.gameutils.gameworld.ParticleManager;
 import com.luis.lgameengine.gameutils.gameworld.SpriteImage;
+import com.luis.lgameengine.gameutils.gameworld.WorldConver;
 import com.luis.projectlgameengineimp.Define;
 
 public abstract class Enemy extends GameObject{
@@ -12,6 +15,10 @@ public abstract class Enemy extends GameObject{
 	protected int live;
 	
 	protected List<SpriteImage> spriteImageList;
+	
+	public static WorldConver worlConver;
+	public static ParticleManager particleManager;
+	public static GfxEffects gfxEffects;
 	
 	protected Player player;
 

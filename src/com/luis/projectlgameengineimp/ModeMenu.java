@@ -29,6 +29,7 @@ public class ModeMenu {
 	
 	public static void init(int _iMenuState){
 		Log.i("Info", "Init State: "+ _iMenuState);
+		iOptionSelect = 0;
 		switch (_iMenuState) {
         case Define.ST_MENU_LOGO:
 			iStateLogo = ST_LOGO_1;
@@ -59,6 +60,13 @@ public class ModeMenu {
 		case Define. ST_MENU_EXIT:
 		case Define. ST_MENU_HELP:
 		case Define. ST_MENU_ABOUT:
+			break;
+			
+		case Define. ST_MENU_SELECT_GAME:
+			MenuManager.init(
+					GfxManager.vImgMenuButtons.getWidth(), GfxManager.vImgMenuButtons.getHeight()/2,
+					GfxManager.vImgSoftkeys.getWidth()/2, GfxManager.vImgSoftkeys.getHeight()/2,
+					GfxManager.vImgMenuArrows.getWidth()/2, GfxManager.vImgMenuArrows.getHeight());
 			break;
 		}
 	}
@@ -334,6 +342,23 @@ public class ModeMenu {
 			}
 			}
         	break;
+        	
+        	
+		case Define.ST_MENU_SELECT_GAME:
+			iOptionSelect = UserInput.getInstance().getOptionMenuTouched_Y(2, iOptionSelect);
+			if (UserInput.getInstance().getOkTouched_Y(iOptionSelect)) {
+
+				switch (iOptionSelect) {
+				case 0:
+					GameState.getInstance().setLevel(1);
+					break;
+				case 1:
+					GameState.getInstance().setLevel(0);
+					break;
+				}
+				Main.changeState(Define.ST_GAME_INIT,true);
+			}
+			break;
 		}
 	}
 	
@@ -341,10 +366,11 @@ public class ModeMenu {
 		switch (Main.iState) {
 		case Define.ST_MENU_LOGO:
 			_g.setClip(0, 0, Define.SIZEX, Define.SIZEY);
-			_g.setColor(Main.COLOR_GREEN);
+			_g.setColor(Main.COLOR_BLACK);
 			_g.fillRect(0, 0, Define.SIZEX, Define.SIZEY);
-			//_g.drawImage(GfxManager.vImgLogo, Define.SIZEX2, Define.SIZEY2, Graphics.VCENTER|Graphics.HCENTER);
-			//_g.setAlpha(255);
+			_g.setAlpha(iLevelAlpha);
+			_g.drawImage(GfxManager.vImgLogo, Define.SIZEX2, Define.SIZEY2, Graphics.VCENTER|Graphics.HCENTER);
+			_g.setAlpha(255);
              
 			break;
 		case Define.ST_MENU_ASK_LANGUAGE:
@@ -427,6 +453,15 @@ public class ModeMenu {
 			
 			break;
 			
+		case Define.ST_MENU_SELECT_GAME:
+			_g.setClip(0, 0, Define.SIZEX, Define.SIZEY);
+			//_g.drawImage(GfxManager.vImgBackground, 0, 0, 0);
+			_g.setColor(Main.COLOR_RED);
+			_g.fillRect(0, 0, Define.SIZEX, Define.SIZEY);
+			MenuManager.drawButtonsAndTextY(_g, 2, new String[]{"NIVEL ROCA", "NIVEL DEMO"},
+				    Font.FONT_BIG, iOptionSelect, null, GfxManager.vImgMenuButtons, Main.iFrame);
+			break;
+			
 		case Define.ST_MENU_EXIT:
 			_g.setClip(0, 0, Define.SIZEX, Define.SIZEY);
 			//_g.drawImage(GfxManager.vImgBackground, 0, 0, 0);
@@ -490,9 +525,9 @@ public class ModeMenu {
     }
 	
 	public static long lInitialLogoTime;
-	public static final long ST_TIME_LOGO_1 = 10;//2000;
-	public static final long ST_TIME_LOGO_2 = 10;//1000;
-	public static final long ST_TIME_LOGO_3 = 10;//2000;
+	public static final long ST_TIME_LOGO_1 = 1000;
+	public static final long ST_TIME_LOGO_2 = 500;
+	public static final long ST_TIME_LOGO_3 = 1000;
 	public static int iStateLogo;
 	public static final int ST_LOGO_1 = 0;
 	public static final int ST_LOGO_2 = 2;
@@ -521,7 +556,7 @@ public class ModeMenu {
 			if(iLevelAlpha <= 0){
 				iLevelAlpha = 255;
 				if(FileIO.isData()) Main.changeState(Define.ST_MENU_ASK_SOUND,true);
-				else Main.changeState(Define.ST_MENU_ASK_LANGUAGE,true);
+				else Main.changeState(Define.ST_MENU_SELECT_GAME,true);
 			}
 			
 			break;

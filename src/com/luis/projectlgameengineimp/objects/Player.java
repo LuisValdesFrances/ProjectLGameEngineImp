@@ -84,6 +84,7 @@ public class Player extends GameObject{
 				 new int[]{GfxManager.imgPlayerJump.getHeight()/3, GfxManager.imgPlayerJump.getHeight()/3, GfxManager.imgPlayerJump.getHeight()/3},
 				 new float[]{Define.PLAYER_DUR_ANIM_JUMP_1, Define.PLAYER_DUR_ANIM_JUMP_2, Define.PLAYER_DUR_ANIM_JUMP_3},
 				 new int[]{JUMP_1_FRAMES, JUMP_2_FRAMES, JUMP_3_FRAMES}));
+		 
 	}
 	
 	public void update(float deltaTime, int[][] tilesMatrixID, float tileW, float tileH, GameControl gameControl) {

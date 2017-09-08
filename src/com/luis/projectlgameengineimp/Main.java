@@ -64,10 +64,10 @@ public class Main extends MyCanvas implements Runnable {
 	public static final int COLOR_GREEN_BG = 0xff8bfc88;
 	public static final int COLOR_YELOW_BG = 0xfffcf659;
 
-	public static final boolean IS_DEBUG = true;
+	public static final boolean IS_DEBUG = false;
 	public static final boolean IS_TOUCH_INPUT_DEBUG = false;
 	public static final boolean IS_KEY_INPUT_DEBUG = false;
-	public static final boolean IS_GAME_DEBUG = false;
+	public static final boolean IS_GAME_DEBUG = true;
 
 	// Nombre del fichero donde se guardaran y cargaran los datos:
 	public static final String DATA_NAME = "angryufodata";
@@ -137,6 +137,7 @@ public class Main extends MyCanvas implements Runnable {
 			         case Define.ST_MENU_EXIT:
 			         case Define.ST_MENU_HELP:
 			         case Define.ST_MENU_ABOUT:
+			         case Define.ST_MENU_SELECT_GAME:
 			             if (!isLoading) {
 			               ModeMenu.update();
 			            }
@@ -196,6 +197,7 @@ public class Main extends MyCanvas implements Runnable {
 		         case Define.ST_MENU_EXIT:
 		         case Define.ST_MENU_HELP:
 		         case Define.ST_MENU_ABOUT:
+		         case Define.ST_MENU_SELECT_GAME:
 					ModeMenu.draw(_g);
 					break;
 		         case Define.ST_GAME_INIT:

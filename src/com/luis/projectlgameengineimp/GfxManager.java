@@ -10,7 +10,7 @@ public class GfxManager {
 	   public static Image vImgFontMedium;
 	   public static Image vImgFontBig;
 	   
-	   //public static Image vImgLogo;
+	   public static Image vImgLogo;
 	   //public static Image vImgBackground;
 	   public static Image vImgMenuButtons;
 	   public static Image vImgMenuArrows;
@@ -53,7 +53,7 @@ public class GfxManager {
 		            vImgFontMedium = Image.createImage("/font_medium.png");
 		            vImgFontBig = Image.createImage("/font_big.png");
 		               
-		            //vImgLogo = Image.createImage("/4away.png");
+		            vImgLogo = Image.createImage("/4away.png");
 	            } catch (IOException ex) {
 	               ex.printStackTrace();
 	            }
@@ -72,13 +72,47 @@ public class GfxManager {
 		        }
 		        
 		        break;
+		       
+		     //Test
+	         case Define.ST_MENU_SELECT_GAME:
+	        	 try {
+			        	vImgMenuButtons = Image.createImage("/menu_buttons.png");
+			            vImgMenuArrows = Image.createImage("/menu_arrows.png");
+			            vImgSoftkeys = Image.createImage("/softkeys.png");
+			            try{
+			                //vImgBackground = Image.createImage("/bg_generic.png");
+			            }catch(Exception e){}
+			        } catch (IOException ex) {
+			            ex.printStackTrace();
+			        }
+	        	 break;
+	        	 
 		        
 	         case Define.ST_GAME_INIT:
 	            try {
+	            	
+	            	switch(GameState.getInstance().getLevel()){
+	            	case 0:
+	            		vImgGameTilesL1 = Image.createImage("/tile_matrix_layer_1.png");
+						vImgGameTilesL2 = Image.createImage("/tile_matrix_layer_2.png");
+						vImgGameTilesL3 = Image.createImage("/tile_matrix_layer_3.png");
+						
+						//bg
+			            vImgBGs = new Image[5];
+			            for(int i = 0; i < vImgBGs.length; i++){
+			            	vImgBGs[i] = Image.createImage("/bg/layer_" + (i + 1) + ".png");
+			        	}
+			            
+	            		break;
+	            	case 1:
+	            		vImgGameTilesL1 = Image.createImage("/tile_matrix_layer_1_2.png");
+						vImgGameTilesL2 = Image.createImage("/tile_matrix_layer_2.png");
+						vImgGameTilesL3 = Image.createImage("/tile_matrix_layer_3.png");
+	            		break;
+	            		
+	            	}
+					
 	               vImgPause = Image.createImage("/pause.png");
-	               vImgGameTilesL1 = Image.createImage("/tile_matrix_layer_1.png");
-	               vImgGameTilesL2 = Image.createImage("/tile_matrix_layer_2.png");
-	               vImgGameTilesL3 = Image.createImage("/tile_matrix_layer_3.png");
 	               imgPlayerIdle = Image.createImage("/player_idle.png");
 	               imgPlayerRun = Image.createImage("/player_run.png");
 	               imgPlayerAtack = Image.createImage("/player_atack.png");
@@ -91,11 +125,7 @@ public class GfxManager {
 	               
 	               imgRock = Image.createImage("/rock.png");
 	               imgBigRock = Image.createImage("/big_rock.png");
-	               //bg
-	               vImgBGs = new Image[5];
-	               for(int i = 0; i < vImgBGs.length; i++){
-	            	   vImgBGs[i] = Image.createImage("/bg/layer_" + (i + 1) + ".png");
-	               }
+	               
 	            } catch (IOException ex) {
 	               ex.printStackTrace();
 	            }

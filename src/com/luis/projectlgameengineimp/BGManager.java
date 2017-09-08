@@ -12,7 +12,6 @@ public class BGManager {
 		fPosX = new float[GfxManager.vImgBGs.length];
 		fModY = new float[GfxManager.vImgBGs.length];
 		
-		
 		for(int i = 0; i < GfxManager.vImgBGs.length; i++){
 			fPosX[i] = 0;
 			fCamX = ModeGame.gameCamera.getPosX();

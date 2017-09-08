@@ -33,6 +33,7 @@ public class ModeGame {
 	 */
 	public static final int PERF_BUTTON_W = Define.SIZEX12;
 	public static final int PERF_BUTTON_H = Define.SIZEY12;
+	
 	public static int systemColision = 0;
 	public static boolean isBackBuffer = false;
 	
@@ -40,13 +41,14 @@ public class ModeGame {
 	 * 
 	 */
 	public static boolean isGamePaused;
+	private static int gameFrame;
 	
 	public static final int TILE_SET_SIZE[] = {24,32,48,64};
-	public static int TILE_SIZE;
+	public static int tileSize;
 	public static float worldWidth;
 	public static float worldHeight;
 	//Levels design:
-	private static final int[] COLOR_BG = {0xff458071, 0xffbeeee2};
+	private static int bgColor;
 	
 	static GameCamera gameCamera;
 	private static WorldConver worldConver;
@@ -74,15 +76,39 @@ public class ModeGame {
 		
 		switch(_iState){
 		case Define.ST_GAME_INIT:
+			
 			//Init world dimensions
-			TILE_SIZE = TILE_SET_SIZE[Settings.getInstance().getResolution()];
-			worldWidth = TILE_SIZE * LEVEL_ROCK_WIDTH;
-			worldHeight = TILE_SIZE * LEVEL_ROCK_HEIGHT;
+			tileSize = TILE_SET_SIZE[Settings.getInstance().getResolution()];
 			
-			worldConver = new WorldConver(Define.SIZEX, Define.SIZEY, 0, 0, 0, 0, worldWidth, worldHeight);
+			switch(GameState.getInstance().getLevel()){
+			case 0:
+				worldWidth = tileSize * LEVEL_TEST_WIDTH;
+				worldHeight = tileSize * LEVEL_TEST_HEIGHT;
+				
+				tileManager = new TileManager(
+						"/bin/levels/" + LEVEL_1_PATH);
+				bgColor = 0xffCED8F6;
+				
+				spawnPlayer();
+				gameCamera= new GameCamera(player.getPosX(), player.getPosY(), worldWidth, worldHeight, Define.FRAME_SPEED_DEC);
+				
+				bgManager = new BGManager();
+				break;
+			case 1:
+				bgColor = 0xffCED8F6;
+				worldWidth = tileSize * LEVEL_ROCK_WIDTH;
+				worldHeight = tileSize * LEVEL_ROCK_HEIGHT;
+				
+				tileManager = new TileManager(
+						"/bin/levels/" + LEVEL_ROCK_TEST_PATH);
+				
+				spawnPlayer();
+				gameCamera= new GameCamera(player.getPosX(), player.getPosY(), worldWidth, worldHeight, Define.FRAME_SPEED_DEC);
+				
+				bgManager = null;
+				break;
+			}
 			
-			tileManager = new TileManager(
-					"/bin/levels/" + LEVEL_ROCK_TEST_PATH);
 			tileManager.idConversionData(
 					new Image[] {
 						GfxManager.vImgGameTilesL1, 
@@ -90,6 +116,7 @@ public class ModeGame {
 						GfxManager.vImgGameTilesL3, 
 						GfxManager.imgEnemyTile});
 			
+			worldConver = new WorldConver(Define.SIZEX, Define.SIZEY, 0, 0, 0, 0, worldWidth, worldHeight);
 			
 			gameControl = new TouchPadControl(
 		    		null, null, Define.SIZEX / 6, Define.SIZEY - Define.SIZEY / 4,
@@ -101,16 +128,15 @@ public class ModeGame {
 			gameControl.reset();
 			
 			enemyList = new ArrayList<Enemy>();
-			spawnPlayer();
-			gameCamera= new GameCamera(player.getPosX(), player.getPosY(), worldWidth, worldHeight, Define.FRAME_SPEED_DEC);
-			bgManager = new BGManager();
+			
+			particleManager = ParticleManager.getInstance();
+			gfxEffects = GfxEffects.getInstance();
 			
 			gameBuffer = Image.createImage(Define.SIZEX, Define.SIZEY);
-			
 			if(isBackBuffer){
 				tileManager.enableBuffer(
 						worldConver,
-						TILE_SIZE, 
+						tileSize, 
 						Define.SIZEX, 
 						Define.SIZEY, 
 						gameCamera.getPosX(), 
@@ -119,8 +145,12 @@ public class ModeGame {
 				drawBuffer = true;
 			}
 			
-			particleManager = ParticleManager.getInstance();
-			gfxEffects = GfxEffects.getInstance();
+			Enemy.particleManager = particleManager;
+			Enemy.gfxEffects = gfxEffects;
+			Enemy.worlConver = worldConver;
+			Enemy.gameCamera = gameCamera;
+			
+			gameFrame = 0;
 			Main.changeState(Define.ST_GAME_RUN, false);
 			break;
 			
@@ -135,15 +165,22 @@ public class ModeGame {
 			break;
 			
 		case Define.ST_GAME_RUN:
+			
 			if(isGoToPerformanceMenu() || isFocusPerformanceMenu()){
 				if(isGoToPerformanceMenu())
 					Main.changeState(Define.ST_GAME_PERFORMANCE_OPTIONS, false);
 			}else{
 				
-				if(!isBackBuffer)
-					bgManager.update();
-				else{
-					drawBuffer = tileManager.updateBuffer(gameCamera.getPosX(), gameCamera.getPosY(), TILE_SIZE);
+				gameFrame++;
+				
+				if(!isBackBuffer){
+					if(bgManager != null)
+						bgManager.update();
+				}else{
+					drawBuffer = tileManager.updateBuffer(
+							gameCamera.getPosX(), 
+							gameCamera.getPosY(), 
+							tileSize);
 				}
 				
 				gameControl.update(
@@ -160,7 +197,7 @@ public class ModeGame {
 				spawnEnemy();
 				updateEnemy();
 				
-				player.update(Main.getDeltaSec(), tileManager.getLayerID(1), TILE_SIZE, TILE_SIZE, gameControl);
+				player.update(Main.getDeltaSec(), tileManager.getLayerID(1), tileSize, tileSize, gameControl);
 				
 			}
 			
@@ -179,8 +216,10 @@ public class ModeGame {
 			break;
 			
 		case Define.ST_GAME_RUN:
-			
-			
+			//Ajuste de la logica
+			if(gameFrame<2){
+				return;
+			}
 			
 			
 //			vTileManager.drawLayer(_g, GfxManager.vImgGameTilesL0, 8, 0, vWorldConver, 
@@ -235,7 +274,7 @@ public class ModeGame {
 							worldConver, 
 							gameCamera.getPosX(), gameCamera.getPosY(), 
 							new int[]{modBufferX, modBufferX, modBufferX}, 
-							new int[]{modBufferY + (TILE_SIZE>>1), modBufferY, modBufferY + (TILE_SIZE>>1)},
+							new int[]{modBufferY + (tileSize>>1), modBufferY, modBufferY + (tileSize>>1)},
 							Graphics.BOTTOM | Graphics.HCENTER);
 				}
 				tileManager.drawBuffer(gameBuffer.getGraphics(), Define.SIZEX, Define.SIZEY);
@@ -243,15 +282,17 @@ public class ModeGame {
 			else{
 				//Adornos fondo
 				gameBuffer.getGraphics().setClip(0, 0, Define.SIZEX, Define.SIZEY);
-				gameBuffer.getGraphics().setColor(0xffCED8F6);
+				gameBuffer.getGraphics().setColor(bgColor);
 				gameBuffer.getGraphics().fillRect(0, 0, Define.SIZEX, Define.SIZEY);
-				bgManager.draw(gameBuffer.getGraphics());
+				
+				if(bgManager != null)
+					bgManager.draw(gameBuffer.getGraphics());
 				
 				tileManager.drawLayer(gameBuffer.getGraphics(), 
 						new Image[] {GfxManager.vImgGameTilesL1, GfxManager.vImgGameTilesL2, GfxManager.vImgGameTilesL3},
 						0,
 						worldConver, 
-						gameCamera.getPosX(), gameCamera.getPosY(), 0, TILE_SIZE>>1,
+						gameCamera.getPosX(), gameCamera.getPosY(), 0, tileSize>>1,
 						Graphics.BOTTOM | Graphics.HCENTER);
 				
 				tileManager.drawLayer(gameBuffer.getGraphics(), 
@@ -275,7 +316,7 @@ public class ModeGame {
 						new Image[] {GfxManager.vImgGameTilesL1, GfxManager.vImgGameTilesL2, GfxManager.vImgGameTilesL3},
 						2,
 						worldConver, 
-						gameCamera.getPosX(), gameCamera.getPosY(), 0, TILE_SIZE>>1,
+						gameCamera.getPosX(), gameCamera.getPosY(), 0, tileSize>>1,
 						Graphics.BOTTOM | Graphics.HCENTER);
 			}
 			
@@ -306,20 +347,22 @@ public class ModeGame {
 			
 			if (Main.IS_GAME_DEBUG) {
 				_g.setClip(0, 0, Define.SIZEX, Define.SIZEY);
-				_g.setTextSize((int) (24 * Settings.getInstance().getScale()));
+				_g.setTextSize(32);
 				_g.setAlpha(160);
-				_g.setColor(Main.COLOR_BLACK);
-				_g.fillRect(0, 0, Define.SIZEX, _g.getTextHeight() * 6);
+				_g.setColor(0x88000000);
+				_g.fillRect(0, 0, Define.SIZEX, _g.getTextHeight() * 3);
 				_g.setAlpha(255);
-				_g.drawText("FramesXSecond: " + Main.iFramesXSecond, 0, _g.getTextHeight(), Main.COLOR_RED);
-				_g.drawText("DeltaTime: " + Main.getDeltaSec(), Define.SIZEX2, _g.getTextHeight(), Main.COLOR_RED);
+				_g.drawText("FramesXSecond: " + Main.iFramesXSecond, 0, _g.getTextHeight(), Main.COLOR_WHITE);
+				_g.drawText("DeltaTime: " + Main.getDeltaSec(), Define.SIZEX2, _g.getTextHeight(), Main.COLOR_WHITE);
+				_g.drawText("Player x: " + (int)player.getPosX() + " - Player y: " + (int)player.getPosY(), 
+						0, _g.getTextHeight()*2, Main.COLOR_WHITE);
 				//Colisiones
 				_g.drawText(
 						"ColT: " + player.isColisionTop()
 						+ " ColB: " + player.isColisionBotton()
 						+ " ColL: " + player.isColisionLeft()
 						+ " ColR: " + player.isColisionRight()
-						, 0, _g.getTextHeight()*3, Main.COLOR_RED);
+						, 0, _g.getTextHeight()*3, Main.COLOR_WHITE);
 				
 				
 			}
@@ -336,21 +379,21 @@ public class ModeGame {
 		for(int f = 0; f < tileManager.getLayerID(3).length; f++){
 			for(int c = 0; c < tileManager.getLayerID(3)[f].length; c++){
 				if(tileManager.getLayerID(3)[f][c] == Define.PLAYER_ID){
-					int w = (int) (TILE_SIZE);
-					int y = (int)(TILE_SIZE*2f);
+					int w = (int) (tileSize);
+					int y = (int)(tileSize*2f);
 					player = new Player(
 							w, y,
-							(TILE_SIZE * c)+TILE_SIZE/2,
-                            (TILE_SIZE * f)+TILE_SIZE,
+							(tileSize * c)+tileSize/2,
+                            (tileSize * f)+tileSize,
 							0,
-							RigidBody.transformUnityValue(0.96f, ModeGame.TILE_SIZE, Define.PLAYER_SPEED),
+							RigidBody.transformUnityValue(0.96f, ModeGame.tileSize, Define.PLAYER_SPEED),
 							0);
 					
 					player.setGravityForce(Define.GRAVITY_FORCE);
-					player.setWeight(RigidBody.transformUnityValue(0.96f, TILE_SIZE, Define.PLAYER_WEIGHT));
-					player.setForceJump(RigidBody.transformUnityValue(0.96f, TILE_SIZE, Define.PLAYER_FORCE_JUMP));
-					player.setForceJumpShort(RigidBody.transformUnityValue(0.96f, TILE_SIZE, Define.PLAYER_FORCE_JUMP_SHORT));
-					player.setForceAtack(RigidBody.transformUnityValue(0.96f, TILE_SIZE, Define.PLAYER_FORCE_ATACK));
+					player.setWeight(RigidBody.transformUnityValue(0.96f, tileSize, Define.PLAYER_WEIGHT));
+					player.setForceJump(RigidBody.transformUnityValue(0.96f, tileSize, Define.PLAYER_FORCE_JUMP));
+					player.setForceJumpShort(RigidBody.transformUnityValue(0.96f, tileSize, Define.PLAYER_FORCE_JUMP_SHORT));
+					player.setForceAtack(RigidBody.transformUnityValue(0.96f, tileSize, Define.PLAYER_FORCE_ATACK));
 					break;
 				}
 			}
@@ -363,24 +406,25 @@ public class ModeGame {
 				if(tileManager.getLayerID(3)[f][c] != 0){
 					Enemy e = null;
 					if (worldConver.isObjectInGameLayout(gameCamera.getPosX(), gameCamera.getPosY(),
-                            (TILE_SIZE * c),
-                            (TILE_SIZE * f),
-                            TILE_SIZE, TILE_SIZE)) {
+							(tileSize * c),
+                            (tileSize * f),
+                            tileSize, tileSize)) {
 						
 						int w;
 						int h;
 						switch(tileManager.getLayerID(3)[f][c]){
 						case Define.BADROCK_ID:
-							w = (int) (TILE_SIZE * 0.5f);
-							h = (int) (TILE_SIZE * 1.5f);
-							e = new BadRock(Define.BADROCK_ID, player, w, h, 
-									TILE_SIZE * c+TILE_SIZE/2, 
-									TILE_SIZE * f+TILE_SIZE, 
+							w = (int) (tileSize * 0.5f);
+							h = (int) (tileSize * 1.5f);
+							e = new BadRock(
+									Define.BADROCK_ID, player, 
+									w, h, 
+									tileSize * c+tileSize/2, 
+									tileSize * f+tileSize, 
 									0, 0, 0, Define.BADROCK_LIVE);
 							
 							e.setGravityForce(Define.GRAVITY_FORCE);
-							e.setWeight(RigidBody.transformUnityValue(0.96f, TILE_SIZE, Define.PLAYER_WEIGHT));
-							
+							e.setWeight(RigidBody.transformUnityValue(0.96f, tileSize, Define.PLAYER_WEIGHT));
 							tileManager.getLayerID(3)[f][c] = 0;
 							enemyList.add(e);
 							break;
@@ -389,22 +433,19 @@ public class ModeGame {
 						case Define.BIGROCK_LEFT_ID:
 							
 							char d = tileManager.getLayerID(3)[f][c] == Define.BIGROCK_RIGHT_ID ? 'R' : 'L';
-							float speed = RigidBody.transformUnityValue(0.96f, ModeGame.TILE_SIZE, Define.BIG_ROCK_SPEED);
-							w = (int) (TILE_SIZE * 4);
-							h = (int) (TILE_SIZE * 4);
+							float speed = RigidBody.transformUnityValue(0.96f, ModeGame.tileSize, Define.BIG_ROCK_SPEED);
+							w = (int) (tileSize * 4);
+							h = (int) (tileSize * 4);
 							e = new BigRock(tileManager.getLayerID(3)[f][c], 
-									player, 
+									player,
 									w, h, 
-									TILE_SIZE * c + TILE_SIZE/2, 
-									TILE_SIZE * f + TILE_SIZE, 0,
+									tileSize * c + tileSize/2, 
+									tileSize * f + tileSize, 0,
 									d=='R'?speed:-speed, 0);
 							
 							e.setGravityForce(Define.GRAVITY_FORCE);
-							e.setWeight(RigidBody.transformUnityValue(0.96f, TILE_SIZE, Define.BIG_ROCK_WEIGHT));
+							e.setWeight(RigidBody.transformUnityValue(0.96f, tileSize, Define.BIG_ROCK_WEIGHT));
 							e.setRotationSpeed(d=='R'?Define.BIG_ROCK_SPEED_ROTATION:-Define.BIG_ROCK_SPEED_ROTATION);
-							BigRock.particleManager = particleManager;
-							BigRock.gfxEffects = gfxEffects;
-							BigRock.worlConver = worldConver;
 							tileManager.getLayerID(3)[f][c] = 0;
 							enemyList.add(e);
 							break;
@@ -421,66 +462,61 @@ public class ModeGame {
 	private static void updateEnemy(){
 		for(int i = 0; i < enemyList.size(); i++){
 			
-			enemyList.get(i).update(Main.getDeltaSec(), tileManager.getLayerID(1), TILE_SIZE, TILE_SIZE);
+			enemyList.get(i).update(Main.getDeltaSec(), tileManager.getLayerID(1), tileSize, tileSize);
 			
 			switch(enemyList.get(i).getType()){
 			
 				case Define.BADROCK_ID:
 					if(enemyList.get(i).getState() == BadRock.STATE_DEAD){
-						
-						particleManager.createParticles(
-								3,
-								Define.GRAVITY_FORCE,
-								RigidBody.transformUnityValue(0.96f, TILE_SIZE, Define.PARTICLE_ENEMY_DESTROY_WEIGHT),
-								enemyList.get(i).getPosX(), enemyList.get(i).getPosY()-enemyList.get(i).getHeight()/2, 
-								RigidBody.transformUnityValue(0.96f, TILE_SIZE, Define.PARTICLE_ENEMY_DESTROY_SPEED), 
-								(int)(enemyList.get(i).getWidth()*0.75f), (int)(enemyList.get(i).getWidth()*0.85f),
-								ParticleManager.COL_CENTER, 
-								new int[]{0xffE2C683, 0xff724611, 0xffD2872C, 0xffD5FCB5, 0Xff4E4032, 0xff426129},
-								Define.PARTICLE_ENEMY_DESTROY_DURATION, false, false);
+						enemyList.get(i).createParticles(
+								tileSize, 
+								enemyList.get(i).getPosX(), enemyList.get(i).getPosY()-enemyList.get(i).getHeight()/2,
+								RigidBody.transformUnityValue(0.96f, tileSize, Define.PARTICLE_ENEMY_DESTROY_WEIGHT), 
+								RigidBody.transformUnityValue(0.96f, tileSize, Define.PARTICLE_ENEMY_DESTROY_SPEED), 
+								Define.PARTICLE_ENEMY_DESTROY_DURATION);
 						enemyList.remove(i);
 						i--;
 					}
 					else if(enemyList.get(i).createObject()){
 						float x = enemyList.get(i).getPosX();
 						float y = enemyList.get(i).getPosY()-enemyList.get(i).getHeight()*0.7f;
-						Enemy e = new Rock(Define.ROCK_ID, player, 
-								TILE_SIZE, TILE_SIZE, 
+						Enemy e = new Rock(
+								Define.ROCK_ID, player,
+								tileSize, tileSize, 
 								x, 
 								y, 0, 0, 0);
-						enemyList.add(e);
-						
 						e.setGravityForce(Define.GRAVITY_FORCE);
-						e.setWeight(RigidBody.transformUnityValue(0.96f, TILE_SIZE, Define.ROCK_WEIGHT));
-						float speedX = RigidBody.transformUnityValue(0.96f, TILE_SIZE, 
+						e.setWeight(RigidBody.transformUnityValue(0.96f, tileSize, Define.ROCK_WEIGHT));
+						float speedX = RigidBody.transformUnityValue(0.96f, tileSize, 
 								enemyList.get(i).isFlip()?Define.BADROCK_FORCE_LAUNCH:-Define.BADROCK_FORCE_LAUNCH);
-						float speedY = RigidBody.transformUnityValue(0.96f, TILE_SIZE, 
+						float speedY = RigidBody.transformUnityValue(0.96f, tileSize, 
 								Define.BADROCK_FORCE_LAUNCH);
 						e.setSpeedX(-speedX);
 						e.setSpeedY(-speedY);
 						e.setRotationSpeed(enemyList.get(i).isFlip() ? -Define.ROCK_SPEED_ROTATION : Define.ROCK_SPEED_ROTATION);
+						
+						enemyList.add(e);
 					}
 				break;
 				case Define.ROCK_ID:
 					if(enemyList.get(i).getState() == Rock.STATE_DESTROY){
 						
-						particleManager.createParticles(
-								2,
-								Define.GRAVITY_FORCE,
-								RigidBody.transformUnityValue(0.96f, TILE_SIZE, Define.PARTICLE_ROCK_DESTROY_WEIGHT),
-								enemyList.get(i).getPosX(), enemyList.get(i).getPosY() - enemyList.get(i).getHeight()/2f, 
-								RigidBody.transformUnityValue(0.96f, TILE_SIZE, Define.PARTICLE_ROCK_DESTROY_SPEED),
-								(int)(TILE_SIZE*0.45f), (int)(TILE_SIZE*0.45f),
-								ParticleManager.COL_CENTER, 
-								new int[]{0xff35302A, 0Xff4E4032, 0xff918274},
-								Define.PARTICLE_ROCK_DESTROY_DURATION, false, false);
+						enemyList.get(i).createParticles(
+								tileSize,
+								enemyList.get(i).getPosX(), enemyList.get(i).getPosY()-enemyList.get(i).getHeight()/2,
+								RigidBody.transformUnityValue(0.96f, tileSize, Define.PARTICLE_ROCK_DESTROY_WEIGHT),
+								RigidBody.transformUnityValue(0.96f, tileSize, Define.PARTICLE_ROCK_DESTROY_SPEED),
+								Define.PARTICLE_ROCK_DESTROY_DURATION);
 						
-						gfxEffects.createTremor(0.35f, TILE_SIZE/8);
+						gfxEffects.createTremor(0.35f, tileSize/8);
 						
 						enemyList.remove(i);
 						i--;
 					}
 				break;
+				case Define.BIGROCK_LEFT_ID:
+				case Define.BIGROCK_RIGHT_ID:
+					enemyList.get(i).setEnemeyDamage(enemyList);
 				default:
 					
 					break;
@@ -538,7 +574,7 @@ public class ModeGame {
 				if(isBackBuffer){
 					tileManager.enableBuffer(
 						worldConver,
-						TILE_SIZE, Define.SIZEX, Define.SIZEY, gameCamera.getPosX(), gameCamera.getPosY());
+						tileSize, Define.SIZEX, Define.SIZEY, gameCamera.getPosX(), gameCamera.getPosY());
 					drawBuffer = true;
 					//Reinicio worldConver, ahora las dismensiones de la pantalla deben de ser la de la imagen del buffer
 					worldConver = new WorldConver(tileManager.getBuffer().getWidth(), tileManager.getBuffer().getHeight(), 

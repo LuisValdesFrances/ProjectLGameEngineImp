@@ -85,6 +85,7 @@ public class Define {
 	public static final int ST_MENU_EXIT = 6;
 	public static final int ST_MENU_HELP = 7;
 	public static final int ST_MENU_ABOUT = 8;
+	public static final int ST_MENU_SELECT_GAME = 9;
 
 	// Game states:
 	public static final int ST_GAME_INIT = 100;
@@ -115,7 +116,7 @@ public class Define {
 	public static final float PLAYER_DUR_ANIM_IDLE = 0.1f;
 	public static final float PLAYER_DUR_ANIM_RUN = 0.015f;
 	public static final float PLAYER_DUR_ANIM_ATACK = 0.01f;
-	public static final float PLAYER_DUR_ANIM_JUMP_1 = 0.04f;
+	public static final float PLAYER_DUR_ANIM_JUMP_1 = 0.03f;
 	public static final float PLAYER_DUR_ANIM_JUMP_2 = 0.4f;
 	public static final float PLAYER_DUR_ANIM_JUMP_3 = 0.04f;
 
@@ -132,7 +133,7 @@ public class Define {
 	public static final float ROCK_WEIGHT = 8f;
 	public static final float ROCK_SPEED_ROTATION = 120f;
 	
-	public static final float BIG_ROCK_SPEED = PLAYER_SPEED*0.55f;
+	public static final float BIG_ROCK_SPEED = PLAYER_SPEED*1.35f;
 	public static final float BIG_ROCK_WEIGHT = 10f;
 	public static final float BIG_ROCK_SPEED_ROTATION = 110f;
 	public static final int[] BIG_ROCK_TILE_DESTROY = {93, 94, 95, 96, 97};

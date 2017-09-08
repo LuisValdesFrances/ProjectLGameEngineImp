@@ -1,5 +1,6 @@
 package com.luis.projectlgameengineimp.objects;
 
+import com.luis.lgameengine.gameutils.gameworld.ParticleManager;
 import com.luis.lgameengine.gameutils.gameworld.SpriteImage;
 import com.luis.lgameengine.gameutils.gameworld.WorldConver;
 import com.luis.lgameengine.implementation.graphics.Graphics;
@@ -50,12 +51,25 @@ public class Rock extends Enemy{
 		}
 	}
 
-	@Override
 	public boolean createObject() {
 		// TODO Auto-generated method stub
 		return false;
 	}
 
+	@Override
+	public void createParticles(int tileSize, float x, float y,  float weight, float speed, float duration) {
+		particleManager.createParticles(
+				2,
+				Define.GRAVITY_FORCE,
+				x, y,
+				weight,
+				speed, 
+				(int)(tileSize*0.45f), (int)(tileSize*0.45f),
+				ParticleManager.COL_CENTER, 
+				new int[]{0xff35302A, 0Xff4E4032, 0xff918274},
+				duration, false, false);
+		
+	}
 	
 	
 }

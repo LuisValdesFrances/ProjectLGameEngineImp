@@ -1,6 +1,9 @@
 package com.luis.projectlgameengineimp.objects;
 
 import java.util.ArrayList;
+
+import com.luis.lgameengine.gameutils.gameworld.GameCamera;
+import com.luis.lgameengine.gameutils.gameworld.ParticleManager;
 import com.luis.lgameengine.gameutils.gameworld.SpriteImage;
 import com.luis.lgameengine.gameutils.gameworld.WorldConver;
 import com.luis.lgameengine.implementation.graphics.Graphics;
@@ -18,12 +21,6 @@ public class BadRock extends Enemy{
 	public static final int IDLE_FRAMES = 10;
 	public static final int ATACK_FRAMES = 20;
 	public static final int SUFF_FRAMES = 5;
-	
-	public static final int STATE_IDLE = 0;
-	public static final int STATE_ATACK = 1;
-	public static final int STATE_TREMOR = 2;
-	public static final int STATE_SUFF = 3;
-	public static final int STATE_DEAD = 4;
 	
 	private boolean launchRock;
 	
@@ -71,6 +68,11 @@ public class BadRock extends Enemy{
 	public void update(float deltaTime, int[][] _iTilesMatrixID, float _fTileW, float _fTileH) {
     	super.update (deltaTime, _iTilesMatrixID, _fTileW, _fTileH);
     	
+    	if(state == STATE_DEAD)
+    		return;
+    	
+    	if(worlConver.isObjectInGameLayout(gameCamera.getPosX(), gameCamera.getPosY(), 
+			getPosX(), gameCamera.getPosY(), getWidth(), getHeight())){
     	if(isDead()){
     		state = STATE_DEAD;
     		return;
@@ -149,10 +151,7 @@ public class BadRock extends Enemy{
 				newState = STATE_IDLE;
 			}
 			break;
-	}
-    	
-    	
-    	
+    	}
     	
     	if(newState != state){
     		lastState = state;
@@ -173,9 +172,8 @@ public class BadRock extends Enemy{
 			}
 			spriteImageList.get(animation).resetAnimation(0);
 		}
-    	
-    	
     	updateAnimations(deltaTime);
+    	}
     }
 	
 	public void draw(
@@ -205,5 +203,20 @@ public class BadRock extends Enemy{
 		if(state != STATE_TREMOR){
 			spriteImageList.get(animation).updateAnimation(deltaTime);
 		}
+	}
+	
+	@Override
+	public void createParticles(int tileSize, float x, float y, float weight, float speed, float duration) {
+		particleManager.createParticles(
+				3,
+				Define.GRAVITY_FORCE,
+				x, y,
+				weight,
+				speed, 
+				(int)(getWidth()*0.75f), (int)(getWidth()*0.85f),
+				ParticleManager.COL_CENTER, 
+				new int[]{0xffE2C683, 0xff724611, 0xffD2872C, 0xffD5FCB5, 0Xff4E4032, 0xff426129},
+				duration, false, false);
+		
 	}
 }

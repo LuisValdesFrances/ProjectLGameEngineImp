@@ -2,7 +2,7 @@ package com.luis.projectlgameengineimp;
 
 import android.util.Log;
 
-import com.luis.lgameengine.gameutils.MenuManager;
+import com.luis.lgameengine.menu.MenuManager;
 import com.luis.lgameengine.gameutils.Settings;
 import com.luis.lgameengine.gameutils.fonts.Font;
 import com.luis.lgameengine.gameutils.fonts.TextManager;
@@ -18,7 +18,7 @@ public class ModeMenu {
 	public static final int NUMBER_OPTS_MAIN_MENU = 4;
 	public static final int NUMBER_OPTS_MORE_MENU = 2;
 	
-	public static int iOptionSelect;
+	public static int optionSelect;
 	public static int iLanguageSelect;
 	public static int iSoundSelect;
 	
@@ -29,7 +29,7 @@ public class ModeMenu {
 	
 	public static void init(int _iMenuState){
 		Log.i("Info", "Init State: "+ _iMenuState);
-		iOptionSelect = 0;
+		optionSelect = 0;
 		switch (_iMenuState) {
         case Define.ST_MENU_LOGO:
 			iStateLogo = ST_LOGO_1;
@@ -78,18 +78,18 @@ public class ModeMenu {
 			break;
 		case Define.ST_MENU_ASK_LANGUAGE:
 			if (UserInput.getInstance().getOptionMenuTouched_X(MenuManager.BUTTON_CENTER,0)) {
-				if (iOptionSelect <= 0) 
-					iOptionSelect = 1;
+				if (optionSelect <= 0) 
+					optionSelect = 1;
 				else 
-					iOptionSelect--;
+					optionSelect--;
 				
 				//UserInput.getInstance().isKeyLeft = false;
 				
 			} else if (UserInput.getInstance().getOptionMenuTouched_X(MenuManager.BUTTON_CENTER,1)) {
-				if (iOptionSelect >= NUMBER_OPTS_LANGUAGE-1) 
-					iOptionSelect = 0;
+				if (optionSelect >= NUMBER_OPTS_LANGUAGE-1) 
+					optionSelect = 0;
 				 else 
-					 iOptionSelect++;
+					 optionSelect++;
 				
 				//UserInput.getInstance().isKeyRight = false;
 			} else if (UserInput.getInstance().goToSoftLeft(0,0)){
@@ -115,7 +115,7 @@ public class ModeMenu {
 				*/
 				
 				
-				Main.iLanguage = iOptionSelect;
+				Main.iLanguage = optionSelect;
 //				Resources.loadLanguage(Main.iLanguage);
 //				Main.iDataList[Main.INDEX_DATA_LANGUAGE]=iOptionSelect;
 //				Log.i("LOGCAT", "Save language: "+ iOptionSelect);
@@ -129,24 +129,24 @@ public class ModeMenu {
 		case Define.ST_MENU_ASK_SOUND:
 			if (UserInput.getInstance().getOptionMenuTouched_X(
 					MenuManager.BUTTON_CENTER,0)) {
-				if (iOptionSelect <= 0) 
-					iOptionSelect = 1;
+				if (optionSelect <= 0) 
+					optionSelect = 1;
 				else 
-					iOptionSelect--;
+					optionSelect--;
 				
 				//UserInput.getInstance().isKeyLeft = false;
 				
 			} else if (UserInput.getInstance().getOptionMenuTouched_X(
 					MenuManager.BUTTON_CENTER,1)) {
-				if (iOptionSelect >= NUMBER_OPTS_SOUND-1) 
-					iOptionSelect = 0;
+				if (optionSelect >= NUMBER_OPTS_SOUND-1) 
+					optionSelect = 0;
 				 else 
-					 iOptionSelect++;
+					 optionSelect++;
 				
 				//UserInput.getInstance().isKeyRight = false;
 			} else if (UserInput.getInstance().goToSoftLeft(0,0)) {
 				
-				if (iOptionSelect == 0){
+				if (optionSelect == 0){
 					Log.i("LOGCAT", "Sonido ON");
 					SndManager.isSound=true;
 				}else{
@@ -180,13 +180,13 @@ public class ModeMenu {
 				
 			}else {
 			*/
-				iOptionSelect = UserInput.getInstance().getOptionMenuTouched_Y(
+				optionSelect = UserInput.getInstance().getOptionMenuTouched_Y(
 						NUMBER_OPTS_MAIN_MENU,
-						iOptionSelect);
+						optionSelect);
 			//}
-			if (UserInput.getInstance().getOkTouched_Y(iOptionSelect)) {
+			if (UserInput.getInstance().getOkTouched_Y(optionSelect)) {
 
-				switch (iOptionSelect) {
+				switch (optionSelect) {
 				case 0:// Jugar
 					Main.changeState(Define.ST_GAME_INIT,true);
 					break;
@@ -223,12 +223,12 @@ public class ModeMenu {
 				
 			}else {
 			*/
-				iOptionSelect = UserInput.getInstance().getOptionMenuTouched_Y(
-						NUMBER_OPTS_MORE_MENU, iOptionSelect);
+				optionSelect = UserInput.getInstance().getOptionMenuTouched_Y(
+						NUMBER_OPTS_MORE_MENU, optionSelect);
 			//}
-			if (UserInput.getInstance().getOkTouched_Y(iOptionSelect)) {
+			if (UserInput.getInstance().getOkTouched_Y(optionSelect)) {
 
-				switch (iOptionSelect) {
+				switch (optionSelect) {
 				case 0:
 					Main.changeState(Define.ST_MENU_HELP,false);
 					break;
@@ -317,25 +317,25 @@ public class ModeMenu {
         	
         	if (UserInput.getInstance().getOptionMenuTouched_X(
 					MenuManager.BUTTON_CENTER,0)) {
-				if (iOptionSelect <= 0) 
-					iOptionSelect = 1;
+				if (optionSelect <= 0) 
+					optionSelect = 1;
 				else 
-					iOptionSelect--;
+					optionSelect--;
 				
 				//UserInput.getInstance().isKeyLeft = false;
 				
 			} else if (UserInput.getInstance().getOptionMenuTouched_X(
 					MenuManager.BUTTON_CENTER,1)) {
-				if (iOptionSelect >= 1) 
-					iOptionSelect = 0;
+				if (optionSelect >= 1) 
+					optionSelect = 0;
 				 else 
-					 iOptionSelect++;
+					 optionSelect++;
 				
 				//UserInput.getInstance().isKeyRight = false;
 			} else if (UserInput.getInstance().goToSoftLeft(0,0)
 					) {
 				
-			if (iOptionSelect == 0){
+			if (optionSelect == 0){
 				Main.changeState(Define.ST_MENU_MAIN,false);
 			}else{
 				Main.isGameHeart=false;
@@ -345,10 +345,10 @@ public class ModeMenu {
         	
         	
 		case Define.ST_MENU_SELECT_GAME:
-			iOptionSelect = UserInput.getInstance().getOptionMenuTouched_Y(2, iOptionSelect);
-			if (UserInput.getInstance().getOkTouched_Y(iOptionSelect)) {
+			optionSelect = UserInput.getInstance().getOptionMenuTouched_Y(2, optionSelect);
+			if (UserInput.getInstance().getOkTouched_Y(optionSelect)) {
 
-				switch (iOptionSelect) {
+				switch (optionSelect) {
 				case 0:
 					GameState.getInstance().setLevel(1);
 					break;
@@ -380,7 +380,7 @@ public class ModeMenu {
 			_g.fillRect(0, 0, Define.SIZEX, Define.SIZEY);
 			MenuManager.drawButtonsAndTextX(_g, MenuManager.BUTTON_CENTER,NUMBER_OPTS_LANGUAGE, RscManager.TXT_ENGLISH, 
 					RscManager.sAllTexts, Font.FONT_BIG,
-					iOptionSelect, GfxManager.vImgSoftkeys,GfxManager.vImgMenuButtons, GfxManager.vImgMenuArrows, Main.iFrame);
+					optionSelect, GfxManager.vImgSoftkeys,GfxManager.vImgMenuButtons, GfxManager.vImgMenuArrows, Main.iFrame);
 			Main.drawSoftkey(_g, Main.SOFT_OK, false);
 			break;
 			
@@ -390,7 +390,7 @@ public class ModeMenu {
 			_g.setColor(Main.COLOR_BLACK);
 			_g.fillRect(0, 0, Define.SIZEX, Define.SIZEY);
 			MenuManager.drawButtonsAndTextX(_g, MenuManager.BUTTON_CENTER,NUMBER_OPTS_SOUND, RscManager.TXT_SOUND_ON, 
-					RscManager.sAllTexts, Font.FONT_BIG,iOptionSelect, 
+					RscManager.sAllTexts, Font.FONT_BIG,optionSelect, 
 					GfxManager.vImgSoftkeys,GfxManager.vImgMenuButtons, GfxManager.vImgMenuArrows, Main.iFrame);
 			Main.drawSoftkey(_g, Main.SOFT_OK, false);
 			break;
@@ -401,7 +401,7 @@ public class ModeMenu {
 			_g.setColor(Main.COLOR_RED);
 			_g.fillRect(0, 0, Define.SIZEX, Define.SIZEY);
 			MenuManager.drawButtonsAndTextY(_g,NUMBER_OPTS_MAIN_MENU, RscManager.TXT_PLAY, RscManager.sAllTexts,
-				    Font.FONT_BIG, iOptionSelect, null, GfxManager.vImgMenuButtons, Main.iFrame);
+				    Font.FONT_BIG, optionSelect, null, GfxManager.vImgMenuButtons, Main.iFrame);
 			break;
 			
 		case Define.ST_MENU_OPTIONS:
@@ -427,7 +427,7 @@ public class ModeMenu {
 			_g.setColor(Main.COLOR_BLACK);
 			_g.fillRect(0, 0, Define.SIZEX, Define.SIZEY);
 			MenuManager.drawButtonsAndTextY(_g,NUMBER_OPTS_MORE_MENU, RscManager.TXT_HELP, RscManager.sAllTexts, Font.FONT_BIG, 
-					iOptionSelect, null, GfxManager.vImgMenuButtons, Main.iFrame);
+					optionSelect, null, GfxManager.vImgMenuButtons, Main.iFrame);
 			
 			Main.drawSoftkey(_g, Main.SOFT_BACK, false);
 			break;
@@ -459,7 +459,7 @@ public class ModeMenu {
 			_g.setColor(Main.COLOR_RED);
 			_g.fillRect(0, 0, Define.SIZEX, Define.SIZEY);
 			MenuManager.drawButtonsAndTextY(_g, 2, new String[]{"NIVEL ROCA", "NIVEL DEMO"},
-				    Font.FONT_BIG, iOptionSelect, null, GfxManager.vImgMenuButtons, Main.iFrame);
+				    Font.FONT_BIG, optionSelect, null, GfxManager.vImgMenuButtons, Main.iFrame);
 			break;
 			
 		case Define.ST_MENU_EXIT:
@@ -470,7 +470,7 @@ public class ModeMenu {
         	
         	MenuManager.drawButtonsAndTextX(_g, MenuManager.BUTTON_CENTER,2, RscManager.TXT_NO, 
         			RscManager.sAllTexts, Font.FONT_BIG,
-					iOptionSelect, 
+					optionSelect, 
 					GfxManager.vImgSoftkeys,GfxManager.vImgMenuButtons, GfxManager.vImgMenuArrows, Main.iFrame);
         	
         	_g.setAlpha(120);

@@ -21,8 +21,14 @@ public class GfxManager {
 	   public static Image vImagePatch;
 	   public static Image vImagePatch2;
 	   public static Image vImagePlanetLocked;
+	   
+	   public static Image imgMenuBox;
+	   public static Image imgButtonRelease;
+	   public static Image imgButtonFocus;
+	   
 	   //Game images:
-	   public static Image vImgPause;
+	   public static Image imgButtonPauseRelease;
+	   public static Image imgButtonPauseFocus;
 	   public static Image vImgGameTilesL1;
 	   public static Image vImgGameTilesL2;
 	   public static Image vImgGameTilesL3;
@@ -54,6 +60,11 @@ public class GfxManager {
 		            vImgFontBig = Image.createImage("/font_big.png");
 		               
 		            vImgLogo = Image.createImage("/4away.png");
+		            
+		            imgMenuBox = Image.createImage("/menu_box.png");
+		            imgButtonRelease = Image.createImage("/button_release.png");
+		            imgButtonFocus = Image.createImage("/button_focus.png");
+		            
 	            } catch (IOException ex) {
 	               ex.printStackTrace();
 	            }
@@ -64,7 +75,7 @@ public class GfxManager {
 		        	vImgMenuButtons = Image.createImage("/menu_buttons.png");
 		            vImgMenuArrows = Image.createImage("/menu_arrows.png");
 		            vImgSoftkeys = Image.createImage("/softkeys.png");
-		            try{
+		            	try{
 		                //vImgBackground = Image.createImage("/bg_generic.png");
 		            }catch(Exception e){}
 		        } catch (IOException ex) {
@@ -111,8 +122,9 @@ public class GfxManager {
 	            		break;
 	            		
 	            	}
-					
-	               vImgPause = Image.createImage("/pause.png");
+	            	
+	            	imgButtonPauseRelease = Image.createImage("/pause_release.png");
+	            	imgButtonPauseFocus = Image.createImage("/pause_focus.png");
 	               imgPlayerIdle = Image.createImage("/player_idle.png");
 	               imgPlayerRun = Image.createImage("/player_run.png");
 	               imgPlayerAtack = Image.createImage("/player_atack.png");
@@ -137,7 +149,6 @@ public class GfxManager {
 	    	//vImgLogo = null;
 	        //vImgBackground = null;
 	        //Game images:
-	        vImgPause = null;
 	        System.gc();
 	    }
     

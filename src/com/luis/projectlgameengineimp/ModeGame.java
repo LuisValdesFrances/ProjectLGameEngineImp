@@ -5,9 +5,15 @@ import java.util.List;
 
 import android.util.Log;
 
+import com.luis.lgameengine.menu.Button;
+import com.luis.lgameengine.menu.MenuBox;
+import com.luis.lgameengine.menu.MenuManager;
+import com.luis.lgameengine.gameutils.GamePerformance;
 import com.luis.lgameengine.gameutils.Settings;
 import com.luis.lgameengine.gameutils.controls.GameControl;
 import com.luis.lgameengine.gameutils.controls.TouchPadControl;
+import com.luis.lgameengine.gameutils.fonts.Font;
+import com.luis.lgameengine.gameutils.fonts.TextManager;
 import com.luis.lgameengine.gameutils.gameworld.GameCamera;
 import com.luis.lgameengine.gameutils.gameworld.GfxEffects;
 import com.luis.lgameengine.gameutils.gameworld.ParticleManager;
@@ -28,7 +34,8 @@ import com.luis.projectlgameengineimp.objects.Rock;
  * @author Luis Valdes Frances
  */
 public class ModeGame {
-	/*
+	
+	/**
 	 * Perfomarce options
 	 */
 	public static final int PERF_BUTTON_W = Define.SIZEX12;
@@ -37,9 +44,7 @@ public class ModeGame {
 	public static int systemColision = 0;
 	public static boolean isBackBuffer = false;
 	
-	/*
-	 * 
-	 */
+	/**/
 	public static boolean isGamePaused;
 	private static int gameFrame;
 	
@@ -47,6 +52,7 @@ public class ModeGame {
 	public static int tileSize;
 	public static float worldWidth;
 	public static float worldHeight;
+	
 	//Levels design:
 	private static int bgColor;
 	
@@ -72,6 +78,19 @@ public class ModeGame {
 	private static final int LEVEL_ROCK_WIDTH = 200;
 	private static final int LEVEL_ROCK_HEIGHT = 24;
 	
+	/**
+	 * Interface
+	 */
+	private static Button btnPause;
+	private static int optionSelect;
+	private static MenuBox confirmationQuit;
+	
+	/**
+	 * Init game zoom
+	 */
+	private static final float INIT_ZOOM = 4;
+	private static float initCurrentZoom;
+	
 	public static void init(int _iState) {
 		
 		switch(_iState){
@@ -90,7 +109,8 @@ public class ModeGame {
 				bgColor = 0xffCED8F6;
 				
 				spawnPlayer();
-				gameCamera= new GameCamera(player.getPosX(), player.getPosY(), worldWidth, worldHeight, Define.FRAME_SPEED_DEC);
+				gameCamera= new GameCamera(player.getPosX(), player.getPosY(), worldWidth, worldHeight, 
+						GamePerformance.getInstance().getFrameMult(Main.targetFPS));
 				
 				bgManager = new BGManager();
 				break;
@@ -103,11 +123,31 @@ public class ModeGame {
 						"/bin/levels/" + LEVEL_ROCK_TEST_PATH);
 				
 				spawnPlayer();
-				gameCamera= new GameCamera(player.getPosX(), player.getPosY(), worldWidth, worldHeight, Define.FRAME_SPEED_DEC);
+				gameCamera= new GameCamera(player.getPosX(), player.getPosY(), worldWidth, worldHeight, 
+						GamePerformance.getInstance().getFrameMult(Main.targetFPS));
 				
 				bgManager = null;
 				break;
 			}
+			
+			/**
+			 * Game GUI
+			 */
+			btnPause = new Button(
+					GfxManager.imgButtonPauseRelease, 
+					GfxManager.imgButtonPauseFocus, 
+					Define.SIZEX-GfxManager.imgButtonPauseRelease.getWidth(), 
+					GfxManager.imgButtonPauseRelease.getHeight(),
+					null, 0){
+				@Override
+				public void onButtonPressDown(){}
+				
+				@Override
+				public void onButtonPressUp(){
+					isGamePaused = true;
+					Main.changeState(Define.ST_GAME_PAUSE, false);
+				}
+			};
 			
 			tileManager.idConversionData(
 					new Image[] {
@@ -151,10 +191,41 @@ public class ModeGame {
 			Enemy.gameCamera = gameCamera;
 			
 			gameFrame = 0;
+			
+			initCurrentZoom = INIT_ZOOM;
+			
 			Main.changeState(Define.ST_GAME_RUN, false);
 			break;
 			
 		case Define.ST_GAME_RUN:
+			break;
+			
+		case Define.ST_GAME_PAUSE:
+			optionSelect = 0;
+			
+			confirmationQuit = new MenuBox(
+					Define.SIZEX, Define.SIZEY, 
+					GfxManager.imgMenuBox, 
+					GfxManager.imgButtonRelease, GfxManager.imgButtonFocus, 
+					RscManager.sAllTexts[RscManager.TXT_RETURN_MENU],
+					new String[]{RscManager.sAllTexts[RscManager.TXT_NO], RscManager.sAllTexts[RscManager.TXT_YES]},
+					Font.FONT_MEDIUM, Font.FONT_MEDIUM){
+				@Override
+				public void onButtonPressUp(){
+					Log.i("Debug", "Index: " + this.getIndexPressed());
+					switch(this.getIndexPressed()){
+					case 0:
+						UserInput.getInstance().getMultiTouchHandler().resetTouch();
+						UserInput.getInstance().getKeyboardHandler().resetKeys();
+						optionSelect = 0;
+						break;
+					case 1:
+						Main.changeState(Define.ST_MENU_SELECT_GAME, false);
+					break;
+					}
+				}
+			};
+			
 			break;
 		}
 	}
@@ -172,7 +243,6 @@ public class ModeGame {
 			}else{
 				
 				gameFrame++;
-				
 				if(!isBackBuffer){
 					if(bgManager != null)
 						bgManager.update();
@@ -183,30 +253,61 @@ public class ModeGame {
 							tileSize);
 				}
 				
-				gameControl.update(
-						UserInput.getInstance().getMultiTouchHandler().getTouchOriginX(), 
-						UserInput.getInstance().getMultiTouchHandler().getTouchOriginY(), 
-						UserInput.getInstance().getMultiTouchHandler().getTouchX(), 
-						UserInput.getInstance().getMultiTouchHandler().getTouchY(), 
-						UserInput.getInstance().getMultiTouchHandler().getTouchAction());
-				
-				gameCamera.updateCamera(player.getPosX(), player.getPosY());
-				particleManager.update(Main.getDeltaSec());
-				gfxEffects.update(Main.getDeltaSec());
-				
-				spawnEnemy();
-				updateEnemy();
-				
-				player.update(Main.getDeltaSec(), tileManager.getLayerID(1), tileSize, tileSize, gameControl);
-				
+				if(initCurrentZoom > 0.0f){
+					initCurrentZoom -= ((initCurrentZoom*0.06f)*
+							GamePerformance.getInstance().getFrameMult(Main.iFramesXSecond) +0.001f);
+				}else{
+					initCurrentZoom = 0f;
+					
+					btnPause.update(UserInput.getInstance().getMultiTouchHandler());
+					if(!btnPause.isTouching()){
+						gameControl.update(
+								UserInput.getInstance().getMultiTouchHandler().getTouchOriginX(), 
+								UserInput.getInstance().getMultiTouchHandler().getTouchOriginY(), 
+								UserInput.getInstance().getMultiTouchHandler().getTouchX(), 
+								UserInput.getInstance().getMultiTouchHandler().getTouchY(), 
+								UserInput.getInstance().getMultiTouchHandler().getTouchAction());
+					}
+					
+					
+					gameCamera.updateCamera(player.getPosX(), player.getPosY());
+					particleManager.update(Main.getDeltaSec());
+					gfxEffects.update(Main.getDeltaSec());
+					
+					spawnEnemy();
+					updateEnemy();
+					
+					player.update(Main.getDeltaSec(), tileManager.getLayerID(1), tileSize, tileSize, gameControl);
+				}
 			}
-			
 			break;
 			
 		case Define.ST_GAME_PERFORMANCE_OPTIONS:
 			updatePerformanceMenu();
 			break;
-		}
+			
+		case Define.ST_GAME_PAUSE:
+			if(!confirmationQuit.update(Main.getDeltaSec(), UserInput.getInstance().getMultiTouchHandler())){
+				
+				optionSelect = UserInput.getInstance().getOptionMenuTouched_Y(2, optionSelect);
+				
+				if (UserInput.getInstance().getOkTouched_Y(optionSelect)) {
+
+					switch (optionSelect) {
+					case 0:
+						Main.changeState(Define.ST_GAME_RUN, true);
+						break;
+					case 1:
+						UserInput.getInstance().getMultiTouchHandler().resetTouch();
+						UserInput.getInstance().getKeyboardHandler().resetKeys();
+						confirmationQuit.start();
+						break;
+					}
+				}
+				break;
+				}
+			}
+		
 	}
 
 	public static void draw(Graphics _g, int _iState) {
@@ -322,28 +423,20 @@ public class ModeGame {
 			
 			gameBuffer.getGraphics().setClip(0, 0, Define.SIZEX, Define.SIZEY);
 			
-			/*
-			gameBuffer.getGraphics().drawRegion(
-					GfxManager.imgBigRock, 
-					Define.SIZEX2-GfxManager.imgBigRock.getWidth()/2, Define.SIZEY2-GfxManager.imgBigRock.getHeight()/2, 
-					0, 0, 
-					GfxManager.imgBigRock.getWidth(), GfxManager.imgBigRock.getHeight(), 
-					45f, Define.SIZEX2, Define.SIZEY2);
-			*/
-			
 			particleManager.draw(gameBuffer.getGraphics(), worldConver, gameCamera);
+			
+			_g.setImageSize(1f+initCurrentZoom, 1f+initCurrentZoom);
 			
 			_g.drawImage(gameBuffer, 
 					Define.SIZEX2+(int)gfxEffects.getTremorX(), 
 					Define.SIZEY2+(int)gfxEffects.getTremorY(), 
 					Graphics.VCENTER | Graphics.HCENTER);
 			
+			_g.setImageSize(1f, 1f);
+			
+			btnPause.draw(_g, 0, 0);
 			gameControl.draw(_g);
-			
 			drawPerformanceButton(_g);
-			
-			
-			
 			
 			if (Main.IS_GAME_DEBUG) {
 				_g.setClip(0, 0, Define.SIZEX, Define.SIZEY);
@@ -363,14 +456,22 @@ public class ModeGame {
 						+ " ColL: " + player.isColisionLeft()
 						+ " ColR: " + player.isColisionRight()
 						, 0, _g.getTextHeight()*3, Main.COLOR_WHITE);
-				
-				
 			}
-			
 			break;
 			
 		case Define.ST_GAME_PERFORMANCE_OPTIONS:
 			drawPerformanceMenu(_g);
+			break;
+			
+		case Define.ST_GAME_PAUSE:
+			_g.setClip(0, 0, Define.SIZEX, Define.SIZEY);
+			//_g.drawImage(GfxManager.vImgBackground, 0, 0, 0);
+			_g.setColor(Main.COLOR_RED);
+			_g.fillRect(0, 0, Define.SIZEX, Define.SIZEY);
+			MenuManager.drawButtonsAndTextY(_g, 2, new String[]{"CONTINUAR", "SALIR"},
+				    Font.FONT_BIG, optionSelect, null, GfxManager.vImgMenuButtons, Main.iFrame);
+			
+			confirmationQuit.draw(_g);
 			break;
 		}
 	}
@@ -644,6 +745,4 @@ public class ModeGame {
 		}
 		return -1;
 	}
-	
-	
 }

@@ -13,43 +13,6 @@ import android.util.Log;
 @SuppressLint("NewApi")
 public class Define {
 	
-	public static int iFrames;
-    public static int setFrames() {
-    	if (((Settings.getInstance().ms_iCPUMaxMhzs >= 1190 || Settings.ms_iCPUMaxMhzs == -1)
-                && android.os.Build.VERSION.SDK_INT > 16)
-                //&& Settings.ms_iDeviceOS == Settings.OS_ANDROID
-                //&& Settings.ms_iSize > Settings.HVGA_320X480
-                //&& Settings.ms_iSize < Settings.WXGA_720X1280
-                ) {
-        	iFrames=60;
-        } else {
-        	iFrames=30;
-        }
-        Log.i("INFO", "Frames: " + iFrames);
-        return iFrames;
-     }
-	
-	public static int FPS = setFrames();
-	public static final int MAX_FPS = 60;
-    public static final int MIN_FPS = 10;
-    
-    public static final int FRAME_SPEED_DEC = MAX_FPS / FPS;//60 fps=1,30 fps=2,15 fps=4,10 fps=6
-    public static final int FRAME_SPEED_INC = ((FPS * (MAX_FPS/FPS)) / MIN_FPS);//60 fps=6,30 fps=4,15 fps=2,10 fps=1
-    
-    public static final int getFPSset(){
-    	switch(FPS){
-    	case 60:
-    		return 3;
-    	case 30:
-    		return 2;
-    	case 15:
-    		return 1;
-    	default:
-    		return 0;
-    	}
-    	
-    }
-	
 	public static final int SIZEX = (int) Settings.getInstance().getScreenWidth();
 	public static final int SIZEY = (int) Settings.getInstance().getScreenHeight();
 

@@ -10,6 +10,7 @@ import java.util.Random;
 import android.app.Activity;
 import android.util.Log;
 
+import com.luis.lgameengine.gameutils.GamePerformance;
 import com.luis.lgameengine.gameutils.Settings;
 
 import com.luis.lgameengine.implementation.graphics.Graphics;
@@ -25,6 +26,7 @@ public class Main extends MyCanvas implements Runnable {
 	
 	public static final boolean IS_MOVE_SOFT_BANNER = false;
 
+	public static int targetFPS;
 	public static int iFrame;
 	public static long lInitTime;
 	private static int iAcumulativeTicks;
@@ -41,7 +43,7 @@ public class Main extends MyCanvas implements Runnable {
 	}
 	public static long lLastTime;
 
-	private static final long MINIM_DURATION_FRAME = 1000 / Define.FPS;
+	private static long minDurationFrame;
 	public static boolean isGameHeart;
 
 	private KeyboardHandler vKeyData;
@@ -108,6 +110,8 @@ public class Main extends MyCanvas implements Runnable {
 		// iLanguage = 0;
 		// ModeGame.iRecordPoints = 0;
 		// }
+		targetFPS = GamePerformance.getInstance().getOptimalFrames();
+		minDurationFrame = 1000 / targetFPS;
 		changeState(Define.ST_MENU_LOGO,true);
 	}
 
@@ -145,6 +149,7 @@ public class Main extends MyCanvas implements Runnable {
 			         
 			         case Define.ST_GAME_INIT:
 			         case Define.ST_GAME_RUN:
+			         case Define.ST_GAME_PAUSE:
 			         case Define.ST_GAME_PERFORMANCE_OPTIONS:
 			             if (!isLoading) {
 			               ModeGame.update(iState);
@@ -156,7 +161,7 @@ public class Main extends MyCanvas implements Runnable {
 				multiTouchHandler.update();
 				keyboardHandler.update();
 
-				while (System.currentTimeMillis() - lInitTime < MINIM_DURATION_FRAME)
+				while (System.currentTimeMillis() - lInitTime < minDurationFrame)
 					Thread.yield();
 
 				// New loop:
@@ -202,6 +207,7 @@ public class Main extends MyCanvas implements Runnable {
 					break;
 		         case Define.ST_GAME_INIT:
 		         case Define.ST_GAME_RUN:
+		         case Define.ST_GAME_PAUSE:
 		         case Define.ST_GAME_PERFORMANCE_OPTIONS:
 		        	 ModeGame.draw(_g, iState);
 					break;
@@ -215,7 +221,7 @@ public class Main extends MyCanvas implements Runnable {
 				_g.fillRect(0, 0, Define.SIZEX, _g.getTextHeight() * 4);
 				_g.setAlpha(255);
 				_g.drawText("LGameEngine version: : " + Settings.LGAME_ENGINE_VERSION, 0, _g.getTextHeight(), COLOR_WHITE);
-				_g.drawText("FramesXSecond: " + Define.MAX_FPS + "/" + iFramesXSecond, 0, _g.getTextHeight() * 2, COLOR_WHITE);
+				_g.drawText("FramesXSecond: " + targetFPS + "/" + iFramesXSecond, 0, _g.getTextHeight() * 2, COLOR_WHITE);
 				_g.drawText("DeltaTime: " + lDeltaTime, Define.SIZEX2, _g.getTextHeight() * 2, COLOR_WHITE);
 				_g.drawText("SizeX: " + Define.SIZEX, 0, _g.getTextHeight() * 3,COLOR_WHITE);
 				_g.drawText("SizeY: " + Define.SIZEY, Define.SIZEX2, _g.getTextHeight() * 3, COLOR_WHITE);
@@ -372,8 +378,13 @@ public class Main extends MyCanvas implements Runnable {
     }
     
     public static boolean isIntervalTwo() {
-        if (iFrame % (50 / Define.FRAME_SPEED_DEC) < 5 || (iFrame % (50 / Define.FRAME_SPEED_DEC) > 10
-                && iFrame % (50 / Define.FRAME_SPEED_DEC) < 15)) {
+        if (
+        		iFrame % (50 * GamePerformance.getInstance().getFrameMult(targetFPS)) < 5 || 
+        		(
+        		iFrame % (50 * GamePerformance.getInstance().getFrameMult(targetFPS)) > 10
+                && 
+                iFrame % (50 * GamePerformance.getInstance().getFrameMult(targetFPS)) < 15)
+                ) {
             return false;
         } else {
             return true;
@@ -417,7 +428,7 @@ public class Main extends MyCanvas implements Runnable {
 
 		iLastState = iState;
 		iState = _iNewState;
-		ModeMenu.iOptionSelect = 0;
+		ModeMenu.optionSelect = 0;
 		
 		if(_isLoadGraphics){
 			main.startClock();

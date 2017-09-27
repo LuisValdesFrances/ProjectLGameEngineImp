@@ -254,7 +254,7 @@ public class ModeGame {
 				}
 				
 				if(initCurrentZoom > 0.0f){
-					initCurrentZoom -= ((initCurrentZoom*0.06f)*
+					initCurrentZoom -= ((initCurrentZoom*0.05f)*
 							GamePerformance.getInstance().getFrameMult(Main.iFramesXSecond) +0.001f);
 				}else{
 					initCurrentZoom = 0f;

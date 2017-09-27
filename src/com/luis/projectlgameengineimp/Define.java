@@ -69,7 +69,7 @@ public class Define {
 
 	public static final float PLAYER_SPEED = 4f;
 	public static final float PLAYER_WEIGHT = 4.8f;
-	public static final float PLAYER_FORCE_JUMP = 9f;
+	public static final float PLAYER_FORCE_JUMP = 8.5f;
 	public static final float PLAYER_FORCE_JUMP_SHORT = 4.5f;
 	public static final float PLAYER_FORCE_ATACK = 2f;
 	public static final float PLAYER_DAMAGE = 100;
@@ -110,9 +110,9 @@ public class Define {
 	public static final float PARTICLE_BIG_ROCK_DESTROY_SPEED = 6f;
 	public static final float PARTICLE_BIG_ROCK_DESTROY_WEIGHT = 5f;
 	
-	public static final float PARTICLE_ENEMY_DESTROY_DURATION = 0.75f;
+	public static final float PARTICLE_ENEMY_DESTROY_DURATION = 0.85f;
 	public static final float PARTICLE_ENEMY_DESTROY_SPEED = 6f;
-	public static final float PARTICLE_ENEMY_DESTROY_WEIGHT = 2f;
+	public static final float PARTICLE_ENEMY_DESTROY_WEIGHT = 2.5f;
 	   
 	  
 	 

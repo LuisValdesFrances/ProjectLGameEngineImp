@@ -107,7 +107,7 @@ public abstract class GameObject extends RigidBody{
 	   movePosX(getPosX() + (speedX * deltaTime));
 	   movePosY(getPosY() - (speedY * deltaTime));
    }
-   
+    
    public int getId() {
         return id;
    }

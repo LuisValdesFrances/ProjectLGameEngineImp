@@ -208,12 +208,12 @@ public class BadRock extends Enemy{
 	@Override
 	public void createParticles(int tileSize, float x, float y, float weight, float speed, float duration) {
 		particleManager.createParticles(
-				3,
+				4,
 				Define.GRAVITY_FORCE,
 				x, y,
 				weight,
 				speed, 
-				(int)(getWidth()*0.75f), (int)(getWidth()*0.85f),
+				(int)(getWidth()*0.85f), (int)(getWidth()*0.90f),
 				ParticleManager.COL_CENTER, 
 				new int[]{0xffE2C683, 0xff724611, 0xffD2872C, 0xffD5FCB5, 0Xff4E4032, 0xff426129},
 				duration, false, false);

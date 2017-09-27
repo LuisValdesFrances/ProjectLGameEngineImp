@@ -59,8 +59,14 @@ public class Player extends GameObject{
 	private float blinkCount;
 	private boolean blink;
 	
+	private float soilSpeed;
+	private float jumpSpeed;
+	
 	public Player(int width, int height, float posX, float posY, float posZ, float speed, float angle) {
 		 super(width, height, posX, posY, posZ, speed, angle);
+		 
+		 soilSpeed = speed;
+		 jumpSpeed = speed*1.25f;
 		 
 		 spriteImageList = new ArrayList<SpriteImage>();
 		 
@@ -167,6 +173,9 @@ public class Player extends GameObject{
 				if((_vGameControl.getAngle() != -1 && (_vGameControl.getAngle() > 315 || _vGameControl.getAngle() < 45)) 
 						||  keyRight){
 					if(state != STATE_JUMP || (state == STATE_JUMP && spriteImageList.get(animation).getFileIndex() == ANIM_JUMP_SUB_2)){
+						
+						setSpeed(state == STATE_JUMP ? jumpSpeed: soilSpeed);
+						
 						setAngle(360);
 						move(Main.getDeltaSec());
 						flip = false;
@@ -180,6 +189,9 @@ public class Player extends GameObject{
 				else if((_vGameControl.getAngle() != -1 && (_vGameControl.getAngle() > 135 && _vGameControl.getAngle() < 225)) 
 						|| keyLeft){
 					if(state != STATE_JUMP || (state == STATE_JUMP && spriteImageList.get(animation).getFileIndex() == ANIM_JUMP_SUB_2)){
+						
+						setSpeed(state == STATE_JUMP ? jumpSpeed: soilSpeed);
+						
 						setAngle(180);
 						setSpeed(getSpeed());
 						move(Main.getDeltaSec());

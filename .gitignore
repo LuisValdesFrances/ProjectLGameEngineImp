@@ -1,6 +1,4 @@
-bin/
-.classpath
-lint.xml
-project.properties
+*.classpath
+*.settings/
 gen/
-.settings/
+bin/

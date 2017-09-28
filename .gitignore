@@ -1,1 +1,4 @@
+*.classpath
+*.settings/
+gen/
 bin/

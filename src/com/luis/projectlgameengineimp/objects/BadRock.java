@@ -56,7 +56,6 @@ public class BadRock extends Enemy{
 	
 	public boolean createObject(){
 		if(launchRock && state == STATE_ATACK){
-			
 			if(launchRock && spriteImageList.get(animation).getFrame()==13){
 				launchRock = false;
 				return true;
@@ -73,13 +72,12 @@ public class BadRock extends Enemy{
     	
     	if(worlConver.isObjectInGameLayout(gameCamera.getPosX(), gameCamera.getPosY(), 
 			getPosX(), gameCamera.getPosY(), getWidth(), getHeight())){
-    	if(isDead()){
-    		state = STATE_DEAD;
-    		return;
-    	}
-    	
-    	//if(state != STATE_SUFF){
-    		if(checkDamageFromPlayer(player)){
+	    	if(isDead()){
+	    		state = STATE_DEAD;
+	    		return;
+	    	}
+	    	
+	    	if(checkDamageFromPlayer(player)){
     			newState = STATE_SUFF;
     			int forceMod = Main.getRandom(0, (int)(player.getForceAtack()*0.5f));
     			setSpeedX(player.isFlip() ? -player.getForceAtack()-forceMod : player.getForceAtack()-forceMod);
@@ -92,7 +90,6 @@ public class BadRock extends Enemy{
     				player.setDamage(0);
     			}
     		}
-    	//}
     		
     	switch(state){
 		case STATE_IDLE:
@@ -196,7 +193,7 @@ public class BadRock extends Enemy{
 			super.draw(_g, GfxManager.imgBadRockSuff, spriteImageList.get(animation), worldConver, cameraX, cameraY,
 					modAnimX, modAnimY, modDrawX, 12, anchor);
 			break;
-	}
+		}
 	}
 
 	protected void updateAnimations(float deltaTime) {

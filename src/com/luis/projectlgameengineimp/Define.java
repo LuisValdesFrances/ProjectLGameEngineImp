@@ -62,6 +62,7 @@ public class Define {
 	public static final int BADROCK_ID = 192;
 	public static final int BIGROCK_RIGHT_ID = 193;
 	public static final int BIGROCK_LEFT_ID = 194;
+	public static final int BADSTICK_ID = 195;
 
 	public static final long HIT_PAUSE = 85;
 	public static final float GRAVITY_FORCE = 3f;
@@ -84,14 +85,25 @@ public class Define {
 	public static final float PLAYER_DUR_ANIM_JUMP_3 = 0.04f;
 
 	public static final float BADROCK_WEIGHT = 4.8f;
-	public static final float BADROCK_IDLE_TIME = 2f;
+	public static final float BADROCK_IDLE_TIME = 1.5f;
+	public static final float BADROCK_RUN_TIME = 3f;
 	public static final float BADROCK_FORCE_LAUNCH = 10f;
 	public static final int BADROCK_LIVE = 400;
+	
+	public static final float BADSTICK_SPEED = PLAYER_SPEED*0.70f;
+	public static final float BADSTICK_WEIGHT = 4.9f;
+	public static final float BADSTICK_IDLE_TIME = 2f;
+	public static final int BADSTICK_LIVE = 400;
 
 	// ANIMATION DURATION FRAME
 	public static final float BADROCK_DUR_ANIM_IDLE = 0.1f;
 	public static final float BADROCK_DUR_ANIM_ATACK = 0.06f;
 	public static final float BADROCK_DUR_ANIM_SUFF = 0.14f;
+	
+	public static final float BADSTICK_DUR_ANIM_IDLE = 0.14f;
+	public static final float BADSTICK_DUR_ANIM_RUN = 0.07f;
+	public static final float BADSTICK_DUR_ANIM_ATACK = 0.06f;
+	public static final float BADSTICK_DUR_ANIM_SUFF = 0.14f;
 
 	public static final float ROCK_WEIGHT = 8f;
 	public static final float ROCK_SPEED_ROTATION = 120f;

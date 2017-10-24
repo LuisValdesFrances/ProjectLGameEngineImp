@@ -44,6 +44,11 @@ public class GfxManager {
 	   public static Image imgBadRockAtack;
 	   public static Image imgBadRockSuff;
 	   
+	   public static Image imgBadStickIdle;
+	   public static Image imgBadStickRun;
+	   public static Image imgBadStickAtack;
+	   public static Image imgBadStickSuff;
+	   
 	   public static Image imgRock;
 	   public static Image imgBigRock;
 	   //bg
@@ -125,15 +130,20 @@ public class GfxManager {
 	            	
 	            	imgButtonPauseRelease = Image.createImage("/pause_release.png");
 	            	imgButtonPauseFocus = Image.createImage("/pause_focus.png");
-	               imgPlayerIdle = Image.createImage("/player_idle.png");
-	               imgPlayerRun = Image.createImage("/player_run.png");
-	               imgPlayerAtack = Image.createImage("/player_atack.png");
-	               imgPlayerJump = Image.createImage("/player_jump.png");
+	            	imgPlayerIdle = Image.createImage("/player_idle.png");
+	            	imgPlayerRun = Image.createImage("/player_run.png");
+	            	imgPlayerAtack = Image.createImage("/player_atack.png");
+	            	imgPlayerJump = Image.createImage("/player_jump.png");
 	               
 	               imgEnemyTile = Image.createImage("/enemy_tile.png");
 	               imgBadRockIdle = Image.createImage("/badrock_idle.png");
 	               imgBadRockAtack = Image.createImage("/badrock_atack.png");
 	               imgBadRockSuff = Image.createImage("/badrock_suff.png");
+	               
+	               imgBadStickIdle = Image.createImage("/badstick_idle.png");
+	               imgBadStickAtack = Image.createImage("/badstick_atack.png");
+	               imgBadStickRun = Image.createImage("/badstick_run.png");
+	               //imgBadStickSuff = Image.createImage("/badrock_suff.png");
 	               
 	               imgRock = Image.createImage("/rock.png");
 	               imgBigRock = Image.createImage("/big_rock.png");

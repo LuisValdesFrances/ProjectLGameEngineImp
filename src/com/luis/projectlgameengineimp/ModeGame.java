@@ -24,6 +24,7 @@ import com.luis.lgameengine.implementation.graphics.Graphics;
 import com.luis.lgameengine.implementation.graphics.Image;
 import com.luis.lgameengine.implementation.input.TouchData;
 import com.luis.projectlgameengineimp.objects.BadRock;
+import com.luis.projectlgameengineimp.objects.BadStick;
 import com.luis.projectlgameengineimp.objects.BigRock;
 import com.luis.projectlgameengineimp.objects.Enemy;
 import com.luis.projectlgameengineimp.objects.Player;
@@ -525,7 +526,24 @@ public class ModeGame {
 									0, 0, 0, Define.BADROCK_LIVE);
 							
 							e.setGravityForce(Define.GRAVITY_FORCE);
-							e.setWeight(RigidBody.transformUnityValue(0.96f, tileSize, Define.PLAYER_WEIGHT));
+							e.setWeight(RigidBody.transformUnityValue(0.96f, tileSize, Define.BADROCK_WEIGHT));
+							tileManager.getLayerID(3)[f][c] = 0;
+							enemyList.add(e);
+							break;
+							
+						case Define.BADSTICK_ID:
+							w = (int) (tileSize * 0.5f);
+							h = (int) (tileSize * 1.5f);
+							e = new BadStick(
+									Define.BADSTICK_ID, player, 
+									w, h, 
+									tileSize * c+tileSize/2, 
+									tileSize * f+tileSize, 
+									0, 0, 0, Define.BADSTICK_LIVE);
+							
+							e.setGravityForce(Define.GRAVITY_FORCE);
+							e.setWeight(RigidBody.transformUnityValue(0.96f, tileSize, Define.BADSTICK_WEIGHT));
+							e.setSpeed(RigidBody.transformUnityValue(0.96f, ModeGame.tileSize, Define.BADSTICK_SPEED));
 							tileManager.getLayerID(3)[f][c] = 0;
 							enemyList.add(e);
 							break;
@@ -568,6 +586,7 @@ public class ModeGame {
 			switch(enemyList.get(i).getType()){
 			
 				case Define.BADROCK_ID:
+				case Define.BADSTICK_ID:
 					if(enemyList.get(i).getState() == BadRock.STATE_DEAD){
 						enemyList.get(i).createParticles(
 								tileSize, 

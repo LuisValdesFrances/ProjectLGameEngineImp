@@ -5,7 +5,6 @@ import java.util.List;
 import com.luis.lgameengine.gameutils.gameworld.GameCamera;
 import com.luis.lgameengine.gameutils.gameworld.GfxEffects;
 import com.luis.lgameengine.gameutils.gameworld.ParticleManager;
-import com.luis.lgameengine.gameutils.gameworld.RigidBody;
 import com.luis.lgameengine.gameutils.gameworld.SpriteImage;
 import com.luis.lgameengine.gameutils.gameworld.WorldConver;
 import com.luis.projectlgameengineimp.Define;
@@ -13,10 +12,11 @@ import com.luis.projectlgameengineimp.Define;
 public abstract class Enemy extends GameObject{
 	
 	public static final int STATE_IDLE = 0;
-	public static final int STATE_ATACK = 1;
-	public static final int STATE_TREMOR = 2;
-	public static final int STATE_SUFF = 3;
-	public static final int STATE_DEAD = 4;
+	public static final int STATE_RUN = 1;
+	public static final int STATE_ATACK = 2;
+	public static final int STATE_TREMOR = 3;
+	public static final int STATE_SUFF = 4;
+	public static final int STATE_DEAD = 5;
 	
 	protected int type;
 	protected int animation;

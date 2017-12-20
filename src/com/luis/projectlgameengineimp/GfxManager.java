@@ -143,7 +143,7 @@ public class GfxManager {
 	               imgBadStickIdle = Image.createImage("/badstick_idle.png");
 	               imgBadStickAtack = Image.createImage("/badstick_atack.png");
 	               imgBadStickRun = Image.createImage("/badstick_run.png");
-	               //imgBadStickSuff = Image.createImage("/badrock_suff.png");
+	               imgBadStickSuff = Image.createImage("/badstick_suff.png");
 	               
 	               imgRock = Image.createImage("/rock.png");
 	               imgBigRock = Image.createImage("/big_rock.png");

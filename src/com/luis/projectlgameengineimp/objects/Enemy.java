@@ -16,7 +16,7 @@ public abstract class Enemy extends GameObject{
 	public static final int STATE_ATACK = 2;
 	public static final int STATE_TREMOR = 3;
 	public static final int STATE_SUFF = 4;
-	public static final int STATE_DEAD = 5;
+	public static final int STATE_DEAD = 99;
 	
 	protected int type;
 	protected int animation;

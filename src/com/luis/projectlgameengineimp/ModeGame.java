@@ -757,7 +757,7 @@ public class ModeGame {
 		if(
 			UserInput.getInstance().getMultiTouchHandler().getTouchAction(0) == TouchData.ACTION_DOWN){
 			for(int i = 0; i < numOpt; i++){
-				if(UserInput.getInstance().compareTouch(0, i * secH, Define.SIZEX, (i + 1) * secH, 0)){
+				if(UserInput.getInstance().compareTouch(0, i * secH, Define.SIZEX, (i + 1) * secH, 0) && UserInput.getInstance().getMultiTouchHandler().getTouchFrames(0) == 1){
 					return i;
 				}
 			}

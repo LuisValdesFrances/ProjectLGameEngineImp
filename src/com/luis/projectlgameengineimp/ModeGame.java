@@ -13,7 +13,6 @@ import com.luis.lgameengine.gameutils.Settings;
 import com.luis.lgameengine.gameutils.controls.GameControl;
 import com.luis.lgameengine.gameutils.controls.TouchPadControl;
 import com.luis.lgameengine.gameutils.fonts.Font;
-import com.luis.lgameengine.gameutils.fonts.TextManager;
 import com.luis.lgameengine.gameutils.gameworld.GameCamera;
 import com.luis.lgameengine.gameutils.gameworld.GfxEffects;
 import com.luis.lgameengine.gameutils.gameworld.ParticleManager;
@@ -112,7 +111,7 @@ public class ModeGame {
 				bgColor = 0xffCED8F6;
 				
 				spawnPlayer();
-				gameCamera= new GameCamera(player.getPosX(), player.getPosY(), worldWidth, worldHeight, 
+				gameCamera= new GameCamera(worldConver, player.getPosX(), player.getPosY(), 
 						GamePerformance.getInstance().getFrameMult(Main.targetFPS));
 				
 				bgManager = new BGManager();
@@ -127,8 +126,6 @@ public class ModeGame {
 					FILE_LEVEL[Settings.getInstance().getResolution()] + LEVEL_ROCK_TEST_PATH+ "_" + FILE_LEVEL[Settings.getInstance().getResolution()]+ ".map");
 				
 				spawnPlayer();
-				gameCamera= new GameCamera(player.getPosX(), player.getPosY(), worldWidth, worldHeight, 
-						GamePerformance.getInstance().getFrameMult(Main.targetFPS));
 				
 				bgManager = null;
 				break;
@@ -161,6 +158,9 @@ public class ModeGame {
 						GfxManager.imgEnemyTile});
 			
 			worldConver = new WorldConver(Define.SIZEX, Define.SIZEY, 0, 0, 0, 0, worldWidth, worldHeight);
+			
+			gameCamera= new GameCamera(worldConver, player.getPosX(), player.getPosY(), 
+					GamePerformance.getInstance().getFrameMult(Main.targetFPS));
 			
 			gameControl = new TouchPadControl(
 		    		null, null, Define.SIZEX / 6, Define.SIZEY - Define.SIZEY / 4,
@@ -274,7 +274,11 @@ public class ModeGame {
 					}
 					
 					
-					gameCamera.updateCamera(player.getPosX(), player.getPosY());
+					gameCamera.updateCamera(
+							player.getPosX()-worldConver.getLayoutX()/2, 
+							player.getPosY()-worldConver.getLayoutY()/2);
+					//gameCamera.setPosX(player.getPosX());
+					//gameCamera.setPosY(player.getPosY());
 					particleManager.update(Main.getDeltaSec());
 					gfxEffects.update(Main.getDeltaSec());
 					
@@ -291,7 +295,7 @@ public class ModeGame {
 			break;
 			
 		case Define.ST_GAME_PAUSE:
-			if(!confirmationQuit.update(Main.getDeltaSec(), UserInput.getInstance().getMultiTouchHandler())){
+			if(!confirmationQuit.update(UserInput.getInstance().getMultiTouchHandler(), Main.getDeltaSec())){
 				
 				optionSelect = UserInput.getInstance().getOptionMenuTouched_Y(2, optionSelect);
 				

@@ -50,6 +50,7 @@ public class ModeGame {
 	private static int gameFrame;
 	
 	public static final int TILE_SET_SIZE[] = {24,32,48,64};
+	public static final String FILE_LEVEL[] = {"ldpi","mdpi","hdpi","hhdpi"};
 	public static int tileSize;
 	public static float worldWidth;
 	public static float worldHeight;
@@ -71,11 +72,11 @@ public class ModeGame {
 	private static Image gameBuffer;
 	private static boolean drawBuffer;
 	
-	private static final String LEVEL_1_PATH = "level_1.map";
+	private static final String LEVEL_1_PATH = "/level_1";
 	private static final int LEVEL_TEST_WIDTH = 40;
 	private static final int LEVEL_TEST_HEIGHT = 20;
 	
-	private static final String LEVEL_ROCK_TEST_PATH = "level_rock_test.map";
+	private static final String LEVEL_ROCK_TEST_PATH = "/level_rock_test";
 	private static final int LEVEL_ROCK_WIDTH = 200;
 	private static final int LEVEL_ROCK_HEIGHT = 24;
 	
@@ -106,7 +107,8 @@ public class ModeGame {
 				worldHeight = tileSize * LEVEL_TEST_HEIGHT;
 				
 				tileManager = new TileManager(
-						"/bin/levels/" + LEVEL_1_PATH);
+					"/bin/levels/"+ 
+							FILE_LEVEL[Settings.getInstance().getResolution()] + LEVEL_1_PATH + "_" + FILE_LEVEL[Settings.getInstance().getResolution()]+ ".map");
 				bgColor = 0xffCED8F6;
 				
 				spawnPlayer();
@@ -121,7 +123,8 @@ public class ModeGame {
 				worldHeight = tileSize * LEVEL_ROCK_HEIGHT;
 				
 				tileManager = new TileManager(
-						"/bin/levels/" + LEVEL_ROCK_TEST_PATH);
+					"/bin/levels/"+ 
+					FILE_LEVEL[Settings.getInstance().getResolution()] + LEVEL_ROCK_TEST_PATH+ "_" + FILE_LEVEL[Settings.getInstance().getResolution()]+ ".map");
 				
 				spawnPlayer();
 				gameCamera= new GameCamera(player.getPosX(), player.getPosY(), worldWidth, worldHeight, 

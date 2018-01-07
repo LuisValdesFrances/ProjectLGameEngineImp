@@ -66,10 +66,10 @@ public class Main extends MyCanvas implements Runnable {
 	public static final int COLOR_GREEN_BG = 0xff8bfc88;
 	public static final int COLOR_YELOW_BG = 0xfffcf659;
 
-	public static final boolean IS_DEBUG = false;
+	public static final boolean IS_DEBUG = true;
 	public static final boolean IS_TOUCH_INPUT_DEBUG = false;
 	public static final boolean IS_KEY_INPUT_DEBUG = false;
-	public static final boolean IS_GAME_DEBUG = true;
+	public static final boolean IS_GAME_DEBUG = false;
 
 	// Nombre del fichero donde se guardaran y cargaran los datos:
 	public static final String DATA_NAME = "angryufodata";
@@ -225,6 +225,7 @@ public class Main extends MyCanvas implements Runnable {
 				_g.drawText("DeltaTime: " + lDeltaTime, Define.SIZEX2, _g.getTextHeight() * 2, COLOR_WHITE);
 				_g.drawText("SizeX: " + Define.SIZEX, 0, _g.getTextHeight() * 3,COLOR_WHITE);
 				_g.drawText("SizeY: " + Define.SIZEY, Define.SIZEX2, _g.getTextHeight() * 3, COLOR_WHITE);
+				_g.drawText("RestSet: " + Settings.getInstance().getResolution(), Define.SIZEX2 + Define.SIZEX4, _g.getTextHeight() * 3, COLOR_WHITE);
 				_g.drawText("RealW: " + Settings.getInstance().getRealWidth(), 0, _g.getTextHeight() * 4, COLOR_WHITE);
 				_g.drawText("RealH: " + Settings.getInstance().getRealHeight(), Define.SIZEX2, _g.getTextHeight() * 4, COLOR_WHITE);
 				

@@ -7,12 +7,13 @@ import java.util.Random;
  * @author Luis Valdes Frances
  */
 
+
 import android.app.Activity;
 import android.util.Log;
 
 import com.luis.lgameengine.gameutils.GamePerformance;
 import com.luis.lgameengine.gameutils.Settings;
-
+import com.luis.lgameengine.gameutils.fonts.Font;
 import com.luis.lgameengine.implementation.graphics.Graphics;
 import com.luis.lgameengine.implementation.graphics.Image;
 import com.luis.lgameengine.implementation.graphics.MyCanvas;
@@ -215,7 +216,7 @@ public class Main extends MyCanvas implements Runnable {
 			
 			if (Main.IS_DEBUG) {
 				_g.setClip(0, 0, Define.SIZEX, Define.SIZEY);
-				_g.setTextSize(32);
+				_g.setTextSize(Font.SYSTEM_SIZE[Settings.getInstance().getResolution()]);
 				_g.setAlpha(160);
 				_g.setColor(0x88000000);
 				_g.fillRect(0, 0, Define.SIZEX, _g.getTextHeight() * 4);
@@ -237,7 +238,7 @@ public class Main extends MyCanvas implements Runnable {
 				
 			}else if (Main.IS_TOUCH_INPUT_DEBUG){
 				_g.setClip(0, 0, Define.SIZEX, Define.SIZEY);
-				_g.setTextSize(32);
+				_g.setTextSize(Font.SYSTEM_SIZE[Settings.getInstance().getResolution()]);
 				_g.setAlpha(160);
 				_g.setColor(0x88000000);
 				_g.fillRect(0, 0, Define.SIZEX, _g.getTextHeight() * 7);
@@ -275,7 +276,7 @@ public class Main extends MyCanvas implements Runnable {
 
 			}else if (Main.IS_KEY_INPUT_DEBUG){
 				_g.setClip(0, 0, Define.SIZEX, Define.SIZEY);
-				_g.setTextSize(32);
+				_g.setTextSize(Font.SYSTEM_SIZE[Settings.getInstance().getResolution()]);
 				_g.setAlpha(160);
 				_g.setColor(0x88000000);
 				_g.fillRect(0, 0, Define.SIZEX, _g.getTextHeight() * 3);

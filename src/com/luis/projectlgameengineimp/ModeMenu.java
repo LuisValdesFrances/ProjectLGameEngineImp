@@ -2,7 +2,7 @@ package com.luis.projectlgameengineimp;
 
 import android.util.Log;
 
-import com.luis.lgameengine.menu.MenuManager;
+import com.luis.lgameengine.gui.MenuManager;
 import com.luis.lgameengine.gameutils.Settings;
 import com.luis.lgameengine.gameutils.fonts.Font;
 import com.luis.lgameengine.gameutils.fonts.TextManager;

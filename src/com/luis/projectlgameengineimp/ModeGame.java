@@ -5,9 +5,9 @@ import java.util.List;
 
 import android.util.Log;
 
-import com.luis.lgameengine.menu.Button;
-import com.luis.lgameengine.menu.MenuBox;
-import com.luis.lgameengine.menu.MenuManager;
+import com.luis.lgameengine.gui.Button;
+import com.luis.lgameengine.gui.MenuBox;
+import com.luis.lgameengine.gui.MenuManager;
 import com.luis.lgameengine.gameutils.GamePerformance;
 import com.luis.lgameengine.gameutils.Settings;
 import com.luis.lgameengine.gameutils.controls.GameControl;
@@ -210,12 +210,13 @@ public class ModeGame {
 			confirmationQuit = new MenuBox(
 					Define.SIZEX, Define.SIZEY, 
 					GfxManager.imgMenuBox, 
-					GfxManager.imgButtonRelease, GfxManager.imgButtonFocus, 
+					GfxManager.imgButtonRelease, GfxManager.imgButtonFocus,
+					Define.SIZEX2, Define.SIZEY2,
 					RscManager.sAllTexts[RscManager.TXT_RETURN_MENU],
 					new String[]{RscManager.sAllTexts[RscManager.TXT_NO], RscManager.sAllTexts[RscManager.TXT_YES]},
 					Font.FONT_MEDIUM, Font.FONT_MEDIUM){
 				@Override
-				public void onButtonPressUp(){
+				public void onFinish(){
 					Log.i("Debug", "Index: " + this.getIndexPressed());
 					switch(this.getIndexPressed()){
 					case 0:
@@ -479,7 +480,7 @@ public class ModeGame {
 			MenuManager.drawButtonsAndTextY(_g, 2, new String[]{"CONTINUAR", "SALIR"},
 				    Font.FONT_BIG, optionSelect, null, GfxManager.vImgMenuButtons, Main.iFrame);
 			
-			confirmationQuit.draw(_g);
+			confirmationQuit.draw(_g, false);
 			break;
 		}
 	}

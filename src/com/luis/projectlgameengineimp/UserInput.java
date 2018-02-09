@@ -1,7 +1,7 @@
 package com.luis.projectlgameengineimp;
 
 
-import com.luis.lgameengine.menu.MenuManager;
+import com.luis.lgameengine.gui.MenuManager;
 import com.luis.lgameengine.implementation.input.KeyboardHandler;
 import com.luis.lgameengine.implementation.input.MultiTouchHandler;
 import com.luis.lgameengine.implementation.input.TouchData;

@@ -67,7 +67,7 @@ public class Main extends MyCanvas implements Runnable {
 	public static final int COLOR_GREEN_BG = 0xff8bfc88;
 	public static final int COLOR_YELOW_BG = 0xfffcf659;
 
-	public static final boolean IS_DEBUG = true;
+	public static final boolean IS_DEBUG = false;
 	public static final boolean IS_TOUCH_INPUT_DEBUG = false;
 	public static final boolean IS_KEY_INPUT_DEBUG = false;
 	public static final boolean IS_GAME_DEBUG = false;

@@ -54,7 +54,7 @@ public class ModeMenu {
 			break;
 		case Define. ST_MENU_OPTIONS:
 			iLanguageSelect = Main.iLanguage;
-			iSoundSelect = SndManager.isSound?0:1;
+			//iSoundSelect = SndManager.isSound?0:1;
 			break;
 		case Define. ST_MENU_MORE:
 		case Define. ST_MENU_EXIT:
@@ -148,14 +148,14 @@ public class ModeMenu {
 				
 				if (optionSelect == 0){
 					Log.i("LOGCAT", "Sonido ON");
-					SndManager.isSound=true;
+					//SndManager.isSound=true;
 				}else{
 					Log.i("LOGCAT", "Sonido OFF");
-					SndManager.isSound=false;
+					//SndManager.isSound=false;
 				}
 				
 				Main.changeState(Define.ST_MENU_MAIN,false);
-				SndManager.playMusic(SndManager.MUSIC_MENU, true);
+				//SndManager.playMusic(SndManager.MUSIC_MENU, true);
 				
 			}
 			break;
@@ -275,11 +275,11 @@ public class ModeMenu {
 					iSoundSelect--;
 				
 				if (iSoundSelect == 0){
-					SndManager.isSound = true;
-					SndManager.playMusic(SndManager.MUSIC_MENU, true);
+					//SndManager.isSound = true;
+					//SndManager.playMusic(SndManager.MUSIC_MENU, true);
 				}else{
-					SndManager.stopMusic();
-					SndManager.isSound = false;
+					//SndManager.stopMusic();
+					//SndManager.isSound = false;
 				}
 				
 				//UserInput.getInstance().isKeyLeft = false;
@@ -292,11 +292,11 @@ public class ModeMenu {
 					 iSoundSelect++;
 				
 				if (iSoundSelect == 0){
-					SndManager.isSound = true;
-					SndManager.playMusic(SndManager.MUSIC_MENU, true);
+					//SndManager.isSound = true;
+					//SndManager.playMusic(SndManager.MUSIC_MENU, true);
 				}else{
-					SndManager.stopMusic();
-					SndManager.isSound = false;
+					//SndManager.stopMusic();
+					//SndManager.isSound = false;
 				}
 				//UserInput.getInstance().isKeyRight = false;
 			}
@@ -555,8 +555,7 @@ public class ModeMenu {
 			iLevelAlpha = 255- (int)(((System.currentTimeMillis() - lInitialLogoTime)*255)/ST_TIME_LOGO_3);
 			if(iLevelAlpha <= 0){
 				iLevelAlpha = 255;
-				if(FileIO.isData()) Main.changeState(Define.ST_MENU_ASK_SOUND,true);
-				else Main.changeState(Define.ST_MENU_SELECT_GAME,true);
+				Main.changeState(Define.ST_MENU_SELECT_GAME,true);
 			}
 			
 			break;
@@ -564,10 +563,4 @@ public class ModeMenu {
 		//Log.i("Info", "iLevelAlpha: "+iLevelAlpha);
 	}
 	
-	public static void saveSystemData(){
-		Main.iDataList[Main.INDEX_DATA_LANGUAGE] = Main.iLanguage;
-		Log.i("LOGCAT", "Save: "+ Main.iDataList[Main.INDEX_DATA_LANGUAGE]);
-		FileIO.saveData(Main.iDataList, Main.DATA_NAME, Settings.getInstance().getActiviy());
-		Log.i("LOGCAT", "Datos salvados");
-	}
-	}
+}

@@ -16,11 +16,11 @@ import com.luis.lgameengine.gameutils.Settings;
 import com.luis.lgameengine.gameutils.fonts.Font;
 import com.luis.lgameengine.implementation.graphics.Graphics;
 import com.luis.lgameengine.implementation.graphics.Image;
-import com.luis.lgameengine.implementation.graphics.MyCanvas;
+import com.luis.lgameengine.implementation.graphics.LCanvas;
 import com.luis.lgameengine.implementation.input.KeyboardHandler;
 import com.luis.lgameengine.implementation.sound.SndManager;
 
-public class Main extends MyCanvas implements Runnable {
+public class Main extends LCanvas implements Runnable {
 
 	public static Main main;
 	public static boolean isTouchDevice = true;
@@ -72,9 +72,6 @@ public class Main extends MyCanvas implements Runnable {
 	public static final boolean IS_KEY_INPUT_DEBUG = false;
 	public static final boolean IS_GAME_DEBUG = false;
 
-	// Nombre del fichero donde se guardaran y cargaran los datos:
-	public static final String DATA_NAME = "angryufodata";
-	public static int[] iDataList;
 	public static final int INDEX_DATA_LANGUAGE = 0;
 	public static final int INDEX_DATA_RECORD = 1;
 
@@ -90,27 +87,12 @@ public class Main extends MyCanvas implements Runnable {
 		// touchHandler = new MultiTouchHandler(view, scaleX, scaleY);
 		
 		UserInput.getInstance().init(multiTouchHandler, keyboardHandler);
-		SndManager.inicialize(activity);
+		//SndManager.inicialize(activity);
 		isGameHeart = true;
 	}
 
 	private void initGame() {
 		Log.i("INFO", "initMain run");
-		// FileIO.loadData(DATA_NAME, Main.Context);
-		// if(FileIO.isData()){
-		// iDataList = FileIO.getIntData();
-		// Log.i("LOGCAT", "Existen "+iDataList.length + " datos");
-		// iLanguage = Main.iDataList[0];
-		// ModeGame.iRecordPoints = Main.iDataList[1];
-		// for(int i = 0; i < iDataList.length; i++){
-		// Log.i("LOGCAT", "genLoad: "+ Main.iDataList[i]);
-		// }
-		// }else{
-		// Log.i("LOGCAT", "No existen datos guardados");
-		// Main.iDataList = new int[INDEX_DATA_RECORD+1];
-		// iLanguage = 0;
-		// ModeGame.iRecordPoints = 0;
-		// }
 		targetFPS = GamePerformance.getInstance().getOptimalFrames();
 		minDurationFrame = 1000 / targetFPS;
 		changeState(Define.ST_MENU_LOGO,true);
@@ -403,7 +385,7 @@ public class Main extends MyCanvas implements Runnable {
 //		if (iState >= Define.ST_GAME_INIT)
 //			Main.changeState(Define.ST_GAME_PAUSE,false);
 
-		SndManager.pauseMusic();
+		//SndManager.pauseMusic();
 		Log.i("INFO", "Llamada a pause()");
 	}
 
@@ -411,14 +393,14 @@ public class Main extends MyCanvas implements Runnable {
 		//if (MyCanvas.isPause) 
 		{
 			//MyCanvas.isPause = false;
-			SndManager.unpauseMusic();
+			//SndManager.unpauseMusic();
 			Log.i("INFO", "Llamada a unPause()");
 		}
 	}
 
 	public void stop() {
-		SndManager.stopMusic();
-		SndManager.flushSndManager();
+		//SndManager.stopMusic();
+		//SndManager.flushSndManager();
 	}
 
 	public static boolean isLoading;

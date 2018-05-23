@@ -480,7 +480,7 @@ public class ModeGame {
 			MenuManager.drawButtonsAndTextY(_g, 2, new String[]{"CONTINUAR", "SALIR"},
 				    Font.FONT_BIG, optionSelect, null, GfxManager.vImgMenuButtons, Main.iFrame);
 			
-			confirmationQuit.draw(_g, false);
+			confirmationQuit.draw(_g, null);
 			break;
 		}
 	}

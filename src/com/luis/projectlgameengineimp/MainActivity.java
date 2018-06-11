@@ -5,10 +5,8 @@ import com.luis.lgameengine.gameutils.Settings;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.res.AssetManager;
 import android.os.Bundle;
 import android.os.PowerManager;
-import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Window;
 import android.view.WindowManager;
@@ -22,11 +20,7 @@ import android.widget.RelativeLayout;
 public class MainActivity extends Activity{
 	
 	private Thread vGameThread;
-	private AssetManager vAssets;
 	private Main vMain;
-	private Thread renderView;
-	
-	
 	
 	//Screen do not sleep:
 	public static PowerManager ms_PowerManager;
@@ -36,15 +30,19 @@ public class MainActivity extends Activity{
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		//setContentView(R.layout.activity_main);
-		//requestWindowFeature(Window.FEATURE_NO_TITLE);
 		
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
 		WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		
 		Log.i("Debug", "lGameEngine INIT");
-		Settings.getInstance().init(this);
-		vAssets = getAssets();
+		Settings.getInstance().init(
+				this, new boolean[]{
+									false,
+									false,
+									false,
+									true});
+		
 		vMain = new Main(this);
 		
 		// Rescale surface view to layout size:

@@ -98,7 +98,7 @@ public class ModeGame {
 		case Define.ST_GAME_INIT:
 			
 			//Init world dimensions
-			tileSize = TILE_SET_SIZE[Settings.getInstance().getResolution()];
+			tileSize = TILE_SET_SIZE[Settings.getInstance().getResolutionSet()];
 			
 			switch(GameState.getInstance().getLevel()){
 			case 0:
@@ -107,7 +107,8 @@ public class ModeGame {
 				
 				tileManager = new TileManager(
 					"/bin/levels/"+ 
-							FILE_LEVEL[Settings.getInstance().getResolution()] + LEVEL_1_PATH + "_" + FILE_LEVEL[Settings.getInstance().getResolution()]+ ".map");
+					FILE_LEVEL[Settings.getInstance().getResolutionSet()] + LEVEL_1_PATH + "_" + 
+					FILE_LEVEL[Settings.getInstance().getResolutionSet()]+ ".map");
 				bgColor = 0xffCED8F6;
 				
 				spawnPlayer();
@@ -123,7 +124,8 @@ public class ModeGame {
 				
 				tileManager = new TileManager(
 					"/bin/levels/"+ 
-					FILE_LEVEL[Settings.getInstance().getResolution()] + LEVEL_ROCK_TEST_PATH+ "_" + FILE_LEVEL[Settings.getInstance().getResolution()]+ ".map");
+					FILE_LEVEL[Settings.getInstance().getResolutionSet()] + LEVEL_ROCK_TEST_PATH+ "_" + 
+					FILE_LEVEL[Settings.getInstance().getResolutionSet()]+ ".map");
 				
 				spawnPlayer();
 				
@@ -214,7 +216,7 @@ public class ModeGame {
 					Define.SIZEX2, Define.SIZEY2,
 					RscManager.sAllTexts[RscManager.TXT_RETURN_MENU],
 					new String[]{RscManager.sAllTexts[RscManager.TXT_NO], RscManager.sAllTexts[RscManager.TXT_YES]},
-					Font.FONT_MEDIUM, Font.FONT_MEDIUM){
+					Font.FONT_MEDIUM, Font.FONT_MEDIUM, -1, -1){
 				@Override
 				public void onFinish(){
 					Log.i("Debug", "Index: " + this.getIndexPressed());

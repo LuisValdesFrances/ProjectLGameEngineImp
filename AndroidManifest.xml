@@ -13,12 +13,14 @@
         android:icon="@drawable/ic_launcher"
         android:label="ProjectV" >
         <activity
-            android:name="com.luis.projectlgameengineimp.MainActivity"
-            android:label="ProjectLGameImp"
-            android:screenOrientation="landscape" >
+            android:name=".MainActivity"
+            android:label="@string/app_name"
+            android:launchMode="singleTask"
+            android:screenOrientation="sensorLandscape"
+            android:configChanges="keyboardHidden|orientation|keyboard|screenSize"
+            android:theme="@android:style/Theme.NoTitleBar.Fullscreen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
